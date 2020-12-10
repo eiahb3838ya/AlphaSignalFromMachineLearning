@@ -5,8 +5,20 @@ Created on Thu Dec  3 11:33:44 2020
 @author: eiahb
 """
 
+
+
+
 def initialize(): 
-    global num 
-    global aaaa
-    num = 1
-    aaaa = 101010
+    global varList
+    varList = []
+    
+    
+def register(name, aVar):
+  
+    globals()[name] =  aVar
+    globals()['varList'].append(name)
+    print('{} \n is now in global\n'.format(aVar))
+    return(globals()['varList'])
+    
+def list_vars():
+    return(globals()['varList'])

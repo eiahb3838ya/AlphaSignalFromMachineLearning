@@ -11,10 +11,10 @@ import numpy as np
 import pandas as pd
 
 
-class GeneralDataBase(metaclass=abc.ABCMeta):
+class GeneralDataBase(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def __init__(self):
-        # print('GeneralDataBase __init__')
+        print('GeneralDataBase __init__')
         self.name = ''
         self.generalData = np.ndarray(0)
         self.timestamp = pd.Index([])
@@ -22,13 +22,21 @@ class GeneralDataBase(metaclass=abc.ABCMeta):
         self.metadata = {}
         
     def __str__(self):
-        outputString = "{} : datashape of {} \n".format(self.name,\
-                                                       self.generalData.shape)
+        head = ""
+        if self.generalData.shape[0]>=6:
+            head = self.generalData[:6, :]
+        outputString = "{} : datashape of {} \n{}".format(self.name,\
+                                                          self.generalData.shape,\
+                                                              head)
         return(outputString)
     
     def __repr__(self):
-        outputString = "{} : datashape of {} \n".format(self.name,\
-                                                       self.generalData.shape)
+        head = ""
+        if self.generalData.shape[0]>=6:
+            head = self.generalData[:6, :]
+        outputString = "{} : datashape of {} \n{}".format(self.name,\
+                                                          self.generalData.shape,\
+                                                              head)
         return(outputString)
     
     @abc.abstractmethod
@@ -41,6 +49,14 @@ class GeneralDataBase(metaclass=abc.ABCMeta):
     
     @abc.abstractmethod
     def get_data(self, start = None, end = None, get_loc_method = None):
+        pass
+    
+    @abc.abstractmethod
+    def get_timestamp(self):
+        pass
+    
+    @abc.abstractmethod
+    def get_columnNames(self):
         pass
             
     

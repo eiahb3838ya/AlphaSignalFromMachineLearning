@@ -2,10 +2,16 @@
 """
 Created on Tue Dec  1 15:24:11 2020
 
-@author: eiahb
+@author: Evan
 """
+# for convenience to try with spyder
+# use python -m Factor is the standard way to call modules main function
 
-from Tool.GeneralDataBase import GeneralDataBase
+try:
+    from .GeneralDataBase import GeneralDataBase
+except:
+    from GeneralDataBase import GeneralDataBase 
+
 import numpy as np
 import pandas as pd
 
@@ -13,11 +19,19 @@ class GeneralData(GeneralDataBase):
     def __init__(self, name, generalData = None, timestamp = None, columnNames = None, **kwargs):
         GeneralDataBase.__init__(self)
         
-        # print('GeneralData __init__')
+        print('GeneralData __init__')
         self.name = name
+        
+        if generalData is None and 'filePath' in kwargs:
+            try:
+                filePath = kwargs['filePath']
+                generalData = pd.read_csv(filePath)
+            except Exception as e:
+                print(e.message)
+                print('We have a filePath but we can not load the generalData to pandas df structure')
             
         if generalData is not None:
-            if isinstance(generalData,pd.DataFrame):
+            if isinstance(generalData, pd.DataFrame):
                 try:
                     self.columnNames = generalData.columns
                     self.timestamp = pd.DatetimeIndex(generalData.index)
@@ -26,28 +40,19 @@ class GeneralData(GeneralDataBase):
                     raise(e)
                 
             elif isinstance(generalData, np.ndarray):
+                assert timestamp is not None and columnNames is not None
                 self.generalData = generalData
                 
-        elif 'filePath' in kwargs:
-            try:
-                filePath = kwargs['filePath']
-                generalData = pd.read_csv(filePath)
-                self.columnNames = generalData.columns
-
-                self.timestamp = pd.DatetimeIndex(generalData.index)
-                self.generalData = generalData.to_numpy()
-                
-            except Exception as e:
-                raise(e)
-        
-            
+                    
         if timestamp is not None:
-            assert len(timestamp) == self.generalData.shape[0], 'the timestammp should match the generalData size' 
+            assert len(timestamp) == self.generalData.shape[0], 'the timestammp should \
+                match the generalData size' 
             self.timestamp = timestamp
            
             
         if columnNames is not None:
-            assert len(columnNames) == self.generalData.shape[1], 'the columnNames should match the generalData size'
+            assert len(columnNames) == self.generalData.shape[1], 'the columnNames should \
+                match the generalData size'
             self.columnNames = columnNames
 
         self.metadata.update({k:v for k, v in kwargs.items()})
@@ -58,7 +63,7 @@ class GeneralData(GeneralDataBase):
     def get_data_head(self, n = 10):
         return(self.generalData[:n, :])
     
-    def get_data(self, start = None, end = None, get_loc_method = None):        
+    def get_data(self, start = None, end = None, get_loc_method = 'ffill'):        
         if start is None:
             start = self.timestamp[0]
         if end is None:
@@ -66,16 +71,38 @@ class GeneralData(GeneralDataBase):
             
         if not isinstance(start, int):
             start_loc = self.timestamp.get_loc(start, get_loc_method)
+        else:
+            start_loc = start
+            
         if not isinstance(end, int):
-            end_loc = self.timestamp.get_loc(end, get_loc_method)
+            end_loc = self.timestamp.get_loc(end, method = get_loc_method)
+        else:
+            end_loc = end
+        
+        assert (isinstance(start_loc, int)), "The input type of start and end should be int of loc \
+            or datetime or str that datetimeIndex accessible"
+        assert (isinstance(end_loc, int)), "The input type of start and end should be int of loc \
+            or datetime or str that datetimeIndex accessible"
         return(self.generalData[start_loc:end_loc, :])
+    
+    def get_columnNames(self):
+        return(self.columnNames)
+    
+    def get_timestamp(self):
+        return(self.timestamp)
+    
+    def is_same_shape(self, anotherCls):
+        assert isinstance(anotherCls, GeneralData)
+        return(self.generalData.shape == anotherCls.generalData.shape)
         
 if __name__ ==  "__main__":
     DATA_PATH = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\02data\\ElementaryFactor-复权收盘价.csv'
     testData = pd.read_csv(DATA_PATH, index_col = 0)
     testData.index = testData.index.astype(str)
     klass = GeneralData(name = 'close', generalData = testData)
-    
+    klass.get_data('2005', '2014-01-06')
+    isinstance(klass, GeneralData)
+
     
     
         
