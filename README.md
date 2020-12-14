@@ -19,9 +19,9 @@
 
 ## Signal模块
 
-本模块主要包括两大功能：GenerateSignals和Smoothing，即产生raw signal，signal平滑处理
+本模块主要包括两大功能：generateSignals和smoothing，即产生raw signal，signal平滑处理
 
-### GenerateSignals
+### generateSignals
 
 是一个iteration，每个迭代过程会实现以下几个功能：
 
@@ -34,11 +34,11 @@
 
 最终GenerateSignals会输出包含这段时间每天signal的一张表
 
-### Smoothing
+### smoothing
 
 对于GenerateSignals产出的raw signals进行平滑处理
 
-### Test
+### test
 
 利用叶文轩之前写好的内容对于单个signal进行测试，并输出测试报告
 
