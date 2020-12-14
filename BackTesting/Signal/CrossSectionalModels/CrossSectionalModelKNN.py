@@ -9,8 +9,6 @@ import sys
 sys.path.append("../../")
 from CrossSectionalModelBase import CrossSectionalModelBase
 from sklearn.neighbors import KNeighborsClassifier 
-import numpy as np
-import pandas as pd
 import json
 
 class CrossSectionalModelKNN(CrossSectionalModelBase):
