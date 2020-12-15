@@ -1,11 +1,13 @@
 from sklearn.tree import DecisionTreeRegressor
 from CrossSectionalModelBase import CrossSectionalModelBase
 import json
+import sys
+sys.path.append("../../")
 #import matplotlib.pyplot as plt
 
 class CrossSectionalModelDecisionTree(CrossSectionalModelBase):
     # there are two ways to get parameters
-    def __int__(self, jsonPath = None, paraDict = {}):
+    def __init__(self, jsonPath = None, paraDict = {}):
         if jsonPath is not None:
             with open(jsonPath, 'r') as f:
                 self.parameter = json.load(f)
@@ -19,13 +21,16 @@ class CrossSectionalModelDecisionTree(CrossSectionalModelBase):
 
 
     def predict(self, X):
-        return self.model.parameter
+        return self.model.predict(X)
 
     def getModel(self):
         return self.model
 
     def gerscore(self,y_true,y_pre):
         return self.model.score(y_true, y_pre)
+
+    def getPara(self):
+        return self.parameter
 
 
 if __name__ == '__main__':
