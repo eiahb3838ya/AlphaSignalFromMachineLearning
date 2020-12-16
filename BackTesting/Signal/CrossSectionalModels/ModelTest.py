@@ -6,15 +6,15 @@ Created on Wed Dec 16 14:10:33 2020
 """
 
 import abc
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-
+from ScoreMethod import scoreMethodDict
 
 class ModelTest(object, metaclass=abc.ABCMeta):
-    def __init__(self,model):
+    def __init__(self, model = None, scoreMethodDict = scoreMethodDict):
         '''
         model: sklearn like model
         '''
         self.model = model
+        self.scoreMethodDict = scoreMethodDict
     
     def get_score(self, y_true, **kwargs):
         '''
@@ -36,14 +36,7 @@ class ModelTest(object, metaclass=abc.ABCMeta):
             y_pred = kwargs['y_pred']
         elif 'X' in kwargs.keys():
             y_pred = self.model.predict(kwargs['X'])
-            
-        def r2(y_true, y_pred):
-            return r2_score(y_true, y_pred)
-        def mse(y_true, y_pred):
-            return mean_squared_error(y_true, y_pred)
-        def mae(y_true, y_pred):
-            return mean_absolute_error(y_true, y_pred)
-        methodDict = {'r2':r2, 'mse':mse, 'mae':mae}
+        
         scoreMethod = kwargs.get('scoreMethod','r2')
-        scoreMethod = methodDict[scoreMethod]
+        scoreMethod = self.scoreMethodDict[scoreMethod]
         return scoreMethod(y_true, y_pred)
