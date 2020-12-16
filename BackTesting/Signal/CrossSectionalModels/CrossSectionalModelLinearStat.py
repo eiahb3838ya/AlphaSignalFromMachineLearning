@@ -105,31 +105,7 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
         '''
         return self.res.summary()
     
-    def scatterPred(self, y_real, y_pred):
-        '''
-        
-        ----
-            
-            y: y_real
-            kwargs: must input one of the following
-                X: ndarray, input X to get y_pred
-                y_pred: input y_pred directly
-        '''
-        plt.scatter(y_real,y_pred)
-        plt.title('y_pred vs y_real')
-        plt.xlabel('y_real')
-        plt.ylabel('y_pred')
-        plt.show()
-# =============================================================================
-#         y_pred = kwargs.get('y_pred',self.model.predict(kwargs['X']))
-#         kind = kwargs.get('kind','scatter')
-#         plt.figure()
-#         plt.plot(y_real,y_pred,kind=kind)
-#         plt.show()
-# =============================================================================
-        # print('This function hasn\'t be written')
-        pass
-    
+   
 #%%
 class CrossSectionalModelOLS(CrossSectionalModelLinear):
     pass

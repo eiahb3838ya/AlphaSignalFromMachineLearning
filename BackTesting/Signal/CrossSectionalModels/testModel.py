@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.datasets import load_iris, load_boston
-
+import matplotlib.pyplot as plt
+import numpy as np
 
 def create_classification_dataset():
     # features: 4 numeric, predictive attributes
@@ -41,13 +42,27 @@ if __name__ == "__main__":
 
     from CrossSectionalModelBase import CrossSectionalModelBase
     from CrossSectionalModelLinearSklearn import *
+    
     paraDictOLS = {'fit_intercept':True}
     paraDictRidge = {'fit_intercept':True,'alpha':0.3}
     paraDictLasso = {'fit_intercept':True,'alpha':0.3}
-    model = CrossSectionalModelOLS(paraDict = paraDictOLS)
-    model = CrossSectionalModelRidge(paraDict = paraDictRidge)
-    model = CrossSectionalModelLasso(paraDict = paraDictLasso)
-
+    
+    paraGridRidge = {'alpha':[x for x in np.arange(0.1,2,0.2)]}
+    paraGridLasso = {'alpha':[x for x in np.arange(0.1,2,0.2)]}
+    
+    modelOLS = CrossSectionalModelOLS(paraDict = paraDictOLS)
+    modelRidge = CrossSectionalModelRidge(paraDict = paraDictRidge)
+    modelLasso = CrossSectionalModelLasso(paraDict = paraDictLasso)
+    
+    modelRidgeJson = CrossSectionalModelRidge(jsonPath = 'paraDictRidge.json')
+    modelLassoJson = CrossSectionalModelLasso(jsonPath = 'paraDictLasso.json')
+    
+    modelRidgeCV = CrossSectionalModelRidge(paraGrid = paraGridRidge)
+    modelLassoCV = CrossSectionalModelLasso(paraGrid = paraGridLasso)
+    
+    
+    # 用上面这些做测试
+    model = modelLassoCV
     print("+++++++  Before training +++++++")
     print(model.getModel())
     print(model.getPara())
@@ -69,7 +84,23 @@ if __name__ == "__main__":
 #         return np.mean((y-y_hat)**2)
 #     print(mse(y_test, pred))
 # =============================================================================
-    print("+++++ Linear Rregression Coefficient ++++++")
+    print("+++++ Rregression Coefficient ++++++")
     print(model.getCoef())
-    print(model.getScore(y_test, y_pred=pred, scoreMethod = 'mse'))
-    model.scatterPred(y_test,pred)
+    print(model.getScore(y_test, y_pred=pred, scoreMethod = 'r2'))
+    
+    plt.scatter(y_test,pred)
+    plt.title('y_pred vs y_real')
+    plt.xlabel('y_real')
+    plt.ylabel('y_pred')
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+

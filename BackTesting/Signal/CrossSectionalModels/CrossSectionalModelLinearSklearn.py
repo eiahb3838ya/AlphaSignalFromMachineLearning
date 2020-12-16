@@ -12,20 +12,22 @@ import numpy as np
 import json
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import abc
-import matplotlib.pyplot as plt
+from sklearn.model_selection import GridSearchCV
+# import matplotlib.pyplot as plt
 
 class CrossSectionalModelLinear(CrossSectionalModelBase):
-    @abc.abstractmethod
-    def __init__(self, jsonPath = None, paraDict = {}):
+    
+    def __init__(self, jsonPath = None, paraDict = {}, paraGrid = None):
         self.parameter = paraDict
         if jsonPath is not None:
             with open(jsonPath,'r') as f:
-                self.parameter = json.loads(f)
+                self.parameter = json.load(f)
         self.model = None
+        self.paraGrid = paraGrid
         
+    
     def fit(self, X_train, y_train):
-        self.model.fit(X_train, y_train)
-        
+        pass
         
     def predict(self, X):
         return self.model.predict(X)
@@ -37,7 +39,6 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
                                           columns= ['ParaValue'])
         else:
             print('Hyper parameters are default')
-        
         
     def getModel(self):
         return self.model
@@ -62,8 +63,6 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
             y_pred = kwargs['y_pred']
         elif 'X' in kwargs.keys():
             y_pred = self.predict(kwargs['X'])
-            
-        
         def r2(y_real, y_pred):
             return r2_score(y_real, y_pred)
         def mse(y_real, y_pred):
@@ -82,91 +81,84 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
         return self.model.coef_
     
     def getIntercept(self):
-        
         return self.intercept_
-    
-    def scatterPred(self, y_real, y_pred):
-        '''
-        
-        ----
-            
-            y: y_real
-            kwargs: must input one of the following
-                X: ndarray, input X to get y_pred
-                y_pred: input y_pred directly
-        '''
-        plt.scatter(y_real,y_pred)
-        plt.title('y_pred vs y_real')
-        plt.xlabel('y_real')
-        plt.ylabel('y_pred')
-        plt.show()
-# =============================================================================
-#         y_pred = kwargs.get('y_pred',self.model.predict(kwargs['X']))
-#         kind = kwargs.get('kind','scatter')
-#         plt.figure()
-#         plt.plot(y_real,y_pred,kind=kind)
-#         plt.show()
-# =============================================================================
-        # print('This function hasn\'t be written')
-        pass
     
 #%%
 class CrossSectionalModelOLS(CrossSectionalModelLinear):
     
     def __init__(self, jsonPath = None, paraDict = {}):
-        self.parameter = paraDict
-        if jsonPath is not None:
-            with open(jsonPath,'r') as f:
-                self.parameter = json.loads(f)
+        CrossSectionalModelLinear.__init__(self, jsonPath = None, paraDict = {})
         self.model = LinearRegression(**self.parameter)
+        
+# =============================================================================
+#     def __init__(self, jsonPath = None, paraDict = {}):
+#         self.parameter = paraDict
+#         if jsonPath is not None:
+#             with open(jsonPath,'r') as f:
+#                 self.parameter = json.load(f)
+#         self.model = LinearRegression(**self.parameter)
+# =============================================================================
     
+    def fit(self, X_train, y_train):
+        self.model.fit(X_train, y_train)
 
 #%%
 class CrossSectionalModelRidge(CrossSectionalModelLinear):
     
-    def __init__(self, jsonPath = None, paraDict = {}):
-        self.parameter = paraDict
-        if jsonPath is not None:
-            with open(jsonPath,'r') as f:
-                self.parameter = json.loads(f)
+    def __init__(self,jsonPath = None, paraDict = {}, paraGrid = None):
+        CrossSectionalModelLinear.__init__(self,jsonPath = None, paraDict = {}, paraGrid = None)
         self.model = Ridge(**self.parameter)
+# =============================================================================
+#     def __init__(self, jsonPath = None, paraDict = {}, paraGrid = None):
+#         self.parameter = paraDict
+#         if jsonPath is not None:
+#             with open(jsonPath,'r') as f:
+#                 self.parameter = json.load(f)
+#         self.model = Ridge(**self.parameter)
+#         self.paraGrid = paraGrid
+# =============================================================================
         
-    
+    def fit(self, X_train, y_train, **kwargs):
+        if self.paraGrid is not None:
+            reg = GridSearchCV(
+                Ridge(), self.paraGrid, **kwargs
+                )
+            reg.fit(X_train, y_train)
+            self.parameter = reg.best_params_
+            self.model = reg.best_estimator_
+        else:
+            self.model.fit(X_train, y_train)
+
 #%%        
 class CrossSectionalModelLasso(CrossSectionalModelLinear):
     
-    def __init__(self, jsonPath = None, paraDict = {}):
-        self.parameter = paraDict
-        if jsonPath is not None:
-            with open(jsonPath,'r') as f:
-                self.parameter = json.loads(f)
+    def __init__(self,jsonPath = None, paraDict = {}, paraGrid = None):
+        CrossSectionalModelLinear.__init__(self,jsonPath = None, paraDict = {}, paraGrid = None)
         self.model = Lasso(**self.parameter)
+# =============================================================================
+#     def __init__(self, jsonPath = None, paraDict = {}, paraGrid = None):
+#         self.parameter = paraDict
+#         if jsonPath is not None:
+#             with open(jsonPath,'r') as f:
+#                 self.parameter = json.load(f)
+#         self.model = Lasso(**self.parameter)
+#         self.paraGrid = paraGrid
+# =============================================================================
+        
+    def fit(self, X_train, y_train, **kwargs):
+        if self.paraGrid is not None:
+            reg = GridSearchCV(
+                Lasso(), self.paraGrid, **kwargs
+                )
+            reg.fit(X_train, y_train)
+            self.parameter = reg.best_params_
+            self.model = reg.best_estimator_
+        else:
+            self.model.fit(X_train, y_train)
         
 #%%
 
-
-if __name__ == '__main__':
-    data = {
-        'name' : 'ACME',
-        'shares' : 100,
-        'price' : 542.23
-    }
-    
-    json_str = json.dumps(data)
-    
-    # Writing JSON data
-    with open(None, 'w') as f:
-        json.dump(data, f)
-    
-    # Reading data back
-    with open('data.json', 'r') as f:
-        d = json.load(f)
-    
-    
-    
-    X = np.random.randn(30,5)
-    y = np.random.randn(30)
-    model = OLS(y,X)
+   
     
     
     
