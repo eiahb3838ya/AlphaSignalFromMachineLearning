@@ -19,7 +19,7 @@ from ModelTest import ModelTest
 class CrossSectionalModelLinear(CrossSectionalModelBase, ModelTest):
     
     def __init__(self, jsonPath = None, paraDict = {}, paraGrid = None):
-        ModelTest.__init__(self)
+        # ModelTest.__init__(self)
         self.parameter = paraDict
         if jsonPath is not None:
             with open(jsonPath,'r') as f:

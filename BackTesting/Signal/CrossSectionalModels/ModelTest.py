@@ -9,14 +9,14 @@ import abc
 from ScoreMethod import scoreMethodDict
 
 class ModelTest(object, metaclass=abc.ABCMeta):
-    def __init__(self, model = None, scoreMethodDict = scoreMethodDict):
+    def __init__(self, model = None):
         '''
         model: sklearn like model
         '''
         self.model = model
-        self.scoreMethodDict = scoreMethodDict
+        # self.scoreMethodDict = scoreMethodDict
     
-    def get_score(self, y_true, **kwargs):
+    def get_score(self, y_true, scoreMethodDict = scoreMethodDict, **kwargs):
         '''
         get score of the prediction based on the scoreMethod
         
@@ -38,5 +38,5 @@ class ModelTest(object, metaclass=abc.ABCMeta):
             y_pred = self.model.predict(kwargs['X'])
         
         scoreMethod = kwargs.get('scoreMethod','r2')
-        scoreMethod = self.scoreMethodDict[scoreMethod]
+        scoreMethod = scoreMethodDict[scoreMethod]
         return scoreMethod(y_true, y_pred)
