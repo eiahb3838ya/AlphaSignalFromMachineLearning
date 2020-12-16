@@ -40,7 +40,7 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
             X = sm.add_constant(X)
         return self.res.predict(X)
     
-    def getPara(self):
+    def get_para(self):
         if self.parameter!={}:
             return pd.DataFrame.from_dict(self.parameter, 
                                           orient='index',
@@ -49,7 +49,7 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
             print('Hyper parameters are default')
         
         
-    def getModel(self):
+    def get_model(self):
         try:
             return self.res
         except:
@@ -57,7 +57,7 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
             return None
         
     
-    def getScore(self, y_real, **kwargs):
+    def get_score(self, y_real, **kwargs):
         '''
         get score of the prediction based on the scoreMethod
         
@@ -89,13 +89,13 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
         scoreMethod = methodDict[scoreMethod]
         return scoreMethod(y_real, y_pred)
     
-    def getCoef(self):
+    def get_coef(self):
         '''
         get estimated coefficients for the linear regression problem
         '''
         return self.res.params
     
-    def getModelSummary(self):
+    def get_model_summary(self):
         '''
         get summary of the model
         

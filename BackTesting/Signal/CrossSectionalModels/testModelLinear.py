@@ -1,3 +1,4 @@
+
 import numpy as np
 from sklearn.datasets import load_iris, load_boston
 import matplotlib.pyplot as plt
@@ -64,8 +65,8 @@ if __name__ == "__main__":
     # 用上面这些做测试
     model = modelLassoCV
     print("+++++++  Before training +++++++")
-    print(model.getModel())
-    print(model.getPara())
+    print(model.get_model())
+    print(model.get_para())
 
     X_train, y_train, X_test, y_test = create_regression_dataset()  # or create_classification_dataset()
     
@@ -73,8 +74,8 @@ if __name__ == "__main__":
     model.fit(X_train, y_train)
 
     print("+++++++  After training +++++++")
-    print(model.getModel())
-    print(model.getPara())
+    print(model.get_model())
+    print(model.get_para())
 
     print("+++++++ Predicting +++++++")
     pred = model.predict(X_test)
@@ -85,8 +86,8 @@ if __name__ == "__main__":
 #     print(mse(y_test, pred))
 # =============================================================================
     print("+++++ Rregression Coefficient ++++++")
-    print(model.getCoef())
-    print(model.getScore(y_test, y_pred=pred, scoreMethod = 'r2'))
+    print(model.get_coef())
+    print(model.get_score(y_test, y_pred=pred, scoreMethod = 'r2'))
     
     plt.scatter(y_test,pred)
     plt.title('y_pred vs y_real')

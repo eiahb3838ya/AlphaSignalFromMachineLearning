@@ -28,13 +28,13 @@ class CrossSectionalModelKNN(CrossSectionalModelBase):
     def predict(self, X):
         return self.model.predict(X)
     
-    def getPara(self):
+    def get_para(self):
         return self.para
     
-    def getModel(self):
+    def get_model(self):
         return self.model
     
-    def predictScore(self,x,y):
+    def predict_score(self,x,y):
         return self.model.score(x,y)
 
 if __name__=='__main__':
