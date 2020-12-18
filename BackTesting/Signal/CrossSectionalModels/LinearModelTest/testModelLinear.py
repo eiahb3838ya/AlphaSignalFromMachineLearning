@@ -40,8 +40,14 @@ def create_regression_dataset():
     return X_train, y_train, X_test, y_test
 
 if __name__ == "__main__":
-
-    from CrossSectionalModelLinearSklearn import CrossSectionalModelOLS, CrossSectionalModelRidge, CrossSectionalModelLasso
+# =============================================================================
+#     import sys
+#     import os
+#     sys.path.append(os.path.abspath('.') + '\..')
+#     from CrossSectionalModel.CrossSectionalModelLinearSklearn import CrossSectionalModelOLS, CrossSectionalModelRidge, CrossSectionalModelLasso
+# =============================================================================
+    from BackTesting.Signal.CrossSectionalModels.CrossSectionalModel.CrossSectionalModelLinearSklearn \
+        import CrossSectionalModelOLS, CrossSectionalModelRidge, CrossSectionalModelLasso
     
     paraDictOLS = {'fit_intercept':True}
     paraDictRidge = {'fit_intercept':True,'alpha':0.3}

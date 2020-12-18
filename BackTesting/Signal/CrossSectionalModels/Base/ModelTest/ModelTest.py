@@ -8,10 +8,13 @@ import os
 import sys
 sys.path.append(os.getcwd())
 import abc
-try:
-    from .ScoreMethod import scoreMethodDict
-except:
-    from ScoreMethod import scoreMethodDict
+# =============================================================================
+# try:
+#     from .ScoreMethod import scoreMethodDict
+# except:
+#     from ScoreMethod import scoreMethodDict
+# =============================================================================
+from .ScoreMethod import scoreMethodDict
 
 class ModelTest():
     
