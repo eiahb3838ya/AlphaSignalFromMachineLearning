@@ -34,7 +34,7 @@ class CrossSectionalFeatureSelectionBase(object, metaclass=abc.ABCMeta):
         pass
     
     @abc.abstractmethod
-    def getPara(self):
+    def get_para(self):
         # return the hyperparameter of the model
         # maybe from another file json-like or another module
         # for the cv cases
@@ -47,7 +47,7 @@ class CrossSectionalFeatureSelectionBase(object, metaclass=abc.ABCMeta):
         pass
     
     @abc.abstractmethod
-    def getSelector(self):
+    def get_selector(self):
         # return the hyperparameter of the model
         # maybe from another file json-like or another module
         # for the cv cases

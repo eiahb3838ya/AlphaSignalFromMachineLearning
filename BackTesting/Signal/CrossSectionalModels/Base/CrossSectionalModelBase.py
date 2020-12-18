@@ -28,7 +28,7 @@ class CrossSectionalModelBase(object, metaclass=abc.ABCMeta):
         pass
     
     @abc.abstractmethod
-    def getPara(self):
+    def get_para(self):
         # return the hyperparameter of the model
         # maybe from another file json-like or another module
         # for the cv cases
@@ -41,7 +41,7 @@ class CrossSectionalModelBase(object, metaclass=abc.ABCMeta):
         pass
     
     @abc.abstractmethod
-    def getModel(self):
+    def get_model(self):
         # return the model 
         pass
 

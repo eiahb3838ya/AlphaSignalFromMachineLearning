@@ -11,6 +11,7 @@ try :
     from .FactorProfileBase import FactorProfileBase
     from .GeneralData import GeneralData
 except :
+    from Tool import globalVars
     from FactorProfileBase import FactorProfileBase
     from GeneralData import GeneralData
 
@@ -33,7 +34,7 @@ class Factor(FactorProfileBase, GeneralData):
         for setName in self.reliedDatasetNames:
             try:
                 outputDataset.update({
-                        setName:getattr(globals, setName)
+                        setName:getattr(globalVars, setName)
                     })
             except AttributeError :
                 print("There is no dataset named {} in global".format(setName))

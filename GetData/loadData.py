@@ -8,7 +8,7 @@ Created on Fri Dec  4 14:43:53 2020
 
 import os
 import pandas as pd
-from Tool import globals
+from Tool import globalVars
 from Tool.GeneralData import GeneralData
 #%%
 
@@ -20,7 +20,8 @@ dataFileDict = {
         'adj_open':'S_DQ_ADJOPEN.csv',
         'adj_preclose':'S_DQ_ADJPRECLOSE.csv',
         'amount':'S_DQ_AMOUNT.csv',
-        'volume':'S_DQ_VOLUME.csv'
+        'volume':'S_DQ_VOLUME.csv',
+        'pctChange':'S_DQ_PCTCHANGE.csv'
     }
 
 #%%
@@ -34,7 +35,7 @@ def loadData(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH):
     for k, v in dataFileDict.items():
         tmp = pd.read_csv(os.path.join(DATA_PATH,v), index_col=0)
         data = GeneralData(name = k, generalData = tmp)
-        globals.register(k, data)
+        globalVars.register(k, data)
     
 
 
