@@ -12,6 +12,7 @@ try:
 except:
     from GeneralDataBase import GeneralDataBase 
 
+import copy
 import numpy as np
 import pandas as pd
 
@@ -20,17 +21,18 @@ class GeneralData(GeneralDataBase):
         GeneralDataBase.__init__(self)
         
         print('GeneralData __init__')
-        self.name = name
         
-        if generalData is None and 'filePath' in kwargs:
-            try:
-                filePath = kwargs['filePath']
-                generalData = pd.read_csv(filePath)
-            except Exception as e:
-                print(e.message)
-                print('We have a filePath but we can not load the generalData to pandas df structure')
+        self.name = name
+        if generalData is None: 
+            if 'filePath' in kwargs:
+                try:
+                    filePath = kwargs['filePath']
+                    generalData = pd.read_csv(filePath)
+                except Exception as e:
+                    print(e.message)
+                    print('We have a filePath but we can not load the generalData to pandas df structure')
             
-        if generalData is not None:
+        else:
             if isinstance(generalData, pd.DataFrame):
                 try:
                     self.columnNames = generalData.columns
@@ -43,6 +45,8 @@ class GeneralData(GeneralDataBase):
                 assert timestamp is not None and columnNames is not None
                 self.generalData = generalData
                 
+            else:
+                raise TypeError('Must be np ndarray or pandas DataFrame')
                     
         if timestamp is not None:
             assert len(timestamp) == self.generalData.shape[0], 'the timestammp should \
@@ -94,14 +98,57 @@ class GeneralData(GeneralDataBase):
     def is_same_shape(self, anotherCls):
         assert isinstance(anotherCls, GeneralData)
         return(self.generalData.shape == anotherCls.generalData.shape)
+    
+    def get_shifted_generalData(self, shiftN):
+        toOutput = self.generalData.copy()
+        if shiftN >= 0:
+            toOutput[-shiftN:, :] = np.nan
+        else:
+            toOutput[:-shiftN, :] = np.nan
+        shifted = np.roll(toOutput, shiftN, axis = 0)
+        return(shifted)
+    
+    def get_shifted(self, shiftN):
+        toOutput = copy.copy(self)
+        toOutput.generalData = toOutput.get_shifted_generalData(shiftN)
+        return(toOutput)
         
 if __name__ ==  "__main__":
     DATA_PATH = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\02data\\ElementaryFactor-复权收盘价.csv'
     testData = pd.read_csv(DATA_PATH, index_col = 0)
     testData.index = testData.index.astype(str)
     klass = GeneralData(name = 'close', generalData = testData)
-    klass.get_data('2005', '2014-01-06')
+    # klass.get_data('2005', '2014-01-06')
     isinstance(klass, GeneralData)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
     
