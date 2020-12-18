@@ -98,4 +98,4 @@
   - train_test_slice（叶梦婕）
   - preprocessing（叶文轩）
   - get_signal（国欣然）
-  - smoothing（薛岚天）
+  - smoothing, logger（薛岚天）
