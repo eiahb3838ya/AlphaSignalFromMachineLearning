@@ -136,10 +136,15 @@ def demean(this: GeneralData) -> GeneralData:
     outputToReturn.generalData = np.subtract(outputToReturn.generalData, mean_axis1)
     return outputToReturn
 
-def neg(this: GeneralData) -> GeneralData:
+def negative(this: GeneralData) -> GeneralData:
     outputToReturn = copy.copy(this)
     outputToReturn.generalData = np.multiply(outputToReturn.generalData, -1)
     return outputToReturn
+
+def positive(this: GeneralData) -> GeneralData:
+    outputToReturn = copy.copy(this)
+    # outputToReturn.generalData = np.multiply(outputToReturn.generalData, -1)
+    return(outputToReturn)
 
 def rank(this: GeneralData) -> GeneralData:
     outputToReturn = copy.copy(this)

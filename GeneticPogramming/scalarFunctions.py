@@ -11,7 +11,7 @@ import copy
 
 
 
-def add_scalar(this: GeneralData, aNum: int = 1) -> GeneralData:
+def add_scalar(this: GeneralData, aNum: float = 1) -> GeneralData:
     # print(id(this))
     # print(id(this.generalData))
     outputToReturn = copy.copy(this)
@@ -22,7 +22,7 @@ def add_scalar(this: GeneralData, aNum: int = 1) -> GeneralData:
     # print(id(outputToReturn.generalData))
     return outputToReturn
 
-def subtract_scalar(this: GeneralData, aNum: int) -> GeneralData:
+def subtract_scalar(this: GeneralData, aNum: float) -> GeneralData:
     # print(id(this))
     # print(id(this.generalData))
     outputToReturn = copy.copy(this)
@@ -33,7 +33,7 @@ def subtract_scalar(this: GeneralData, aNum: int) -> GeneralData:
     # print(id(outputToReturn.generalData))
     return outputToReturn
      
-def multiply_scalar(this: GeneralData, aNum: int) -> GeneralData:
+def multiply_scalar(this: GeneralData, aNum: float) -> GeneralData:
     # print(id(this))
     # print(id(this.generalData))
     outputToReturn = copy.copy(this)
@@ -44,7 +44,7 @@ def multiply_scalar(this: GeneralData, aNum: int) -> GeneralData:
     # print(id(outputToReturn.generalData))
     return outputToReturn
 
-def divide_scalar(this: GeneralData, aNum: int) -> GeneralData:
+def divide_scalar(this: GeneralData, aNum: float) -> GeneralData:
     # print(id(this))
     # print(id(this.generalData))
     outputToReturn = copy.copy(this)
@@ -56,7 +56,7 @@ def divide_scalar(this: GeneralData, aNum: int) -> GeneralData:
     # print(id(outputToReturn.generalData))
     return outputToReturn
 
-def power_scalar(this: GeneralData, aNum: int) -> GeneralData:
+def power_scalar(this: GeneralData, aNum: float) -> GeneralData:
     # print(id(this))
     # print(id(this.generalData))
     outputToReturn = copy.copy(this)
@@ -67,7 +67,7 @@ def power_scalar(this: GeneralData, aNum: int) -> GeneralData:
     # print(id(outputToReturn.generalData))
     return outputToReturn
 
-def mod_scalar(this: GeneralData, aNum: int) -> GeneralData:
+def mod_scalar(this: GeneralData, aNum: float) -> GeneralData:
     # print(id(this))
     # print(id(this.generalData))
     outputToReturn = copy.copy(this)

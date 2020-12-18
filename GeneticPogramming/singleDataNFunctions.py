@@ -9,7 +9,7 @@ Created on Tue Dec  8 14:00:18 2020
 import numpy as np
 from Tool.GeneralData import GeneralData
 import copy
-from GeneticPogramming.utils import get_strided, get_maskAllNaN
+from GeneticPogramming import utils #get_strided, get_maskAllNaN
 
 
 
@@ -63,8 +63,8 @@ def ts_argmax(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     outputToReturn = copy.copy(this)
     
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
-    masked, isAllNaN = get_maskAllNaN(strided)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
+    masked, isAllNaN = utils.get_maskAllNaN(strided)
     arg = np.argmax(masked, axis = 1).astype(float)
     arg[isAllNaN] = np.nan
     
@@ -78,8 +78,8 @@ def ts_argmin(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     outputToReturn = copy.copy(this)
     
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
-    masked, isAllNaN = get_maskAllNaN(strided)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
+    masked, isAllNaN = utils.get_maskAllNaN(strided)
     arg = np.argmin(masked, axis = 1).astype(float)
     arg[isAllNaN] = np.nan
     
@@ -95,8 +95,8 @@ def ts_argmaxmin(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     outputToReturn = copy.copy(this)
     
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
-    masked, isAllNaN = get_maskAllNaN(strided)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
+    masked, isAllNaN = utils.get_maskAllNaN(strided)
     argmax = np.argmin(masked, axis = 1).astype(float)
     argmin = np.argmin(masked, axis = 1).astype(float)
     arg = np.subtract(argmax, argmin)
@@ -111,7 +111,7 @@ def ts_max(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     max_ = np.nanmax(strided, axis = 1)
     outputToReturn.generalData = max_
     return outputToReturn
@@ -120,7 +120,7 @@ def ts_min(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     min_ = np.nanmin(strided, axis = 1)
     outputToReturn.generalData = min_
     return outputToReturn
@@ -131,7 +131,7 @@ def ts_maxmin_norm(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     max_ = np.nanmax(strided, axis = 1)
     min_ = np.nanmin(strided, axis = 1)
     toScale = np.subtract(toStride2DArray, min_)
@@ -148,7 +148,7 @@ def ts_mean(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     mean = np.nanmean(strided, axis = 1)
     outputToReturn.generalData = mean
     return outputToReturn
@@ -157,7 +157,7 @@ def ts_std(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     std = np.nanstd(strided, axis = 1)
     outputToReturn.generalData = std
     return outputToReturn
@@ -166,7 +166,7 @@ def ts_median(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     nanmedian = np.nanmedian(strided, axis = 1)
     outputToReturn.generalData = nanmedian
     return outputToReturn
@@ -175,7 +175,7 @@ def ts_cumprod(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     cumprod = np.nanprod(strided, axis = 1)
     outputToReturn.generalData = cumprod
     return outputToReturn
@@ -184,7 +184,7 @@ def ts_cumsum(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     cumsum = np.nansum(strided, axis = 1)
     outputToReturn.generalData = cumsum
     return outputToReturn
@@ -193,9 +193,9 @@ def ts_rank(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     assert rollingDaysN >= 0
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     
-    masked, isAllNaN = get_maskAllNaN(strided)
+    masked, isAllNaN = utils.get_maskAllNaN(strided)
     
     rank = np.argmax(np.argsort(strided, axis = 1), axis = 1).astype(float)
     rank[isAllNaN] = np.nan
@@ -208,7 +208,7 @@ def ts_t(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     
     outputToReturn = copy.copy(this)
     toStride2DArray = outputToReturn.generalData
-    strided = get_strided(toStride2DArray, rollingDaysN)
+    strided = utils.get_strided(toStride2DArray, rollingDaysN)
     mean = np.nanmean(strided, axis = 1)
     std = np.std(strided, axis = 1)
     toScale = np.subtract(toStride2DArray, mean)
