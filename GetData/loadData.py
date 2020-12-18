@@ -10,6 +10,7 @@ import os
 import pandas as pd
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
+from Tool.Factor import Factor
 #%%
 
 
@@ -25,17 +26,32 @@ dataFileDict = {
     }
 
 #%%
-DATA_PATH = './GetData/tables/'
-
+PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
+DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
+# DATA_PATH
 # tmp = pd.read_csv(os.path.join(DATA_PATH,'S_DQ_ADJCLOSE.csv'), index_col=0)
 # adj_close = GeneralData('adj_close', tmp)
 # globals.register('adj_close', adj_close)
 #%%
-def loadData(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH):
+def load_data(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH):
+    toReturnList = []
     for k, v in dataFileDict.items():
-        tmp = pd.read_csv(os.path.join(DATA_PATH,v), index_col=0)
-        data = GeneralData(name = k, generalData = tmp)
+        # tmp = pd.read_csv(os.path.join(DATA_PATH,v), index_col=0)
+        data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
         globalVars.register(k, data)
+        toReturnList.append(k)
+    return(toReturnList)
+
+def simple_load_factor(factorName):
+    if 'factors' not in globalVars.varList:
+        globalVars.register('factors', {})
+        
+    #TODO after done  TODO __init__ with GeneralData, load factors as dtype of Factor
+    globalVars.factors[factorName] = globalVars.__getattribute__(factorName)
+    print(factorName, 'is now in globalVars.factors')
+
+    
+    
     
 
 

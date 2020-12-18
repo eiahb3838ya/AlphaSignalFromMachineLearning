@@ -17,7 +17,7 @@ def register(name, aVar):
   
     globals()[name] =  aVar
     globals()['varList'].append(name)
-    print('{} \n is now in global\n'.format(aVar))
+    print('{}:\n{} \n is now in global\n'.format(name, aVar))
     return(globals()['varList'])
     
 def list_vars():
