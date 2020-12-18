@@ -49,4 +49,53 @@
 - long only
 - 利用cvxopt进行各种组合优化
 
-stash test
+# Meeting Log
+
+## 2020-12-02
+
+**讨论**：
+
+整体框架设计，各模块功能
+
+**任务**：
+
+学习类的继承
+
+## 2020-12-09
+
+**讨论**整体框架设计，各模块功能，分配任务，重点在于Signal模块的设计
+
+**任务：**
+
+编写Signal模块中get_signal会用到的方法：
+
+- 线性（叶梦婕）
+- 树状（国欣然）
+- 网络型（薛岚天）
+
+从以上三个方向编写CrossSectionalModels（AlphaSignalFromMachineLearning\BackTesting\Signal\CrossSectionalModels）以及FeatureSelectors（AlphaSignalFromMachineLearning\BackTesting\Signal\FeatureSelectors）
+
+## 2020-12-16
+
+**讨论**：
+
+- 上周任务完成情况
+  - 已编写线性（OLS、Ridge、Lasso），树状，KNN的CrossSectionalModel
+  - 线性模型已测试完成
+  - parameter的获取方式：jsonPath，paraDict，CrossValidation
+
+- SignalBase的方法设计
+
+**任务**：
+
+- **code review**
+- 编写CrossSectionalModelSklearn与ModelTest两个类，使得构造CrossSectionalModel时直接继承这两个
+  - CrossSectionalModelSklearn：实现共同init的方式，fit的方式（CV或者直接fit）
+  - ModelTest：对模型进行测试的工具包，例如：计算score，画图等等
+- 整理文件夹，每个目录都设置README
+- SignalBase的方法编写
+  - generate_signals（国欣然）
+  - train_test_slice（叶梦婕）
+  - preprocessing（叶文轩）
+  - get_signal（国欣然）
+  - smoothing（薛岚天）

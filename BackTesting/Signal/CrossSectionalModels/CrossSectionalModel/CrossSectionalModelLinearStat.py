@@ -84,6 +84,7 @@ class CrossSectionalModelLinear(CrossSectionalModelBase):
             return mean_squared_error(y_real, y_pred)
         def mae(y_real, y_pred):
             return mean_absolute_error(y_real, y_pred)
+        
         methodDict = {'r2':r2, 'mse':mse, 'mae':mae}
         scoreMethod = kwargs.get('scoreMethod','r2')
         scoreMethod = methodDict[scoreMethod]

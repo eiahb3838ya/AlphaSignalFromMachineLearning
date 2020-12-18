@@ -2,7 +2,7 @@
 import numpy as np
 from sklearn.datasets import load_iris, load_boston
 import matplotlib.pyplot as plt
-import numpy as np
+
 
 def create_classification_dataset():
     # features: 4 numeric, predictive attributes
@@ -41,12 +41,12 @@ def create_regression_dataset():
 
 if __name__ == "__main__":
 
-    from CrossSectionalModelBase import CrossSectionalModelBase
-    from CrossSectionalModelLinearSklearn import *
+    from CrossSectionalModelLinearSklearn import CrossSectionalModelOLS, CrossSectionalModelRidge, CrossSectionalModelLasso
     
     paraDictOLS = {'fit_intercept':True}
     paraDictRidge = {'fit_intercept':True,'alpha':0.3}
-    paraDictLasso = {'fit_intercept':True,'alpha':0.3}
+    paraDictLasso = {'fit_intercept':True,'alpha':1}
+    # paraDictLasso2 = {'fit_intercept':True,'alpha':0.2}
     
     paraGridRidge = {'alpha':[x for x in np.arange(0.1,2,0.2)]}
     paraGridLasso = {'alpha':[x for x in np.arange(0.1,2,0.2)]}
@@ -57,12 +57,23 @@ if __name__ == "__main__":
     
     modelRidgeJson = CrossSectionalModelRidge(jsonPath = 'paraDictRidge.json')
     modelLassoJson = CrossSectionalModelLasso(jsonPath = 'paraDictLasso.json')
+    # modelLassoJson2 = CrossSectionalModelLasso(jsonPath = 'paraDictLasso2.json',json_first = False)
     
     modelRidgeCV = CrossSectionalModelRidge(paraGrid = paraGridRidge)
+    
+    # ????用完modelLassoJson之后 paraDict变了。。。
+    # paraDict.update()的问题？？？
+    # 先用paraDict.update()的话，会把paraDict存在那个函数里面的感觉,id的问题
+    # 直接用self.parameter
+    
+    # modelLassoJson = CrossSectionalModelLasso(jsonPath = 'paraDictLasso.json',
+    #                                           paraDict = paraDictLasso2)
     modelLassoCV = CrossSectionalModelLasso(paraGrid = paraGridLasso)
     
     
     # 用上面这些做测试
+    # modelLassoJson2 = CrossSectionalModelLasso(jsonPath = 'paraDictLasso2.json',json_first = False)
+    # modelLassoCV2 = CrossSectionalModelLasso(paraGrid = paraGridLasso)
     model = modelLassoCV
     print("+++++++  Before training +++++++")
     print(model.get_model())
@@ -75,7 +86,7 @@ if __name__ == "__main__":
 
     print("+++++++  After training +++++++")
     print(model.get_model())
-    print(model.get_para())
+    print(model.get_para(verbal = True))
 
     print("+++++++ Predicting +++++++")
     pred = model.predict(X_test)
