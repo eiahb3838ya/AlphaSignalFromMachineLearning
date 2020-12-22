@@ -1,0 +1,9 @@
+2020-12-21 01:29:36,622 logger.py[line:28] - INFO - loggerTest : start running loggerTest
+2020-12-21 01:29:36,622 logger.py[line:28] - INFO - loggerTest : start running loggerTest
+2020-12-21 01:29:36,622 logger.py[line:28] - INFO - loggerTest : start running loggerTest
+2020-12-21 01:29:36,739 logger.py[line:31] - WARNING - loggerTest : something wrong with loggerTest
+2020-12-21 01:29:36,739 logger.py[line:31] - WARNING - loggerTest : something wrong with loggerTest
+2020-12-21 01:29:36,739 logger.py[line:31] - WARNING - loggerTest : something wrong with loggerTest
+2020-12-21 01:29:36,849 logger.py[line:37] - CRITICAL - loggerTest : we have to break loggerTest
+2020-12-21 01:29:36,849 logger.py[line:37] - CRITICAL - loggerTest : we have to break loggerTest
+2020-12-21 01:29:36,849 logger.py[line:37] - CRITICAL - loggerTest : we have to break loggerTest
