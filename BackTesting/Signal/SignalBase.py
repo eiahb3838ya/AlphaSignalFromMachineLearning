@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABCMeta, abstractstaticmethod
 
 
-class SignalBase(object,metaclass=abc.ABCMeta):
+class SignalBase(object,metaclass=ABCMeta):
     @abstractmethod
     def __init__(self):
         pass

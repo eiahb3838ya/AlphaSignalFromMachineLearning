@@ -11,10 +11,10 @@ from abc import abstractmethod, ABCMeta, abstractstaticmethod
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
-from GetData.loadData import load_data, simple_load_factor
-from SignalBase import SignalBase
-
-class SignalFactorFromCSV(SignalBase,  metaclass=abc.ABCMeta):
+from GetData.loadData import load_material_data, simple_load_factor
+from BackTesting.Signal.SignalBase import SignalBase
+#%%
+class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
 
     def __init__(self):
         self.rawSignals = GeneralData('rawSignals')
@@ -25,16 +25,18 @@ class SignalFactorFromCSV(SignalBase,  metaclass=abc.ABCMeta):
 
     def initialize(self):
         globalVars.initialize()
-        loadedDataList = load_data()
+        loadedDataList = load_material_data()
         
         #TODO:use logger latter 
         print('We now have {} in our globalVar now'.format(loadedDataList))
+        
         try:
-            shiftedReturn = globalVars.pctChange.get_shifted(-1)
+            shiftedReturn = globalVars.materialData['pctChange'].get_shifted(-1)
         except AttributeError as ae:
+            print(ae)
             raise AttributeError('There\'s no pctChange in globalVars')
         except Exception as e :
-            print(e.message)
+            print(e)
             raise 
         
         shiftedReturn.metadata.update({'shiftN':-1})
@@ -48,15 +50,15 @@ class SignalFactorFromCSV(SignalBase,  metaclass=abc.ABCMeta):
         ############ to be modified latter
         ############ with nice designed globalVars
         ############ the factor in globalVars.factors is a dict 
-        toLoadFactors = ['adj_close',
-                         'adj_high',
-                         'adj_low',
-                         'adj_open'
+        toLoadFactors = ['close',
+                         'high',
+                         'low',
+                         'open'
                          ] 
         
         for aFactor in toLoadFactors:
             simple_load_factor(aFactor)
-            factorNameList.append(aFactor)
+            self.factorNameList.append(aFactor)
         
 
 
