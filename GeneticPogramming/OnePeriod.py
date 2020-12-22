@@ -10,7 +10,7 @@ import random
 import sys
 import time
 from tqdm import tqdm, trange
-from deap import base,creator,gp,tools
+from deap import base, creator, gp, tools
 from inspect import getmembers, isfunction
 import itertools
 import numpy as np
@@ -105,12 +105,43 @@ def simpleCorrcoef(factor, shiftedReturn):
         return(0)
     else:
         return(corrcoef[0, 1])
+    
+def simpleIC(factor, shiftedReturn):
+    validFactor = np.ma.masked_invalid(factor.generalData)
+    validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
+    msk = np.ma.mask_or(validFactor.mask, validShiftedReturn.mask)#(~validFactor.mask & ~validShiftedReturn.mask)
+    validFactor.mask = msk
+    validShiftedReturn.mask = msk
+    # get corrcoef of each rowwise pair
+    #======================================================
+    # A_mA = A - A.mean(1)[:, None]
+    # B_mB = B - B.mean(1)[:, None]
 
+    # # Sum of squares across rows
+    # ssA = (A_mA**2).sum(1)
+    # ssB = (B_mB**2).sum(1)
+
+    # # Finally get corr coeff
+    # return np.dot(A_mA, B_mB.T) / np.sqrt(np.dot(ssA[:, None],ssB[None]))
+    
+    #=======================================================
+    
+    # Rowwise mean of input arrays & subtract from input arrays themeselves
+    validFactor_m = validFactor - validFactor.mean(1)[:, None]
+    validShiftedReturn_m = validShiftedReturn - validShiftedReturn.mean(1)[:, None]
+    
+    # Sum of squares across rows
+    ssA = (validFactor_m**2).sum(1)
+    ssB = (validShiftedReturn_m**2).sum(1)
+    
+    toDivide = np.ma.dot(validFactor_m, validShiftedReturn_m.T).diagonal()
+    divider = np.ma.sqrt(np.dot(ssA, ssB))
+    return((toDivide/divider).mean())
 
 def evaluate(individual, shiftedReturn = globalVars.materialData['pctChange'].get_shifted(-1)):
     func = toolbox.compile(expr=individual)
     factor = func(**globalVars.materialData)
-    score = simpleCorrcoef(factor, shiftedReturn)
+    score = simpleIC(factor, shiftedReturn)
     return(score),
     
 toolbox.register('evaluate', evaluate)
@@ -151,7 +182,7 @@ logbook = tools.Logbook()
 
 #%% algorthm iteration 
 
-for gen in trange(N_GEN,file=sys.stdout):
+for gen in trange(N_GEN, file=sys.stdout):
     
     # 配种选择
     selectedTour = toolbox.tourSel(pop, N_POP) # 选择N_POP个体
