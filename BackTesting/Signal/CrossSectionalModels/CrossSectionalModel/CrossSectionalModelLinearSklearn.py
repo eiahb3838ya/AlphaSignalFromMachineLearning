@@ -4,18 +4,20 @@ Created on Fri Dec 11 12:16:04 2020
 
 @author: Mengjie Ye
 """
-import os
-import sys
+# import os
+# import sys
 from sklearn.linear_model import LinearRegression,Ridge,Lasso
 
-abspath = os.path.abspath('.')
-sys.path.append(abspath+'\..')
-try:
-    from .Base.CrossSectionalModelSklearn import CrossSectionalModelSklearn
-except:
-    from Base.CrossSectionalModelSklearn import CrossSectionalModelSklearn
+# =============================================================================
+# abspath = os.path.abspath('.')
+# sys.path.append(abspath+'\..')
+# try:
+#     from .Base.CrossSectionalModelSklearn import CrossSectionalModelSklearn
+# except:
+#     from Base.CrossSectionalModelSklearn import CrossSectionalModelSklearn
+# =============================================================================
 
-    
+from BackTesting.Signal.CrossSectionalModels.Base.CrossSectionalModelSklearn import CrossSectionalModelSklearn
 
 # import matplotlib.pyplot as plt
     

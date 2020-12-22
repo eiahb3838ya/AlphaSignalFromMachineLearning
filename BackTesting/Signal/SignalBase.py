@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABCMeta, abstractstaticmethod
 
 
-class SignalBase(object):
+class SignalBase(object,metaclass=ABCMeta):
     @abstractmethod
     def __init__(self):
         pass
@@ -22,8 +22,8 @@ class SignalBase(object):
         pass
 
     @abstractstaticmethod
-    def train_test_slice(factors, toPredicts, trainStart, trainEnd, testStart, testEnd):
-        # split all the factors and toPredicts to train part and test part according to input,
+    def train_test_slice(factors, dependents, trainStart, trainEnd, testStart, testEnd):
+        # split all the factors and dependents to train part and test part according to input,
         # if end part isn't passed in, slice one period as default, 
         # if the test start isn't passed in,
         # take the very next time period of trainEnd,

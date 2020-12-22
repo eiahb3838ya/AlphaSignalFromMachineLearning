@@ -9,8 +9,12 @@ Created on Tue Dec  1 15:24:11 2020
 
 try:
     from .GeneralDataBase import GeneralDataBase
+    print('from .GeneralDataBase import GeneralDataBase')
 except:
     from GeneralDataBase import GeneralDataBase 
+    print('from GeneralDataBase import GeneralDataBase')
+
+    
 
 import copy
 import numpy as np
@@ -20,33 +24,33 @@ class GeneralData(GeneralDataBase):
     def __init__(self, name, generalData = None, timestamp = None, columnNames = None, **kwargs):
         GeneralDataBase.__init__(self)
         
-        print('GeneralData __init__')
+        # print('GeneralData __init__')
         
         self.name = name
         if generalData is None: 
             if 'filePath' in kwargs:
                 try:
                     filePath = kwargs['filePath']
-                    generalData = pd.read_csv(filePath)
+                    generalData = pd.read_csv(filePath, index_col=0)
                 except Exception as e:
                     print(e.message)
                     print('We have a filePath but we can not load the generalData to pandas df structure')
             
+
+        if isinstance(generalData, pd.DataFrame):
+            try:
+                self.columnNames = generalData.columns
+                self.timestamp = pd.DatetimeIndex(generalData.index)
+                self.generalData = generalData.to_numpy()
+            except Exception as e:
+                raise(e)
+            
+        elif isinstance(generalData, np.ndarray):
+            assert timestamp is not None and columnNames is not None
+            self.generalData = generalData
+            
         else:
-            if isinstance(generalData, pd.DataFrame):
-                try:
-                    self.columnNames = generalData.columns
-                    self.timestamp = pd.DatetimeIndex(generalData.index)
-                    self.generalData = generalData.to_numpy()
-                except Exception as e:
-                    raise(e)
-                
-            elif isinstance(generalData, np.ndarray):
-                assert timestamp is not None and columnNames is not None
-                self.generalData = generalData
-                
-            else:
-                raise TypeError('Must be np ndarray or pandas DataFrame')
+            raise TypeError('Must be np ndarray or pandas DataFrame')
                     
         if timestamp is not None:
             assert len(timestamp) == self.generalData.shape[0], 'the timestammp should \
@@ -114,10 +118,10 @@ class GeneralData(GeneralDataBase):
         return(toOutput)
         
 if __name__ ==  "__main__":
-    DATA_PATH = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\02data\\ElementaryFactor-复权收盘价.csv'
-    testData = pd.read_csv(DATA_PATH, index_col = 0)
-    testData.index = testData.index.astype(str)
-    klass = GeneralData(name = 'close', generalData = testData)
+    DATA_PATH = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local\\GetData/tables/S_DQ_ADJOPEN.csv'
+    # testData = pd.read_csv(DATA_PATH, index_col = 0)
+    # testData.index = testData.index.astype(str)
+    klass = GeneralData(name = 'adj_open', filePath = DATA_PATH)
     # klass.get_data('2005', '2014-01-06')
     isinstance(klass, GeneralData)
 

@@ -7,18 +7,21 @@ Created on Fri Dec  4 14:03:16 2020
 """
 
 import  random
+from inspect import getmembers, isfunction
+#%% initialize global vars
+
+import numpy as np
 from deap import base,creator,gp,tools
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
-from GetData.loadData import loadData
-
+from GetData.loadData import load_data
 from GeneticPogramming import scalarFunctions, singleDataFunctions, singleDataNFunctions, coupleDataFunctions
-from inspect import getmembers, isfunction
+
 #%% initialize global vars
 
 globalVars.initialize()
-loadData()
+loadedData = load_data()
 globalVars.list_vars()
 #%% add primitives
 
@@ -56,31 +59,12 @@ pset.addPrimitive(return_self, [float], float, 'self_float')
 
 
 #%% add EphemeralConstant
-
-# pset.addTerminal(globalVars.adj_close, GeneralData, 'CLOSE')
-# pset.addTerminal(globalVars.adj_open, GeneralData, 'OPEN')
-# pset.addTerminal(globalVars.adj_high, GeneralData, 'HIGH')
-# pset.addTerminal(globalVars.adj_low, GeneralData, 'LOW')
-# pset.addTerminal(globalVars.amount, GeneralData, 'AMOUNT')
-# pset.addTerminal(globalVars.volume, GeneralData, 'VOLUME')
-
-# for i in range(0, 10):
-#     pset.addTerminal(lambda: random.uniform(-10, 10), float, 'flaot_{}'.format(i))
-#     pset.addTerminal(lambda: random.randint(1, 180), int, 'int_{}'.format(i))
-
 pset.addEphemeralConstant(name = 'EphemeralConstant_flaot',
                          ephemeral = lambda: random.uniform(-10, 10),
                          ret_type=float)
 pset.addEphemeralConstant(name = 'EphemeralConstant_int',
                          ephemeral = lambda: random.randint(1, 180),
                          ret_type = int)
-    
-# pset.addEphemeralConstant('flaot1', lambda: random.uniform(-10, 10), float)
-# pset.addEphemeralConstant('float2', lambda: random.uniform(-10, 10), float)
-# pset.addEphemeralConstant('float3', lambda: random.uniform(-10, 10), float)
-# pset.addEphemeralConstant('int1', lambda: random.randint(1, 180), int)
-# pset.addEphemeralConstant('int2', lambda: random.randint(1, 180), int)
-# pset.addEphemeralConstant('int3', lambda: random.randint(1, 180), int)
 
 #%%
 #creating fitness function and individual
@@ -115,9 +99,15 @@ trees = toolbox.population(n=20)
 #%% how to use compile
 
 toolbox.register("compile", gp.compile, pset=pset)
-function = toolbox.compile(expr)
+function = toolbox.compile(trees[0])
 toolbox.compile(trees[0])
 
+#%% check out input data
+close = globalVars.adj_close
+close_np = close.generalData
+np.sum(~np.isfinite(close_np[-3:]), axis = 1)
+ts_argmax(close, 5)
+this = close
 
 
 

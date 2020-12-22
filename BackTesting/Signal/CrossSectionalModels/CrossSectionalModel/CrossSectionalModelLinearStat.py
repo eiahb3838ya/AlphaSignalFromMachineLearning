@@ -5,7 +5,7 @@ Created on Fri Dec 11 12:16:04 2020
 @author: Mengjie Ye
 """
 
-from CrossSectionalModelBase import CrossSectionalModelBase
+from BackTesting.Signal.CrossSectionalModels.Base.CrossSectionalModelBase import CrossSectionalModelBase
 # from sklearn.linear_model import LinearRegression,Ridge,Lasso
 
 import  statsmodels.api as sm
@@ -147,32 +147,7 @@ class CrossSectionalModelLasso(CrossSectionalModelBase):
         else:
             self.model = OLS(y, X)
         self.res = self.model.fit_regularized(alpha = self.alpha, L1_wt = 1, **kwargs)
-#%%
 
-
-if __name__ == '__main__':
-    data = {
-        'name' : 'ACME',
-        'shares' : 100,
-        'price' : 542.23
-    }
-    
-    json_str = json.dumps(data)
-    
-    # Writing JSON data
-    with open(None, 'w') as f:
-        json.dump(data, f)
-    
-    # Reading data back
-    with open('data.json', 'r') as f:
-        d = json.load(f)
-    
-    
-    
-    X = np.random.randn(30,5)
-    y = np.random.randn(30)
-    model = OLS(y,X)
-    
     
     
 

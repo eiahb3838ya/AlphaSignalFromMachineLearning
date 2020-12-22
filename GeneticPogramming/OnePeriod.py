@@ -7,30 +7,34 @@ Created on Wed Dec 16 00:04:44 2020
 """
 #%% import 
 import random
+import sys
 import time
 from tqdm import tqdm, trange
 from deap import base,creator,gp,tools
 from inspect import getmembers, isfunction
+import itertools
 import numpy as np
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
-from GetData.loadData import loadData
+from GetData.loadData import load_material_data
 from GeneticPogramming import scalarFunctions, singleDataFunctions, singleDataNFunctions, coupleDataFunctions
 
 #%% initialize global vars
 globalVars.initialize()
-loadData()
+loadedData = load_material_data()
 
 #%% add primitives
-pset = gp.PrimitiveSetTyped('main', [GeneralData,GeneralData,GeneralData,GeneralData,GeneralData,GeneralData], GeneralData)
+inputOfPset = list(itertools.repeat(GeneralData, len(globalVars.materialData.keys())))
+
+pset = gp.PrimitiveSetTyped('main', inputOfPset, GeneralData)
 for aName, primitive in [o for o in getmembers(singleDataFunctions) if isfunction(o[1])]:
     print('add primitive from {:<20}: {}'.format('singleDataFunctions', aName))
     pset.addPrimitive(primitive, [GeneralData], GeneralData, aName)
     
 for aName, primitive in [o for o in getmembers(scalarFunctions) if isfunction(o[1])]:
     print('add primitive from {:<20}: {}'.format('scalarFunctions', aName))
-    pset.addPrimitive(primitive, [GeneralData, float], GeneralData, aName)
+    pset.addPrimitive(primitive, [GeneralData, int], GeneralData, aName)
     
 for aName, primitive in [o for o in getmembers(singleDataNFunctions) if isfunction(o[1])]:
     print('add primitive from {:<20}: {}'.format('singleDataNFunctions', aName))
@@ -47,21 +51,20 @@ pset.addPrimitive(return_self, [int], int, 'self_int')
 pset.addPrimitive(return_self, [float], float, 'self_float')
 
 #%% add Arguments
-pset.renameArguments(ARG0 = 'CLOSE')
-pset.renameArguments(ARG1 = 'OPEN')
-pset.renameArguments(ARG2 = 'HIGH')
-pset.renameArguments(ARG3 = 'LOW')
-pset.renameArguments(ARG4 = 'AMOUNT')
-pset.renameArguments(ARG5 = 'VOLUME')
+argDict = {'ARG{}'.format(i):argName for i, argName in enumerate(globalVars.materialData.keys()) }
+pset.renameArguments(**argDict)
 
 #%% add EphemeralConstant
-
-pset.addEphemeralConstant(name = 'EphemeralConstant_flaot',
-                         ephemeral = lambda: random.uniform(-10, 10),
-                         ret_type=float)
-pset.addEphemeralConstant(name = 'EphemeralConstant_int',
-                         ephemeral = lambda: random.randint(1, 180),
-                         ret_type = int)
+try:
+    pset.addEphemeralConstant(name = 'EphemeralConstant_flaot',
+                             ephemeral = lambda: random.uniform(-1, 1),
+                             ret_type=float)
+    pset.addEphemeralConstant(name = 'EphemeralConstant_int',
+                             ephemeral = lambda: random.randint(1, 10),
+                             ret_type = int)
+except Exception as e:
+    print(e)
+    print('EphemeralConstant already in global')
 
 #%% create the problem
 
@@ -88,6 +91,9 @@ toolbox.register('individual', tools.initIterate, creator.Individual, toolbox.ex
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 toolbox.register("compile", gp.compile, pset=pset)
 
+
+#%% define how to evaluate
+
 # evaluate function 评价函数
 ## a simple corrcoef func that calculate the corrcoef through out the valid data
 def simpleCorrcoef(factor, shiftedReturn):
@@ -95,24 +101,17 @@ def simpleCorrcoef(factor, shiftedReturn):
     validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
     msk = (~validFactor.mask & ~validShiftedReturn.mask)
     corrcoef = np.ma.corrcoef(validFactor[msk],validShiftedReturn[msk])
-    return(corrcoef[0, 1])
+    if corrcoef.mask[0, 1]:
+        return(0)
+    else:
+        return(corrcoef[0, 1])
 
 
-def evaluate(individual):
+def evaluate(individual, shiftedReturn = globalVars.materialData['pctChange'].get_shifted(-1)):
     func = toolbox.compile(expr=individual)
-    factor = func(globalVars.adj_close,\
-                  globalVars.adj_open,\
-                  globalVars.adj_high,\
-                  globalVars.adj_low,\
-                  globalVars.amount,\
-                  globalVars.volume\
-                  )
-    shiftedReturn = globalVars.pctChange.get_shifted(-1)
+    factor = func(**globalVars.materialData)
     score = simpleCorrcoef(factor, shiftedReturn)
     return(score),
-    
-    
-
     
 toolbox.register('evaluate', evaluate)
 #%% generate the population 
@@ -127,18 +126,18 @@ pop = toolbox.population(n = N_POP)
 fitnesses = map(toolbox.evaluate, pop)
 for ind, fit in tqdm(zip(pop, fitnesses)):
     ind.fitness.values = fit
-    
 #%%  preparation for evolution iteration 
 
 N_GEN = 5 # 迭代代数
 CXPB = 0.5 # 交叉概率
-MUTPB = 0.2 # 突变概率
+MUTPB = 0.3 # 突变概率
+TERMPB = 0.3 #The parameter *termpb* sets the probability to choose between a terminal or non-terminal crossover point.
 
 # register for tools to evolution
 # 注册进化过程需要的工具：配种选择、交叉、突变
-toolbox.register('tourSel', tools.selTournament, tournsize = 2) # 注册Tournsize为2的锦标赛选择
-toolbox.register('crossover', gp.cxOnePoint)
-toolbox.register("expr_mut", gp.genHalfAndHalf, min_ = 0, max_ = 2)
+toolbox.register('tourSel', tools.selTournament, tournsize = 5) # 注册Tournsize为2的锦标赛选择
+toolbox.register('crossover', gp.cxOnePointLeafBiased, termpb = TERMPB)
+toolbox.register("expr_mut", gp.genHalfAndHalf, min_ = 0, max_ = 3)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
 # logging
@@ -151,7 +150,7 @@ logbook = tools.Logbook()
 
 #%% algorthm iteration 
 
-for gen in trange(N_GEN):
+for gen in trange(N_GEN,file=sys.stdout):
     
     # 配种选择
     selectedTour = toolbox.tourSel(pop, N_POP) # 选择N_POP个体
@@ -173,8 +172,8 @@ for gen in trange(N_GEN):
     # 对于被改变的个体，重新评价其适应度
     invalid_ind = [ind for ind in selectedInd if not ind.fitness.valid]
     fitnesses = map(toolbox.evaluate, invalid_ind)
-    for ind, fit in zip(invalid_ind, fitnesses):
-        print(fit)
+    for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
+        print('The {}th ind scored {} in fitness'.format(i, fit[0]))
         ind.fitness.values = fit
     
     # 完全重插入
@@ -185,16 +184,7 @@ for gen in trange(N_GEN):
     logbook.record(gen=gen, **record)
 
 
-#%%
 
-crossover = gp.cxOnePointLeafBiased
-
-
-for child1, child2 in zip(selectedInd[::2], selectedInd[1::2]):
-        if random.random() < CXPB:
-            crossover(child1, child2, 0.1)
-            del child1.fitness.values
-            del child2.fitness.values
 
 
 

@@ -8,14 +8,20 @@ Created on Thu Dec 17 00:19:56 2020
 # import os
 # import sys
 # sys.path.append(os.getcwd())
-try:
-    from .CrossSectionalModelBase import CrossSectionalModelBase
-except:
-    from CrossSectionalModelBase import CrossSectionalModelBase
+from .CrossSectionalModelBase import CrossSectionalModelBase
+from .ModelTest.ModelTest import ModelTest
+# =============================================================================
+# try:
+#     from .CrossSectionalModelBase import CrossSectionalModelBase
+#     from .ModelTest.ModelTest import ModelTest
+# except:
+#     from CrossSectionalModelBase import CrossSectionalModelBase
+#     from ModelTest.ModelTest import ModelTest
+# =============================================================================
 import pandas as pd
 import json
 from sklearn.model_selection import GridSearchCV
-from ModelTest.ModelTest import ModelTest
+
 # import matplotlib.pyplot as plt
 
 class CrossSectionalModelSklearn(CrossSectionalModelBase, ModelTest):

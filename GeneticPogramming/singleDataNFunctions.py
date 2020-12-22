@@ -97,7 +97,7 @@ def ts_argmaxmin(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     toStride2DArray = outputToReturn.generalData
     strided = utils.get_strided(toStride2DArray, rollingDaysN)
     masked, isAllNaN = utils.get_maskAllNaN(strided)
-    argmax = np.argmin(masked, axis = 1).astype(float)
+    argmax = np.argmax(masked, axis = 1).astype(float)
     argmin = np.argmin(masked, axis = 1).astype(float)
     arg = np.subtract(argmax, argmin)
     arg[isAllNaN] = np.nan
@@ -210,7 +210,7 @@ def ts_t(this: GeneralData, rollingDaysN: int = 2) -> GeneralData:
     toStride2DArray = outputToReturn.generalData
     strided = utils.get_strided(toStride2DArray, rollingDaysN)
     mean = np.nanmean(strided, axis = 1)
-    std = np.std(strided, axis = 1)
+    std = np.nanstd(strided, axis = 1)
     toScale = np.subtract(toStride2DArray, mean)
     outputToReturn.generalData = np.divide(toScale, std, out = np.full_like(toScale, 0),where = std != 0)
     return outputToReturn
