@@ -14,12 +14,12 @@ from Tool.Factor import Factor
 #%%
 
 
-dataFileDict = {
-        'adj_close':'S_DQ_ADJCLOSE.csv',
-        'adj_high':'S_DQ_ADJHIGH.csv',
-        'adj_low':'S_DQ_ADJLOW.csv',
-        'adj_open':'S_DQ_ADJOPEN.csv',
-        'adj_preclose':'S_DQ_ADJPRECLOSE.csv',
+materialDataFileDict = {
+        'close':'S_DQ_ADJCLOSE.csv',
+        'high':'S_DQ_ADJHIGH.csv',
+        'low':'S_DQ_ADJLOW.csv',
+        'open':'S_DQ_ADJOPEN.csv',
+        'preclose':'S_DQ_ADJPRECLOSE.csv',
         'amount':'S_DQ_AMOUNT.csv',
         'volume':'S_DQ_VOLUME.csv',
         'pctChange':'S_DQ_PCTCHANGE.csv'
@@ -28,17 +28,28 @@ dataFileDict = {
 #%%
 PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
 DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
-# DATA_PATH
-# tmp = pd.read_csv(os.path.join(DATA_PATH,'S_DQ_ADJCLOSE.csv'), index_col=0)
-# adj_close = GeneralData('adj_close', tmp)
-# globals.register('adj_close', adj_close)
-#%%
-def load_data(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH):
+
+#%% load data functions
+# def load_data(dataFileDict = materialDataFileDict, DATA_PATH = DATA_PATH):
+#     toReturnList = []
+#     for k, v in dataFileDict.items():
+#         data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
+#         globalVars.register(k, data)
+#         toReturnList.append(k)
+#     return(toReturnList)
+
+def load_material_data(dataFileDict = materialDataFileDict, DATA_PATH = DATA_PATH):
     toReturnList = []
+    
+    # add dictionary material_data to globalVars
+    if 'materialData' not in globalVars.varList:
+        globalVars.register('materialData', {})
+        
     for k, v in dataFileDict.items():
-        # tmp = pd.read_csv(os.path.join(DATA_PATH,v), index_col=0)
         data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
-        globalVars.register(k, data)
+        globalVars.materialData[k] = data
+        print('==================================================================\n\
+              {} is now in globalVars.materialData\n'.format(k), data)
         toReturnList.append(k)
     return(toReturnList)
 

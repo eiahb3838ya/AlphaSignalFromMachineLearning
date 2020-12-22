@@ -67,17 +67,17 @@ def power_scalar(this: GeneralData, aNum: int) -> GeneralData:
     # print(id(outputToReturn.generalData))
     return outputToReturn
 
-def mod_scalar(this: GeneralData, aNum: int) -> GeneralData:
-    # print(id(this))
-    # print(id(this.generalData))
-    outputToReturn = copy.copy(this)
-    # print(id(outputToReturn))
-    # print(id(outputToReturn.generalData))
-    if aNum != 0:
-        outputToReturn.generalData = np.mod(outputToReturn.generalData, aNum)
-    # print(id(outputToReturn))
-    # print(id(outputToReturn.generalData))
-    return outputToReturn
+# def mod_scalar(this: GeneralData, aNum: float) -> GeneralData:
+#     # print(id(this))
+#     # print(id(this.generalData))
+#     outputToReturn = copy.copy(this)
+#     # print(id(outputToReturn))
+#     # print(id(outputToReturn.generalData))
+#     if aNum != 0:
+#         outputToReturn.generalData = np.mod(outputToReturn.generalData, aNum)
+#     # print(id(outputToReturn))
+#     # print(id(outputToReturn.generalData))
+#     return outputToReturn
 
 
 

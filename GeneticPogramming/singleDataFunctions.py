@@ -21,16 +21,18 @@ def sign(this: GeneralData) -> GeneralData:
     # print(id(outputToReturn.generalData))
     return outputToReturn
 
-def exp(this: GeneralData) -> GeneralData:
-    # print(id(this))
-    # print(id(this.generalData))
-    outputToReturn = copy.copy(this)
-    # print(id(outputToReturn))
-    # print(id(outputToReturn.generalData))
-    outputToReturn.generalData = np.exp(outputToReturn.generalData)
-    # print(id(outputToReturn))
-    # print(id(outputToReturn.generalData))
-    return outputToReturn
+############################################### cause of overflow ##############################################
+# def exp(this: GeneralData) -> GeneralData:
+#     # print(id(this))
+#     # print(id(this.generalData))
+#     outputToReturn = copy.copy(this)
+#     # print(id(outputToReturn))
+#     # print(id(outputToReturn.generalData))
+#     outputToReturn.generalData = np.exp(outputToReturn.generalData)
+#     # print(id(outputToReturn))
+#     # print(id(outputToReturn.generalData))
+#     return outputToReturn
+############################################### cause of overflow ##############################################
 
 # 带符号的对数，𝑠𝑖𝑔𝑛(𝑎) ∗ 𝑙𝑜𝑔(𝑎𝑏𝑠(𝑎))
 def s_log(this: GeneralData) -> GeneralData:
@@ -39,7 +41,7 @@ def s_log(this: GeneralData) -> GeneralData:
     outputToReturn = copy.copy(this)
     # print(id(outputToReturn))
     # print(id(outputToReturn.generalData))
-    outputToReturn.generalData = np.sign(np.log(np.abs(outputToReturn.generalData)))
+    outputToReturn.generalData = np.sign(np.log(np.abs(outputToReturn.generalData)+1))
     # print(id(outputToReturn))
     # print(id(outputToReturn.generalData))
     return outputToReturn
@@ -136,10 +138,15 @@ def demean(this: GeneralData) -> GeneralData:
     outputToReturn.generalData = np.subtract(outputToReturn.generalData, mean_axis1)
     return outputToReturn
 
-def neg(this: GeneralData) -> GeneralData:
+def negative(this: GeneralData) -> GeneralData:
     outputToReturn = copy.copy(this)
     outputToReturn.generalData = np.multiply(outputToReturn.generalData, -1)
     return outputToReturn
+
+def positive(this: GeneralData) -> GeneralData:
+    outputToReturn = copy.copy(this)
+    # outputToReturn.generalData = np.multiply(outputToReturn.generalData, -1)
+    return(outputToReturn)
 
 def rank(this: GeneralData) -> GeneralData:
     outputToReturn = copy.copy(this)

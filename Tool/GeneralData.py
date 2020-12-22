@@ -9,8 +9,12 @@ Created on Tue Dec  1 15:24:11 2020
 
 try:
     from .GeneralDataBase import GeneralDataBase
+    print('from .GeneralDataBase import GeneralDataBase')
 except:
     from GeneralDataBase import GeneralDataBase 
+    print('from GeneralDataBase import GeneralDataBase')
+
+    
 
 import copy
 import numpy as np
@@ -20,7 +24,7 @@ class GeneralData(GeneralDataBase):
     def __init__(self, name, generalData = None, timestamp = None, columnNames = None, **kwargs):
         GeneralDataBase.__init__(self)
         
-        print('GeneralData __init__')
+        # print('GeneralData __init__')
         
         self.name = name
         if generalData is None: 

@@ -14,7 +14,7 @@ import pandas as pd
 class GeneralDataBase(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def __init__(self):
-        print('GeneralDataBase __init__')
+        # print('GeneralDataBase __init__')
         self.name = ''
         self.generalData = np.ndarray(0)
         self.timestamp = pd.Index([])

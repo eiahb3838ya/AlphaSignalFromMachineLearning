@@ -23,6 +23,10 @@ def get_maskAllNaN(toMask3DArray):
     isAllNaN = m.mask.all(axis=1)
     return(m, isAllNaN)
 
+
+
+
+
 if __name__ == '__main__':
     x = np.arange(36).reshape((6, 6))
     print(x)
