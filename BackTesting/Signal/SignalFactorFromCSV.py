@@ -14,6 +14,7 @@ from Tool.GeneralData import GeneralData
 from GetData.loadData import load_material_data, simple_load_factor
 from BackTesting.Signal.SignalBase import SignalBase
 #%%
+
 class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
 
     def __init__(self):
@@ -97,9 +98,20 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
         # to predict crossSectional expected returns of next period
         pass
 
-    @abstractmethod
-    def smoothing(self):
+    def smoothing(self, periods=10, factors=None):
         # smoothing methods defind at the end
         # typicaly is the moving average of n days
         # use partial function technic here will be suitable 
-        pass
+        '''
+        now the self here is something like what we see in 
+        the generalData.py, in there must be some differences, 
+        cause i haven't understand the whole procedure...
+        it left to be improved later
+        '''
+        weights = np.ones(periods)/periods
+        for factor in factors:
+            if(self.columnNames.count(factor)==0):
+                print('non-exist factor '+factor)
+                continue
+            index = self.generalData.index(factor)
+            self.generalData[:,index] = np.convolve(self.generalData[:,index],weights)
