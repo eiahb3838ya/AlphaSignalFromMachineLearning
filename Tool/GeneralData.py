@@ -33,7 +33,7 @@ class GeneralData(GeneralDataBase):
                     filePath = kwargs['filePath']
                     generalData = pd.read_csv(filePath, index_col=0)
                 except Exception as e:
-                    print(e.message)
+                    print(e)
                     print('We have a filePath but we can not load the generalData to pandas df structure')
             
 

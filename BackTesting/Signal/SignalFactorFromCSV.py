@@ -73,13 +73,32 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
         pass
 
     @abstractstaticmethod
-    def train_test_slice(factors, dependents, trainStart, trainEnd, testStart, testEnd):
+    def train_test_slice(self, 
+                         factorNameList, dependentNameList, 
+                         trainStart, trainEnd = None, 
+                         testStart = None, testEnd = None):
+        if trainEnd is None:
+            trainEnd = self.allTradeDatetime[1 + self.allTradeDatetime.index(trainStart)]
+        if testStart is None:
+            testStart = trainEnd
+        if testEnd is None:
+            testEnd = testStart
+        self.factorTrainDict, self.factorTestDict = {}, {}
+        self.dependentTrainDict, self.dependentTestDict = {}, {}
+        for factorName in factorNameList:
+            factor = globalVars.factors[factorName]
+            self.factorTrainDict[factor.name] = factor.get_data(trainStart,trainEnd)
+            self.factorTestDict[factor.name] = factor.get_data(testStart,testEnd)
+        for dependentName in dependentNameList:
+            dependent = self.dependents[dependentName]
+            self.dependentTrainDict[dependent.name] = dependent.get_data(at = trainEnd)
+            self.dependentTestDict[dependent.name] = dependent.get_data(at = testEnd)
         # split all the factors and toPredicts to train part and test part according to input,
         # if end part isn't passed in, slice one period as default, 
         # if the test start isn't passed in,
         # take the very next time period of trainEnd,
         # the input of factors could be a list of factors or just one Factor
-        pass
+        return self.factorTrainDict, self.factorTestDict, self.dependentTrainDict, self.dependentTestDict
 
     @abstractmethod
     def preprocessing(self):

@@ -27,6 +27,10 @@ materialDataFileDict = {
 
 #%%
 PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
+# !!! change the PROJ_ROOT 
+# PROJ_ROOT = 'D:\AlphaSignalFromMachineLearning'
+# PROJ_ROOT = os.getcwd()
+# PROJ_ROOT = PROJ_ROOT[:PROJ_ROOT.index('AlphaSignalFromMachineLearning')+len('AlphaSignalFromMachineLearning')]
 DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
 
 #%% load data functions
@@ -58,7 +62,7 @@ def simple_load_factor(factorName):
         globalVars.register('factors', {})
         
     #TODO after done  TODO __init__ with GeneralData, load factors as dtype of Factor
-    globalVars.factors[factorName] = globalVars.__getattribute__(factorName)
+    globalVars.factors[factorName] = globalVars.materialData[factorName]
     print(factorName, 'is now in globalVars.factors')
 
     
