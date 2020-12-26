@@ -72,7 +72,7 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
         # for each iteration: call train_test_slice, preprocessing, get_signal
         pass
 
-    @abstractstaticmethod
+
     def train_test_slice(self, 
                          factorNameList, dependentNameList, 
                          trainStart, trainEnd = None, 
