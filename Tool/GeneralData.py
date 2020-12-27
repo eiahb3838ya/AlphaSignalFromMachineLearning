@@ -140,7 +140,7 @@ class GeneralData(GeneralDataBase):
         return(toOutput)
         
 if __name__ ==  "__main__":
-    DATA_PATH = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local\\GetData/tables/S_DQ_ADJOPEN.csv'
+    DATA_PATH = 'D:\\ml\\AlphaSignalFromMachineLearningLocal\\GetData/tables/S_DQ_ADJOPEN.csv'
     klass = GeneralData(name = 'adj_open', filePath = DATA_PATH)
     # klass.get_data('2005', '2014-01-06')
     isinstance(klass, GeneralData)

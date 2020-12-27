@@ -8,11 +8,13 @@ Created on Fri Dec 18 14:21:37 2020
 
 import numpy as np
 from abc import abstractmethod, ABCMeta, abstractstaticmethod
+from copy import copy
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
 from GetData.loadData import load_material_data, simple_load_factor
 from BackTesting.Signal.SignalBase import SignalBase
+from GeneticProgramming import get_strided
 #%%
 
 class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
@@ -117,21 +119,21 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
         # the obviuos version will be use feature selection and models 
         # to predict crossSectional expected returns of next period
         pass
-
-    def smoothing(self, periods=10, factors=None):
+    
+    @staticmethod
+    def smoothing(data,periods = 10,method = 'linear'):
         # smoothing methods defind at the end
         # typicaly is the moving average of n days
         # use partial function technic here will be suitable 
-        '''
-        now the self here is something like what we see in 
-        the generalData.py, in there must be some differences, 
-        cause i haven't understand the whole procedure...
-        it left to be improved later
-        '''
-        weights = np.ones(periods)/periods
-        for factor in factors:
-            if(self.columnNames.count(factor)==0):
-                print('non-exist factor '+factor)
-                continue
-            index = self.generalData.index(factor)
-            self.generalData[:,index] = np.convolve(self.generalData[:,index],weights)
+        toOutputGeneral = copy(data)
+        if method=='linear':  
+            npdata = toOutputGeneral.generalData
+            strided = get_strided(npdata,  periods)
+            toOutput = strided.mean(axis = 1)
+            toOutputGeneral.generalData = toOutput    
+        elif method=='exp':
+            pass
+        else:
+            print('non-existing method when smoothing')
+        return(toOutputGeneral)
+
