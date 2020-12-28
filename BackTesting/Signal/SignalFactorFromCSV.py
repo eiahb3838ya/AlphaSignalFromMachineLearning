@@ -76,9 +76,11 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
 
 
     @abstractmethod
-    def generate_signals(self, startDate = None, endDate = None, panelSize = 1, trainTestGap = 1):
+    def generate_signals(self, startDate = None, endDate = None, panelSize = 1, trainTestGap = 1,
+                         coversign=[]):
         # set startDate & endDate is input is None
         # [startDate,endDate] is the dates interval for backTesting, closed interval
+        prereturn = []
         if startDate is None:
             startDate = self.allTradeDatetime[0]
         if endDate is None:
@@ -95,11 +97,40 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
             testStart = get_last_trade_date(testEnd, panelSize - 1)
             trainEnd = get_last_trade_date(testEnd, trainTestGap)
             trainStart = get_last_trade_date(trainEnd, panelSize - 1)
+            # get the mask of train and test sets
+            maskTrainDict, maskTestDict, maskdependentTrainDict, maskdepentTestDict = train_test_slice(
+                factors=coversign, dependents=self.dependents,
+                trainStart=trainStart, trainEnd=trainEnd, testStart=testStart, testEnd=testEnd
+            )
             # get factors and dependents for each backTestingDate
             factorTrainDict, factorTestDict, dependentTrainDict, dependentTestDict = train_test_slice(
                 factors = globalVars.factors.values(), dependents = self.dependents,
                 trainStart = trainStart, trainEnd = trainEnd, testStart = testStart, testEnd = testEnd
             )
+            # get the transform data of factorTrain data
+            factorTrainresult = sf_csv.preprocessing(factorTrainDict, maskTrainDict,
+                                          imputeMethod=ImputeMethod.JustMask(),
+                                          standardizeMethod=StandardizeMethod.MinMaxScaler(feature_range=(0, 1)),
+                                          deExtremeMethod=DeExtremeMethod.Quantile(method='clip'))
+
+            # get the transform data of factortest data
+            factorTestresult = sf_csv.preprocessing(factorTestDict, maskdepentTestDict,
+                                         imputeMethod=ImputeMethod.JustMask(),
+                                         standardizeMethod=StandardizeMethod.MinMaxScaler(feature_range=(0, 1)),
+                                         deExtremeMethod=DeExtremeMethod.Quantile(method='clip'))
+
+            # get the transform data of dependent data
+            dependentPreresult = sf_csv.preprocessing(dependentTrainDict, maskdependentTrainDict,
+                                         imputeMethod=ImputeMethod.JustMask(),
+                                         standardizeMethod=StandardizeMethod.MinMaxScaler(feature_range=(0, 1)),
+                                         deExtremeMethod=DeExtremeMethod.Quantile(method='clip'))
+
+            
+
+
+
+
+
 
         # the main main func of this class
         # iter through all time periods and get the signals
@@ -144,11 +175,19 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_signal(self):
-        # define how we get signal for one interation
-        # the obviuos version will be use feature selection and models 
-        # to predict crossSectional expected returns of next period
-        pass
+    # define how we get signal for one interation
+    # the obviuos version will be use feature selection and models
+    # to predict crossSectional expected returns of next perio
+    def get_signal(self,X_train, y_train, X_test, y_test,model=None):
+        if model is None:
+            premodel = CrossSectionalModel.CrossSectionalModelDecisionTree(jsonPath=None, paraDict=paraDicts)
+        else:
+            premodel = CrossSectionalModel.model(jsonPath=None, paraDict=paraDicts)
+
+        premodel.fit(X_train, y_train)
+        pred_y = model.predict(X_test)
+
+        return pred_y
     
     @staticmethod
     def smoothing(data,periods = 10,method = 'linear'):

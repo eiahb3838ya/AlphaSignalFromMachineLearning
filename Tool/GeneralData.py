@@ -50,7 +50,8 @@ class GeneralData(GeneralDataBase):
             self.generalData = generalData
             
         else:
-            raise TypeError('Must be np ndarray or pandas DataFrame')
+            raise TypeError('Must be np ndarray or pandas Dat
+            aFrame')
                     
         if timestamp is not None:
             assert len(timestamp) == self.generalData.shape[0], 'the timestammp should \

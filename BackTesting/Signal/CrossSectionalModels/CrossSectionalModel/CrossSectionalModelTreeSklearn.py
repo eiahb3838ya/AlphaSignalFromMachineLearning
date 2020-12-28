@@ -1,5 +1,5 @@
 from sklearn.tree import DecisionTreeRegressor
-from CrossSectionalModelBase import CrossSectionalModelBase
+from BackTesting.Signal.CrossSectionalModels.Base.CrossSectionalModelBase import CrossSectionalModelBase
 import json
 import sys
 import matplotlib.pyplot as plt

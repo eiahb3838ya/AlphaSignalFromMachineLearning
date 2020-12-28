@@ -31,7 +31,7 @@ class TransformerBase(TransformerMixin, BaseEstimator):
         X_ = cp.deepcopy(X)
         for i in range(X_.shape[1]):
             X_t = X_[:, i]
-            if len(X_t[~X_t.mask]) <= 1:
+            if len(X_t[~X_t.mask & np.isnan(X_t)]) <= 1:
                 # globalVars.logger.logger.warning("the number of remaining data after masking"
                 #                                  " is lower than 2")
                 continue

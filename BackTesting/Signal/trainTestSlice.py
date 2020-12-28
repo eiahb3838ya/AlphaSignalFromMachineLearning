@@ -38,9 +38,9 @@ def train_test_slice(factors, dependents,
 
 #%% test
 from Tool import globalVars
-from GetData.loadData import load_data, simple_load_factor
+from GetData.loadData import load_material_data, simple_load_factor
 globalVars.initialize()
-loadedDataList = load_data()
+loadedDataList = load_material_data()
 
 #TODO:use logger latter 
 print('We now have {} in our globalVar now'.format(loadedDataList))
