@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Dec 27 19:29:41 2020
+Created on Fri Dec 25 13:44:31 2020
 
-@author: Lantian
+@author: eiahb
 """
 
-from .utils import get_strided
+
+
