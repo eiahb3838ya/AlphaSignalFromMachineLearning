@@ -63,26 +63,56 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
             simple_load_factor(aFactor)
             self.factorNameList.append(aFactor)
         
+    def get_last_trade_date(self, date, n=1):
+        toGet = self.allTradeDatetime.index(date)-n
+        assert toGet >= 0, 'index out of range'
+        return self.allTradeDatetime[toGet]
 
+    def get_next_trade_date(self, date, n=1):
+        toGet = self.allTradeDatetime.index(date)+n
+        assert toGet < len(self.allTradeDatetime), 'index out of range' 
+        return self.allTradeDatetime[toGet]
 
 
 
     @abstractmethod
-    def generate_signals(self):
+    def generate_signals(self, startDate = None, endDate = None, panelSize = 1, trainTestGap = 1):
+        # set startDate & endDate is input is None
+        # [startDate,endDate] is the dates interval for backTesting, closed interval
+        if startDate is None:
+            startDate = self.allTradeDatetime[0]
+        if endDate is None:
+            endDate = self.allTradeDatetime[-1]
+        # assert whether panelSize is out of range
+        # default panelSize should be 1
+        toStart = self.allTradeDatetime.index(startDate) - panelSize - trainTestGap + 1
+        assert toStart >= 0, 'panelSize out of range'
+        backTestDates = self.allTradeDatetime[self.allTradeDatetime.index(startDate):(self.allTradeDatetime.index(endDate) + 1)]
+        for backTestDate in backTestDates:
+            # if use default panelSize = 1, Start == End
+            # set dates for train_test_slice
+            testEnd = backTestDate
+            testStart = get_last_trade_date(testEnd, panelSize - 1)
+            trainEnd = get_last_trade_date(testEnd, trainTestGap)
+            trainStart = get_last_trade_date(trainEnd, panelSize - 1)
+            # get factors and dependents for each backTestingDate
+            factorTrainDict, factorTestDict, dependentTrainDict, dependentTestDict = train_test_slice(
+                factors = globalVars.factors.values(), dependents = self.dependents,
+                trainStart = trainStart, trainEnd = trainEnd, testStart = testStart, testEnd = testEnd
+            )
+
         # the main main func of this class
         # iter through all time periods and get the signals
         # for each iteration: call train_test_slice, preprocessing, get_signal
         pass
 
     @abstractstaticmethod
-    def train_test_slice(factors, dependents, 
-                         trainStart, trainEnd, 
-                         testStart, testEnd):
+    def train_test_slice(factors, dependents=None, trainStart=None, trainEnd=None, testStart=None, testEnd=None):
         
         factorTrainDict, factorTestDict = {}, {}
         dependentTrainDict, dependentTestDict = {}, {}
         
-        if trainStart is None:
+        if trainStart == trainEnd:
             for factor in factors:
                 factorTrainDict[factor.name] = factor.get_data(at = trainEnd)
                 factorTestDict[factor.name] = factor.get_data(at = testEnd)
@@ -92,10 +122,10 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
                                                          factor.get_data(at = trainEnd))
                 factorTestDict[factor.name] = np.vstack(factor.get_data(testStart, testEnd),
                                                          factor.get_data(at = testEnd))
-      
-        for dependent in dependents:
-            dependentTrainDict[dependent.name] = dependent.get_data(at = trainEnd)
-            dependentTestDict[dependent.name] = dependent.get_data(at = testEnd)
+        if dependents is not None:      
+            for dependent in dependents:
+                dependentTrainDict[dependent.name] = dependent.get_data(at = trainEnd)
+                dependentTestDict[dependent.name] = dependent.get_data(at = testEnd)
         # split all the factors and toPredicts to train part and test part according to input,
         # if end part isn't passed in, slice one period as default, 
         # if the test start isn't passed in,
