@@ -10,9 +10,9 @@ Created on Tue Dec  1 15:24:11 2020
 try:
     from .GeneralDataBase import GeneralDataBase
     # print('from .GeneralDataBase import GeneralDataBase')
-except:
+except Exception:
     from GeneralDataBase import GeneralDataBase 
-    print('from GeneralDataBase import GeneralDataBase')
+    # print('from GeneralDataBase import GeneralDataBase')
 
     
 
@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 
 class GeneralData(GeneralDataBase):
-    def __init__(self, name, generalData = None, timestamp = None, columnNames = None, **kwargs):
+    def __init__(self, name = None, generalData = None, timestamp = None, columnNames = None, **kwargs):
         GeneralDataBase.__init__(self)
         
         # print('GeneralData __init__')
@@ -49,9 +49,16 @@ class GeneralData(GeneralDataBase):
             assert timestamp is not None and columnNames is not None
             self.generalData = generalData
             
+        elif isinstance(generalData, GeneralData):
+            assert timestamp is None and columnNames is None
+            self.generalData = generalData.generalData
+            self.columnNames = generalData.columnNames
+            self.timestamp = generalData.timestamp
+            if self.name == None:
+                self.name = generalData.name
+            
         else:
-            raise TypeError('Must be np ndarray or pandas Dat
-            aFrame')
+            raise TypeError('Must be np ndarray or pandas DataFrame')
                     
         if timestamp is not None:
             assert len(timestamp) == self.generalData.shape[0], 'the timestammp should \
@@ -139,9 +146,19 @@ class GeneralData(GeneralDataBase):
         toOutput = copy.copy(self)
         toOutput.generalData = toOutput.get_shifted_generalData(shiftN)
         return(toOutput)
+    
+    def to_DataFrame(self):
+        return(pd.DataFrame(self.generalData, index=self.timestamp, columns=self.columnNames))
+        
+    
+    def align_with(self, alignTo):
+        data_df = self.to_DataFrame()
+        reindexed = data_df.reindex(index=alignTo.timestamp, columns=alignTo.columnNames)
+        toReturn = GeneralData(self.name, generalData=reindexed)
+        return(toReturn)
         
 if __name__ ==  "__main__":
-    DATA_PATH = 'D:\\ml\\AlphaSignalFromMachineLearningLocal\\GetData/tables/S_DQ_ADJOPEN.csv'
+    DATA_PATH = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local\\GetData/tables/S_DQ_ADJOPEN.csv'
     klass = GeneralData(name = 'adj_open', filePath = DATA_PATH)
     # klass.get_data('2005', '2014-01-06')
     isinstance(klass, GeneralData)

@@ -14,7 +14,7 @@ import numpy as np
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
-from GetData import load_material_data
+from GetData import load_material_data, load_barra_data, align_data
 from GeneticPogramming import scalarFunctions, singleDataFunctions, singleDataNFunctions, coupleDataFunctions
 
 #%% set parameters 設定參數 
@@ -45,12 +45,16 @@ mutGenHeightMin, mutGenHeightMax = 0, 3
 def initialize():
     globalVars.initialize()
     load_material_data() 
+    load_barra_data()
+    
 #%% add primitives
 try:
     inputOfPset = list(itertools.repeat(GeneralData, len(globalVars.materialData.keys())))  
 except AttributeError as ae:
     print(ae)
-    initialize()
+    globalVars.initialize()
+    load_material_data() 
+    load_barra_data()
     inputOfPset = list(itertools.repeat(GeneralData, len(globalVars.materialData.keys())))
 
 pset = gp.PrimitiveSetTyped('main', inputOfPset, GeneralData)
