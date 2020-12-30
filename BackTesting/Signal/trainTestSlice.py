@@ -13,6 +13,7 @@ def train_test_slice(factors, dependents,
     # if the test start isn't passed in,
     # take the very next time period of trainEnd,
     # the input of factors could be a list of factors or just one Factor
+    
     timeStamp = factors[0].timestamp
     if trainEnd is None:
         trainEnd = timeStamp[1+list(timeStamp).index(pd.to_datetime(trainStart))]

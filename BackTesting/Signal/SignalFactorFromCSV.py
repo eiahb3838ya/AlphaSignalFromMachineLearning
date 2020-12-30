@@ -7,14 +7,20 @@ Created on Fri Dec 18 14:21:37 2020
 """
 
 import numpy as np
+import numpy.ma as ma
+from collections import OrderedDict
 from abc import abstractmethod, ABCMeta, abstractstaticmethod
 from copy import copy
+from sklearn.pipeline import Pipeline
+from sklearn.base import TransformerMixin
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
+from Tool.DataPreProcessing import *
 from GetData.loadData import load_material_data, simple_load_factor
 from BackTesting.Signal.SignalBase import SignalBase
 from GeneticProgramming import get_strided
+
 #%%
 
 class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
@@ -76,8 +82,10 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
 
 
     @abstractmethod
-    def generate_signals(self, startDate = None, endDate = None, panelSize = 1, trainTestGap = 1,
-                         coversign=[]):
+    def generate_signals(self, startDate = None, endDate = None, panelSize = 1, trainTestGap = 1, 
+                         maskList=[],
+                         deExtremeMethod=None, imputeMethod=None,
+                         standardizeMethod=None, pipeline=None):
         # set startDate & endDate is input is None
         # [startDate,endDate] is the dates interval for backTesting, closed interval
         prereturn = []
@@ -94,9 +102,9 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
             # if use default panelSize = 1, Start == End
             # set dates for train_test_slice
             testEnd = backTestDate
-            testStart = get_last_trade_date(testEnd, panelSize - 1)
-            trainEnd = get_last_trade_date(testEnd, trainTestGap)
-            trainStart = get_last_trade_date(trainEnd, panelSize - 1)
+            testStart = self.get_last_trade_date(testEnd, panelSize - 1)
+            trainEnd = self.get_last_trade_date(testEnd, trainTestGap)
+            trainStart = self.get_last_trade_date(trainEnd, panelSize - 1)
             # get the mask of train and test sets
             maskTrainDict, maskTestDict, maskdependentTrainDict, maskdepentTestDict = train_test_slice(
                 factors=coversign, dependents=self.dependents,
@@ -132,14 +140,33 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
 
 
 
+            mL = []
+            for mask in maskList:
+                mL.append(globalVars.factors[mask])
+
+            maskTrainDict, maskTestDict, _, _ = train_test_slice(
+                factors=mL, dependents=None,
+                trainStart=trainStart, trainEnd=trainEnd, testStart=testStart, testEnd=testEnd
+            )
+            processedTrainDict = self.preprocessing(factorTrainDict, maskTrainDict, deExtremeMethod=deExtremeMethod,
+                                                     imputeMethod=imputeMethod, standardizeMethod=standardizeMethod,
+                                                     pipeline=pipeline)
+            processedTestDict = self.preprocessing(factorTestDict, maskTestDict, deExtremeMethod=deExtremeMethod,
+                                                    imputeMethod=imputeMethod, standardizeMethod=standardizeMethod,
+                                                    pipeline=pipeline)
         # the main main func of this class
         # iter through all time periods and get the signals
         # for each iteration: call train_test_slice, preprocessing, get_signal
-        pass
+    
 
-    @abstractstaticmethod
+
     def train_test_slice(factors, dependents=None, trainStart=None, trainEnd=None, testStart=None, testEnd=None):
-        
+        # split all the factors and toPredicts to train part and test part according to input,
+        # if trainStart = trainEnd: the user doesn't use panel data
+        # slice factors at that date
+        # else we slice factors from trainStart to trainEnd (closed date interval)
+        # dependents always sliced by trainEnd
+        # if dependents is None, return {} (can be used when we slice maskDict)
         factorTrainDict, factorTestDict = {}, {}
         dependentTrainDict, dependentTestDict = {}, {}
         
@@ -157,22 +184,54 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
             for dependent in dependents:
                 dependentTrainDict[dependent.name] = dependent.get_data(at = trainEnd)
                 dependentTestDict[dependent.name] = dependent.get_data(at = testEnd)
-        # split all the factors and toPredicts to train part and test part according to input,
-        # if end part isn't passed in, slice one period as default, 
-        # if the test start isn't passed in,
-        # take the very next time period of trainEnd,
-        # the input of factors could be a list of factors or just one Factor
+        
         return factorTrainDict, factorTestDict, dependentTrainDict, dependentTestDict
 
-    @abstractmethod
-    def preprocessing(self):
-        # apply preprocess in here including 
-        # clean up nans and 停牌 ST ect,
-        # deal with extreme points
-        # and other stuff
-        # use np.ma module technic here should be suitable 
-        # please make it modulized and easy to maintain (take cleanUpRules as inputs ect.)
-        pass
+    @staticmethod
+    def preprocessing(dataDict, maskDict, *, deExtremeMethod=None, imputeMethod=None,
+                      standardizeMethod=None, pipeline=None):
+        # generating the mask
+        mask = None
+        for _, maskData in maskDict.items():
+            if mask is None:
+                mask = np.zeros(maskData.shape)
+            mask = np.logical_or(mask, maskData)
+
+        # generating the pipeline
+        if pipeline is not None:
+            assert (isinstance(pipeline, Pipeline))
+        else:
+            l = []
+            if deExtremeMethod is not None:
+                assert (isinstance(deExtremeMethod, TransformerMixin))
+                l.append(("de extreme", deExtremeMethod))
+            if imputeMethod is not None:
+                assert (isinstance(imputeMethod, TransformerMixin))
+                l.append(("impute", imputeMethod))
+            if standardizeMethod is not None:
+                assert (isinstance(standardizeMethod, TransformerMixin))
+                l.append(("standardize", standardizeMethod))
+            l.append(('passthrough', 'passthrough'))
+            pipeline = Pipeline(l)
+
+        # processing the data
+        processedDataDict = dict()
+        for dataField, data in dataDict.items():
+            for _, maskData in maskDict.items():
+                assert (data.shape == maskData.shape)
+            maskedData = ma.masked_array(data, mask=mask)
+            # transforming horizontally(stocks-level)
+            maskedData = pipeline.fit_transform(maskedData.T, None).T
+
+            # check the masked proportion
+            # minNoMaskProportion = min(1 - np.mean(maskedData.mask, axis=0))
+            # if minNoMaskProportion < maskThreshold:
+            #     raise ValueError("The remained proportion of data {} is {:.2%} ，"
+            #                      "lower than the setting threshold {:.2%}"
+            #                      .format(dataField, minNoMaskProportion, maskThreshold))
+            processedDataDict[dataField] = maskedData
+
+        return processedDataDict
 
     @abstractmethod
     # define how we get signal for one interation
