@@ -5,35 +5,36 @@ Created on Sun Dec 20 18:44:20 2020
 @author: Mengjie Ye
 """
 
-def train_test_slice(factors, dependents, 
-                     trainStart, trainEnd = None, 
-                     testStart = None, testEnd = None):
-    # split all the factors and dependents to train part and test part according to input,
-    # if end part isn't passed in, slice one period as default, 
-    # if the test start isn't passed in,
-    # take the very next time period of trainEnd,
-    # the input of factors could be a list of factors or just one Factor
-    
-    timeStamp = factors[0].timestamp
-    if trainEnd is None:
-        trainEnd = timeStamp[1+list(timeStamp).index(pd.to_datetime(trainStart))]
-    if testStart is None:
-        # ???? 在get_data的时候end没有被取到
-        # testStart = timeStamp[1+list(timeStamp).index(pd.to_datetime(trainEnd))]
-        testStart = trainEnd
-    if testEnd is None:
-        testEnd = timeStamp[1+list(timeStamp).index(pd.to_datetime(testStart))]
-     
-    trainFactors, testFactors = [], []
-    for factor in factors:
-        trainFactors.append(factor.get_data(trainStart,trainEnd))
-        testFactors.append(factor.get_data(testStart,testEnd))
-    trainDependents, testDependents = [], []
-    for dependent in dependents:
-        trainDependents.append(dependent.get_data(trainStart,trainEnd))
-        testDependents.append(dependent.get_data(testStart,testEnd))
-    return trainFactors, testFactors, trainDependents, testDependents
+import numpy as np
+import pandas as pd
 
+from datetime import datetime
+def train_test_slice(factors, dependents=None, trainStart=None, trainEnd=None, testStart=None, testEnd=None):
+    # split all the factors and toPredicts to train part and test part according to input,
+    # if trainStart = trainEnd: the user doesn't use panel data
+    # slice factors at that date
+    # else we slice factors from trainStart to trainEnd (closed date interval)
+    # dependents always sliced by trainEnd
+    # if dependents is None, return {} (can be used when we slice maskDict)
+    factorTrainDict, factorTestDict = {}, {}
+    dependentTrainDict, dependentTestDict = {}, {}
+    
+    if trainStart == trainEnd:
+        for factor in factors:
+            factorTrainDict[factor.name] = factor.get_data(at = trainEnd)
+            factorTestDict[factor.name] = factor.get_data(at = testEnd)
+    else:
+        for factor in factors:
+            factorTrainDict[factor.name] = np.vstack((factor.get_data(trainStart, trainEnd),
+                                                     factor.get_data(at = trainEnd)))
+            factorTestDict[factor.name] = np.vstack((factor.get_data(testStart, testEnd),
+                                                     factor.get_data(at = testEnd)))
+    if dependents is not None:      
+        for name, dependent in dependents.items():
+            dependentTrainDict[name] = dependent.get_data(at = trainEnd)
+            dependentTestDict[name] = dependent.get_data(at = testEnd)
+    
+        return factorTrainDict, factorTestDict, dependentTrainDict, dependentTestDict
 
 
 
@@ -44,20 +45,29 @@ globalVars.initialize()
 loadedDataList = load_material_data()
 
 #TODO:use logger latter 
-print('We now have {} in our globalVar now'.format(loadedDataList))
-try:
-    shiftedReturn = globalVars.pctChange.get_shifted(-1)
-except AttributeError:
-    raise AttributeError('There\'s no pctChange in globalVars')
-except Exception as e :
-    print(e)
-    raise 
+shiftedReturn = globalVars.materialData['pctChange'].get_shifted(-1)
 # TODO: take the -1 as a para: the period we want to shift
 shiftedReturn.metadata.update({'shiftN':-1})
 shiftedReturn.name = 'shiftedReturn'
-allTradeDatetime = shiftedReturn.timestamp
 dependents = {}
+factorNameList = []
+allTradeDatetime = shiftedReturn.timestamp
 dependents.update({'shiftedReturn':shiftedReturn})
+toLoadFactors = ['close',
+                         'high',
+                         'low',
+                         'open'
+                         ] 
+        
+for aFactor in toLoadFactors:
+    simple_load_factor(aFactor)
+    factorNameList.append(aFactor)
+
+# shiftedReturn.metadata.update({'shiftN':-1})
+# shiftedReturn.name = 'shiftedReturn'
+# allTradeDatetime = shiftedReturn.timestamp
+
+# dependents.update({'shiftedReturn':shiftedReturn})
 
 
 # TODO: should load from some factor.json file latter
@@ -75,10 +85,31 @@ for aFactor in toLoadFactors:
     simple_load_factor(aFactor)
     factorNameList.append(aFactor)
 
-#%%
-import pandas as pd
 
-from datetime import datetime
+def get_last_trade_date(date, n=1):
+    assert allTradeDatetime[allTradeDatetime<date][-n], 'index out of range'
+    return allTradeDatetime[allTradeDatetime<date][-n]
+
+def get_next_trade_date( date, n=1):
+    assert allTradeDatetime[allTradeDatetime>date][n], 'index out of range'
+    return allTradeDatetime[allTradeDatetime>date][n]
+
+backTestDate = allTradeDatetime[10]
+panelSize = 5
+trainTestGap = 1
+testEnd = backTestDate
+testStart = get_last_trade_date(testEnd, panelSize - 1)
+trainEnd = get_last_trade_date(testEnd, trainTestGap)
+trainStart = get_last_trade_date(trainEnd, panelSize - 1)
+
+factorTrainDict, factorTestDict, dependentTrainDict, dependentTestDict = train_test_slice(
+                factors = globalVars.factors.values(), dependents = dependents,
+                trainStart = trainStart, trainEnd = trainEnd, testStart = testStart, testEnd = testEnd
+            )
+#%%
+
+#%%
+
 #%%
 trainStart = '2020-11-30'
 trainEnd = '2020-12-02'

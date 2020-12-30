@@ -81,7 +81,7 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
 
 
 
-    @abstractmethod
+
     def generate_signals(self, startDate = None, endDate = None, panelSize = 1, trainTestGap = 1, 
                          maskList=[],
                          deExtremeMethod=None, imputeMethod=None,
@@ -160,31 +160,31 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
     
 
 
-    def train_test_slice(factors, dependents=None, trainStart=None, trainEnd=None, testStart=None, testEnd=None):
-        # split all the factors and toPredicts to train part and test part according to input,
-        # if trainStart = trainEnd: the user doesn't use panel data
-        # slice factors at that date
-        # else we slice factors from trainStart to trainEnd (closed date interval)
-        # dependents always sliced by trainEnd
-        # if dependents is None, return {} (can be used when we slice maskDict)
-        factorTrainDict, factorTestDict = {}, {}
-        dependentTrainDict, dependentTestDict = {}, {}
-        
-        if trainStart == trainEnd:
-            for factor in factors:
-                factorTrainDict[factor.name] = factor.get_data(at = trainEnd)
-                factorTestDict[factor.name] = factor.get_data(at = testEnd)
-        else:
-            for factor in factors:
-                factorTrainDict[factor.name] = np.vstack(factor.get_data(trainStart, trainEnd),
-                                                         factor.get_data(at = trainEnd))
-                factorTestDict[factor.name] = np.vstack(factor.get_data(testStart, testEnd),
-                                                         factor.get_data(at = testEnd))
-        if dependents is not None:      
-            for dependent in dependents:
-                dependentTrainDict[dependent.name] = dependent.get_data(at = trainEnd)
-                dependentTestDict[dependent.name] = dependent.get_data(at = testEnd)
-        
+def train_test_slice(factors, dependents=None, trainStart=None, trainEnd=None, testStart=None, testEnd=None):
+    # split all the factors and toPredicts to train part and test part according to input,
+    # if trainStart = trainEnd: the user doesn't use panel data
+    # slice factors at that date
+    # else we slice factors from trainStart to trainEnd (closed date interval)
+    # dependents always sliced by trainEnd
+    # if dependents is None, return {} (can be used when we slice maskDict)
+    factorTrainDict, factorTestDict = {}, {}
+    dependentTrainDict, dependentTestDict = {}, {}
+    
+    if trainStart == trainEnd:
+        for factor in factors:
+            factorTrainDict[factor.name] = factor.get_data(at = trainEnd)
+            factorTestDict[factor.name] = factor.get_data(at = testEnd)
+    else:
+        for factor in factors:
+            factorTrainDict[factor.name] = np.vstack((factor.get_data(trainStart, trainEnd),
+                                                     factor.get_data(at = trainEnd)))
+            factorTestDict[factor.name] = np.vstack((factor.get_data(testStart, testEnd),
+                                                     factor.get_data(at = testEnd)))
+    if dependents is not None:      
+        for name, dependent in dependents.items():
+            dependentTrainDict[name] = dependent.get_data(at = trainEnd)
+            dependentTestDict[name] = dependent.get_data(at = testEnd)
+    
         return factorTrainDict, factorTestDict, dependentTrainDict, dependentTestDict
 
     @staticmethod
@@ -233,7 +233,7 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
 
         return processedDataDict
 
-    @abstractmethod
+
     # define how we get signal for one interation
     # the obviuos version will be use feature selection and models
     # to predict crossSectional expected returns of next perio
@@ -265,3 +265,6 @@ class SignalFactorFromCSV(SignalBase,  metaclass=ABCMeta):
             print('non-existing method when smoothing')
         return(toOutputGeneral)
 
+#%%
+if __name__ == '__main__':
+    signalFromCsv = SignalFactorFromCSV()

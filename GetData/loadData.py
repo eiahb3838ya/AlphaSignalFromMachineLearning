@@ -33,6 +33,7 @@ barraDataFileDict = {
 
 #%%
 PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
+PROJ_ROOT = 'D:/AlphaSignalFromMachineLearning'
 DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
 
 #%% load data functions
