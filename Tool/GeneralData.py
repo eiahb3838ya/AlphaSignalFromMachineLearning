@@ -34,7 +34,8 @@ class GeneralData(GeneralDataBase):
                     generalData = pd.read_csv(filePath, index_col=0)
                 except Exception as e:
                     print(e)
-                    print('We have a filePath but we can not load the generalData to pandas df structure')
+                    print('We have a filePath {0} but we can not load the generalData to pandas df structure'
+                          .format(filePath))
             
 
         if isinstance(generalData, pd.DataFrame):

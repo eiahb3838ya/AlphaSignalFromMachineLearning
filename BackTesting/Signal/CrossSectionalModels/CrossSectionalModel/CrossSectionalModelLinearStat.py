@@ -15,7 +15,6 @@ import numpy as np
 import json
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import abc
-import matplotlib.pyplot as plt
 
 class CrossSectionalModelLinear(CrossSectionalModelBase):
     

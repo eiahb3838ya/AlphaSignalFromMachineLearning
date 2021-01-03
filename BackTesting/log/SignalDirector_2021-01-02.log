@@ -1,0 +1,36 @@
+2021-01-02 16:33:40,599 logger.py[line:33] - INFO - SignalDirector : globalVars is initialized
+2021-01-02 16:33:51,238 logger.py[line:33] - INFO - SignalDirector : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange'] is loaded
+2021-01-02 16:33:51,238 logger.py[line:33] - INFO - SignalDirector : factor close is loaded
+2021-01-02 16:33:51,239 logger.py[line:33] - INFO - SignalDirector : factor high is loaded
+2021-01-02 16:33:51,239 logger.py[line:33] - INFO - SignalDirector : factor low is loaded
+2021-01-02 16:33:51,239 logger.py[line:33] - INFO - SignalDirector : factor open is loaded
+2021-01-02 16:33:51,241 logger.py[line:33] - INFO - SignalDirector : factor volume is loaded
+2021-01-02 16:33:51,241 logger.py[line:33] - INFO - SignalDirector : all factors are loaded
+2021-01-02 16:33:51,242 logger.py[line:33] - INFO - SignalDirector : start to generate signalGenerator
+2021-01-02 16:40:53,125 logger.py[line:33] - INFO - SignalDirector : globalVars is initialized
+2021-01-02 16:41:03,752 logger.py[line:33] - INFO - SignalDirector : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange'] is loaded
+2021-01-02 16:41:03,752 logger.py[line:33] - INFO - SignalDirector : factor close is loaded
+2021-01-02 16:41:03,753 logger.py[line:33] - INFO - SignalDirector : factor high is loaded
+2021-01-02 16:41:03,753 logger.py[line:33] - INFO - SignalDirector : factor low is loaded
+2021-01-02 16:41:03,753 logger.py[line:33] - INFO - SignalDirector : factor open is loaded
+2021-01-02 16:41:03,753 logger.py[line:33] - INFO - SignalDirector : factor volume is loaded
+2021-01-02 16:41:03,754 logger.py[line:33] - INFO - SignalDirector : all factors are loaded
+2021-01-02 16:41:03,754 logger.py[line:33] - INFO - SignalDirector : start to generate signalGenerator
+2021-01-02 17:20:05,500 logger.py[line:33] - INFO - SignalDirector : globalVars is initialized
+2021-01-02 17:20:27,103 logger.py[line:33] - INFO - SignalDirector : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange'] is loaded
+2021-01-02 17:20:27,103 logger.py[line:33] - INFO - SignalDirector : factor close is loaded
+2021-01-02 17:20:27,104 logger.py[line:33] - INFO - SignalDirector : factor high is loaded
+2021-01-02 17:20:27,105 logger.py[line:33] - INFO - SignalDirector : factor low is loaded
+2021-01-02 17:20:27,105 logger.py[line:33] - INFO - SignalDirector : factor open is loaded
+2021-01-02 17:20:27,106 logger.py[line:33] - INFO - SignalDirector : factor volume is loaded
+2021-01-02 17:20:27,106 logger.py[line:33] - INFO - SignalDirector : all factors are loaded
+2021-01-02 17:20:27,108 logger.py[line:33] - INFO - SignalDirector : start to generate signalGenerator
+2021-01-02 17:27:33,251 logger.py[line:33] - INFO - SignalDirector : globalVars is initialized
+2021-01-02 17:27:55,077 logger.py[line:33] - INFO - SignalDirector : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange'] is loaded
+2021-01-02 17:27:55,077 logger.py[line:33] - INFO - SignalDirector : factor close is loaded
+2021-01-02 17:27:55,078 logger.py[line:33] - INFO - SignalDirector : factor high is loaded
+2021-01-02 17:27:55,079 logger.py[line:33] - INFO - SignalDirector : factor low is loaded
+2021-01-02 17:27:55,079 logger.py[line:33] - INFO - SignalDirector : factor open is loaded
+2021-01-02 17:27:55,080 logger.py[line:33] - INFO - SignalDirector : factor volume is loaded
+2021-01-02 17:27:55,080 logger.py[line:33] - INFO - SignalDirector : all factors are loaded
+2021-01-02 17:27:55,082 logger.py[line:33] - INFO - SignalDirector : start to generate signalGenerator

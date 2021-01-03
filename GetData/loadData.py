@@ -32,12 +32,12 @@ barraDataFileDict = {
     }
 
 #%%
-PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
-PROJ_ROOT = 'D:/AlphaSignalFromMachineLearning'
+# PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
+PROJ_ROOT = os.path.abspath(os.path.join(__file__, "../.."))
 DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
 
-#%% load data functions
 
+#%% load data functions
 def load_data(dataFileDict, DATA_PATH, dictName = None):
     toReturnList = []
     if dictName is not None:

@@ -1,8 +1,6 @@
 import copy as cp
-import pandas as pd
 import numpy as np
 import numpy.ma as ma
-import statsmodels.api as sm
 import sklearn
 import sklearn.impute
 import sklearn.preprocessing
@@ -27,7 +25,7 @@ class TransformerBase(TransformerMixin, BaseEstimator):
             raise ValueError("X should be np.array or np.ma.masked_array")
         return X_.reshape(-1, 1)
 
-    def fit_transform(self, X, y=None, **fit_params):
+    def fit_transform(self, X, y=None):
         X_ = cp.deepcopy(X)
         for i in range(X_.shape[1]):
             X_t = X_[:, i]
@@ -35,7 +33,7 @@ class TransformerBase(TransformerMixin, BaseEstimator):
                 # globalVars.logger.logger.warning("the number of remaining data after masking"
                 #                                  " is lower than 2")
                 continue
-            X_t[~X_t.mask] = self.transformer.fit_transform(self._mask_x(X_t), **fit_params).reshape(-1)
+            X_t[~X_t.mask] = self.transformer.fit_transform(self._mask_x(X_t)).reshape(-1)
         return X_
 
     def fit(self, X, y=None, **fit_params):
