@@ -8,21 +8,26 @@ Created on Fri Dec 25 13:08:35 2020
 import random
 import warnings
 # import sys
-# import time
+from time import time
 # import itertools
 
-from multiprocessing import Pool
+from multiprocessing import Pool, Manager
 # from tqdm import tqdm, trange
 from deap import tools
 # from inspect import getmembers, isfunction
 import numpy as np
 
-# from Tool import globalVars
+from Tool import globalVars as globalVarsModule
 # from Tool.GeneralData import GeneralData
-# from GetData import load_material_data
+from GetData import load_all
 # from GeneticPogramming import scalarFunctions, singleDataFunctions, singleDataNFunctions, coupleDataFunctions
+try:
+    globalVarsModule.logger.info('start')
+except :
+    load_all()
+    globalVarsModule.logger.warning('load all')
+    globalVarsModule.logger.info('start')
 
-from GeneticPogramming.gpMultiprocessWorker import toolbox, evaluate
 warnings.filterwarnings("ignore")
 #%% set parameters 設定參數 
 global POOL_SIZE, N_POP, N_GEN, TOURNSIZE, CXPB, MUTPB, TERMPB
@@ -40,17 +45,19 @@ TOURNSIZE = 15
 CXPB = 0.4 # 交叉概率
 
 # prob to mutate
-MUTPB = 0.2 # 突变概率
+MUTPB = 0.1 # 突变概率
 
 # The parameter *termpb* sets the probability to choose between 
 # a terminal or non-terminal crossover point.
-TERMPB = 0.1 
+TERMPB = 0.5
 
 # the height min max of a initial generate 
 initGenHeightMin, initGenHeightMax = 1, 3
 
 # the height min max of a mutate sub tree
 mutGenHeightMin, mutGenHeightMax = 0, 3
+
+
 
 #%%
 def easimple(toolbox, stats, logbook, evaluate):
@@ -63,14 +70,19 @@ def easimple(toolbox, stats, logbook, evaluate):
     #     ind.fitness.values = fit
     ############################################################
     # multiprocess
-    print('start evaluating initial pop')
+    
+    globalVars.logger.info('evaluating initial pop......start')
+    tic = time()
+    # print('start evaluating initial pop......')
+    
     with Pool(processes=POOL_SIZE) as pool: 
         fitnesses = pool.map(evaluate, pop)      
         
     for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
-        print(i, fit)
         ind.fitness.values = fit
-        
+    toc = time()
+    globalVars.logger.info('evaluating initial pop......done  {}'.format(toc-tic))
+    
     # start evolution
     for gen in range(N_GEN):
         # 配种选择
@@ -91,20 +103,24 @@ def easimple(toolbox, stats, logbook, evaluate):
                 del mutant.fitness.values
           
         # 对于被改变的个体，重新评价其适应度
-        print('start evaluate for {}th Generation new individual'.format(gen))
+        # print('start evaluate for {}th Generation new individual......'.format(gen))
+        globalVars.logger.info('start evaluate for {}th Generation new individual......'.format(gen))
+        tic = time()
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         with Pool(processes=POOL_SIZE) as pool: 
             fitnesses = pool.map(evaluate, pop)  
-        for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):   
-            print(i, fit)
+        for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
-        
+        toc = time()
+        globalVars.logger.info('evaluate for {}th Generation new individual......done  {}'.format(gen, toc-tic))
+
         # select best 环境选择 - 保留精英
         pop = tools.selBest(offspring, N_POP, fit_attr='fitness') # 选择精英,保持种群规模
         
         # 记录数据
         record = stats.compile(pop)
-        print(record)
+        globalVars.logger.info("The {} th record:{}".format(gen, str(record)))
+
         logbook.record(gen=gen, **record)
     return(pop)
         
@@ -116,7 +132,18 @@ if __name__ == '__main__':
     stats.register("min", np.min)
     stats.register("max", np.max)
     logbook = tools.Logbook()
+    
+
+    from GeneticPogramming.gpMultiprocessWorker import toolbox, evaluate
+    manager = Manager()
+    globalVars = manager.Namespace()
+    globalVars
+    globalVarsModule
+    
+    globalVars.logger.info('start the easimple')
     pop = easimple(toolbox, stats, logbook, evaluate)
+
+
 
 
 

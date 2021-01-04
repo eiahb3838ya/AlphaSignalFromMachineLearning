@@ -80,8 +80,7 @@ def create_toolbox(pset, initGenHeightMin = 1, initGenHeightMax = 3):
 
     creator.create('FitnessMax', base.Fitness, weights=(1.0,))
     creator.create('Individual', gp.PrimitiveTree, fitness = creator.FitnessMax, pset = pset) 
-    
-    
+
     # init a toolbox
     toolbox = base.Toolbox()
     

@@ -12,9 +12,9 @@ from inspect import getmembers, isfunction
 import itertools
 import numpy as np
 
-from Tool import globalVars
+
 from Tool.GeneralData import GeneralData
-from GetData import load_material_data, load_barra_data, align_data
+# from GetData import load_all
 from GeneticPogramming import scalarFunctions, singleDataFunctions, singleDataNFunctions, coupleDataFunctions
 
 #%% set parameters 設定參數 
@@ -42,36 +42,38 @@ mutGenHeightMin, mutGenHeightMax = 0, 3
 
 #%% initialize global vars
 # load_data 
-def initialize():
-    globalVars.initialize()
-    load_material_data() 
-    load_barra_data()
+
     
 #%% add primitives
+try:
+    globalVars.logger.debug('prepare the pset......start')
+except:
+    from Tool import globalVars
+    from GetData import load_all
+    load_all()
+    globalVars.logger.info('load gpMultiprocessWorker')
+    globalVars.logger.debug('prepare the pset......start')
 try:
     inputOfPset = list(itertools.repeat(GeneralData, len(globalVars.materialData.keys())))  
 except AttributeError as ae:
     print(ae)
-    globalVars.initialize()
-    load_material_data() 
-    load_barra_data()
     inputOfPset = list(itertools.repeat(GeneralData, len(globalVars.materialData.keys())))
 
 pset = gp.PrimitiveSetTyped('main', inputOfPset, GeneralData)
 for aName, primitive in [o for o in getmembers(singleDataFunctions) if isfunction(o[1])]:
-    print('add primitive from {:<20}: {}'.format('singleDataFunctions', aName))
+    # print('add primitive from {:<20}: {}'.format('singleDataFunctions', aName))
     pset.addPrimitive(primitive, [GeneralData], GeneralData, aName)
     
 for aName, primitive in [o for o in getmembers(scalarFunctions) if isfunction(o[1])]:
-    print('add primitive from {:<20}: {}'.format('scalarFunctions', aName))
+    # print('add primitive from {:<20}: {}'.format('scalarFunctions', aName))
     pset.addPrimitive(primitive, [GeneralData, int], GeneralData, aName)
     
 for aName, primitive in [o for o in getmembers(singleDataNFunctions) if isfunction(o[1])]:
-    print('add primitive from {:<20}: {}'.format('singleDataNFunctions', aName))
+    # print('add primitive from {:<20}: {}'.format('singleDataNFunctions', aName))
     pset.addPrimitive(primitive, [GeneralData, int], GeneralData, aName)
     
 for aName, primitive in [o for o in getmembers(coupleDataFunctions) if isfunction(o[1])]:
-    print('add primitive from {:<20}: {}'.format('coupleDataFunctions', aName))
+    # print('add primitive from {:<20}: {}'.format('coupleDataFunctions', aName))
     pset.addPrimitive(primitive, [GeneralData, GeneralData], GeneralData, aName)
 
 def return_self(this):
@@ -79,6 +81,7 @@ def return_self(this):
 
 pset.addPrimitive(return_self, [int], int, 'self_int')
 pset.addPrimitive(return_self, [float], float, 'self_float')
+
 
 #%% add Arguments
 argDict = {'ARG{}'.format(i):argName for i, argName in enumerate(globalVars.materialData.keys()) }
@@ -94,6 +97,7 @@ try:
                               ret_type = int)
 except Exception as e:
     print(e)
+    globalVars.logger.debug('EphemeralConstant already in global')
     del gp.EphemeralConstant_flaot
     pset.addEphemeralConstant(name = 'EphemeralConstant_flaot',
                               ephemeral = lambda: random.uniform(-1, 1),
@@ -102,9 +106,10 @@ except Exception as e:
     pset.addEphemeralConstant(name = 'EphemeralConstant_int',
                               ephemeral = lambda: random.randint(1, 10),
                               ret_type = int)
-
+    
+globalVars.logger.debug('prepare the pset......done')
 #%% create the problem
-
+globalVars.logger.debug('prepare the toolbox......start')
 # FitnessMax inherits gp.PrimitiveTree, and define the optimization target
 creator.create('FitnessMax', base.Fitness, weights=(1.0,))
 
@@ -136,25 +141,39 @@ toolbox.register('crossover', gp.cxOnePointLeafBiased, termpb = TERMPB)
 toolbox.register("expr_mut", gp.genHalfAndHalf, min_ = mutGenHeightMin, max_ = mutGenHeightMax)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
-
-
+globalVars.logger.debug('prepare the toolbox......done')
 
 #%% define how to evaluate
 # import how to evaluate factors
-from GeneticPogramming.factorEval import ic_evaluator
+from GeneticPogramming.factorEval import ic_evaluator, residual_preprocess
+
+factorEvalFunc = ic_evaluator
 
 # evaluate function
-def evaluate(individual, factorEvalFunc = ic_evaluator, pset = pset):
+def evaluate(individual,
+             factorEvalFunc = factorEvalFunc,
+             factorPreprocessFunc = residual_preprocess,
+             pset = pset):
+    
     func = gp.compile(expr=individual, pset = pset)
     factor = func(**globalVars.materialData)
-    
     if (~np.isfinite(factor.generalData).any() or np.nanstd(factor.generalData) == 0) : #如果新因子全是空值或者都相同则 0 
         return (-1.),
     
-    score = factorEvalFunc(factor)
+    # go through some preprocess function 
+    # typically get the residual after mutualize with existing factors
+    toScoreFactor = factorPreprocessFunc(factor)
+    
+    # evaluate the factor with certain way
+    # typically ic, icir, factorReturn, Monotonicity(單調性)
+    score = factorEvalFunc(toScoreFactor)
+    
     if score == np.ma.masked:
         return (-1.),
     return (score),
+
+
+globalVars.logger.debug('the evaluate function is {}'.format(factorEvalFunc.__name__))
 
 #### not useful if we use Pool to do multiprocessing
 
@@ -174,63 +193,62 @@ def evaluate(individual, factorEvalFunc = ic_evaluator, pset = pset):
 
 #%%
 # from  multiprocessing import Pool
-if __name__ == '__main__':
+# if __name__ == '__main__':
+#     globalVars.logger.warning('worker')
+#     # logging
+#     stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+#     stats.register("avg", np.mean)
+#     stats.register("std", np.std)
+#     stats.register("min", np.min)
+#     stats.register("max", np.max)
+#     logbook = tools.Logbook()
     
-    initialize()
-    # logging
-    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
-    stats.register("avg", np.mean)
-    stats.register("std", np.std)
-    stats.register("min", np.min)
-    stats.register("max", np.max)
-    logbook = tools.Logbook()
+#     pop = toolbox.population(n = N_POP)
     
-    pop = toolbox.population(n = N_POP)
-    
-    # eval the population 评价初始族群
-    ########## single process 
-    fitnesses = map(evaluate, pop)
-    for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
-        print(i, fit)
-        ind.fitness.values = fit
+#     # eval the population 评价初始族群
+#     ########## single process 
+#     fitnesses = map(evaluate, pop)
+#     for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
+#         print(i, fit)
+#         ind.fitness.values = fit
         
-    # start 
-    for gen in range(N_GEN):
-        # 配种选择
-        offspring = toolbox.select(pop, 2*N_POP)
-        offspring = list(map(toolbox.clone, offspring)) # 复制个体，供交叉变异用
+#     # start 
+#     for gen in range(N_GEN):
+#         # 配种选择
+#         offspring = toolbox.select(pop, 2*N_POP)
+#         offspring = list(map(toolbox.clone, offspring)) # 复制个体，供交叉变异用
         
-        # 对选出的育种族群两两进行交叉，对于被改变个体，删除其适应度值
-        for child1, child2 in zip(offspring[::2], offspring[1::2]):
-            if random.random() < CXPB:
-                toolbox.crossover(child1, child2)
-                del child1.fitness.values
-                del child2.fitness.values
+#         # 对选出的育种族群两两进行交叉，对于被改变个体，删除其适应度值
+#         for child1, child2 in zip(offspring[::2], offspring[1::2]):
+#             if random.random() < CXPB:
+#                 toolbox.crossover(child1, child2)
+#                 del child1.fitness.values
+#                 del child2.fitness.values
                 
-        # 对选出的育种族群进行变异，对于被改变个体，删除适应度值
-        for mutant in offspring:
-            if random.random() < MUTPB:
-                toolbox.mutate(mutant)
-                del mutant.fitness.values
+#         # 对选出的育种族群进行变异，对于被改变个体，删除适应度值
+#         for mutant in offspring:
+#             if random.random() < MUTPB:
+#                 toolbox.mutate(mutant)
+#                 del mutant.fitness.values
           
-        # 对于被改变的个体，重新评价其适应度
-        invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
+#         # 对于被改变的个体，重新评价其适应度
+#         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
 
-        ########## single process 
-        fitnesses = map(evaluate, invalid_ind)
-        for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):   
-            print(i, fit)
-            ind.fitness.values = fit
+#         ########## single process 
+#         fitnesses = map(evaluate, invalid_ind)
+#         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):   
+#             print(i, fit)
+#             ind.fitness.values = fit
         
 
-        # 环境选择 - 保留精英
-        pop = tools.selBest(offspring, N_POP, fit_attr='fitness') # 选择精英,保持种群规模
-        # pop[:] = selectedInd
+#         # 环境选择 - 保留精英
+#         pop = tools.selBest(offspring, N_POP, fit_attr='fitness') # 选择精英,保持种群规模
+#         # pop[:] = selectedInd
         
-        # 记录数据
-        record = stats.compile(pop)
-        print(record)
-        logbook.record(gen=gen, **record)
+#         # 记录数据
+#         record = stats.compile(pop)
+#         print(record)
+#         logbook.record(gen=gen, **record)
     
 
 

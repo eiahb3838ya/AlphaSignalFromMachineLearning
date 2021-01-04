@@ -1,0 +1,52 @@
+2020-12-31 14:46:42,262 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2020-12-31 14:46:43,431 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2020-12-31 14:46:44,591 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2020-12-31 14:46:45,748 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2020-12-31 14:46:46,902 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2020-12-31 14:46:48,058 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2020-12-31 14:46:49,355 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2020-12-31 14:46:50,611 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2020-12-31 14:46:51,536 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2020-12-31 14:46:51,537 logger.py[line:36] - INFO - log : barra:{} is now in global
+2020-12-31 14:46:54,453 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2020-12-31 14:46:57,435 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2020-12-31 14:46:57,512 logger.py[line:39] - WARNING - log : load all
+2020-12-31 14:46:57,514 logger.py[line:36] - INFO - log : start
+2020-12-31 14:54:11,416 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2020-12-31 14:54:11,416 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2020-12-31 14:54:12,571 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2020-12-31 14:54:12,571 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2020-12-31 14:54:13,768 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2020-12-31 14:54:13,768 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2020-12-31 14:54:14,931 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2020-12-31 14:54:14,931 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2020-12-31 14:54:16,103 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2020-12-31 14:54:16,103 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2020-12-31 14:54:17,264 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2020-12-31 14:54:17,264 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2020-12-31 14:54:18,549 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2020-12-31 14:54:18,549 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2020-12-31 14:54:19,802 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2020-12-31 14:54:19,802 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2020-12-31 14:54:20,736 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2020-12-31 14:54:20,736 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2020-12-31 14:54:20,743 logger.py[line:36] - INFO - log : barra:{} is now in global
+2020-12-31 14:54:20,743 logger.py[line:36] - INFO - log : barra:{} is now in global
+2020-12-31 14:54:23,657 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2020-12-31 14:54:23,657 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2020-12-31 14:54:26,619 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2020-12-31 14:54:26,619 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2020-12-31 14:54:26,695 logger.py[line:36] - INFO - log : load gpMultiprocessWorker
+2020-12-31 14:54:26,695 logger.py[line:36] - INFO - log : load gpMultiprocessWorker
+2020-12-31 14:54:26,696 logger.py[line:33] - DEBUG - log : prepare the pset......start
+2020-12-31 14:54:26,696 logger.py[line:33] - DEBUG - log : prepare the pset......start
+2020-12-31 14:54:26,697 logger.py[line:33] - DEBUG - log : prepare the pset......done
+2020-12-31 14:54:26,697 logger.py[line:33] - DEBUG - log : prepare the pset......done
+2020-12-31 14:54:26,697 logger.py[line:33] - DEBUG - log : prepare the toolbox......start
+2020-12-31 14:54:26,697 logger.py[line:33] - DEBUG - log : prepare the toolbox......start
+2020-12-31 14:54:26,697 logger.py[line:33] - DEBUG - log : prepare the toolbox......done
+2020-12-31 14:54:26,697 logger.py[line:33] - DEBUG - log : prepare the toolbox......done
+2020-12-31 14:54:26,700 logger.py[line:36] - INFO - log : load factorEval
+2020-12-31 14:54:26,700 logger.py[line:36] - INFO - log : load factorEval
+2020-12-31 14:54:26,733 logger.py[line:33] - DEBUG - log : the evaluate function is ic_evaluator
+2020-12-31 14:54:26,733 logger.py[line:33] - DEBUG - log : the evaluate function is ic_evaluator

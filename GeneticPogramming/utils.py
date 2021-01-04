@@ -7,6 +7,9 @@ Created on Wed Dec  9 10:07:25 2020
 """
 import numpy as np
 from numpy.lib import stride_tricks
+from numpy.ma import masked_invalid
+
+
 
 def get_strided(toStride2DArray, rollingDaysN):
     nrows, ncols = toStride2DArray.shape
@@ -66,15 +69,48 @@ def rowwise_corrcoef(factor, shiftedReturn):
     divider = np.ma.sqrt(np.dot(ssA, ssB))
     return((toDivide/divider).mean())
 
+
 # 矩阵求解最主要的问题是数据中不能有空值，时间可以很快
-def linearRegLsq(x,y):
-    '''最小二乘法直接求解回归系数'''
+def linear_regression(x,y):
+    '''
+    get the theta in of OLS regression 
+    the function doesn't deal with nan in the matrix
+    make sure all value is valid and the shape is correct
+    最小二乘法直接求解回归系数
+    '''
     xtx = np.dot(x.T, x)
     if np.linalg.det(xtx) == 0.0: # 判断xtx行列式是否等于0，奇异矩阵不能求逆
-        #print('Can not resolve the problem')
-        return None
-    theta_lsq = np.dot(np.dot(np.linalg.inv(np.dot(x.T, x)), x.T), y)
-    return theta_lsq
+        print('the det(xtx) is 0')
+        return np.full(x.shape[0], np.nan)
+    tmp = np.dot(np.linalg.inv(xtx), x.T)
+    try:
+        theta = np.dot(tmp, y)
+    except ValueError as ve:
+        print('''
+              plz check the shape of x and y in linear regression
+              make sure the shape of x is (y.shape[0] , count of featrues)
+              ''')
+        print(ve)
+        raise ve
+        
+    return theta
+
+def get_residual(x, y):
+    '''
+    get the residual of y with OLS regression 
+    this function checks the nan values and the theta ignore the datapoint that contain any nans
+    but the result will show nan if any nan in x or y for that data point
+    make sure all value is valid and the shape is correct
+    '''
+    masked_x = masked_invalid(x)
+    masked_y = masked_invalid(y)
+    mask_stocks = np.ma.mask_or(masked_x.mask.any(axis = 1), masked_y.mask)
+    if mask_stocks.all():
+        print('all data points are invalid on the time')
+        return(np.full_like(y, np.nan), np.full(x.shape[1], np.nan))
+    theta = linear_regression(x[~mask_stocks, :],y[~mask_stocks])
+    residual = y - np.dot(x, theta)
+    return(residual, theta)
 
 def add_constant(x):
     return np.c_[x,np.ones(x.shape[0])]
@@ -82,7 +118,11 @@ def add_constant(x):
 
 
 if __name__ == '__main__':
-    x = np.arange(36).reshape((6, 6))
+    b1 = np.random.uniform(size = (70)).reshape((5, 14))
+    b2 = np.random.uniform(size = (70)).reshape((5, 14))
+    f = np.random.uniform(size = (70)).reshape((5, 14))
+    bs = np.stack((b1, b2), axis = 2)
+    x = b1
     print(x)
     print(x.shape, x.strides)
     strided = get_strided(x, 3)

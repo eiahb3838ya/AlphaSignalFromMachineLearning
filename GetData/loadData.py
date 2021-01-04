@@ -32,12 +32,16 @@ barraDataFileDict = {
     }
 
 #%%
-# PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
-PROJ_ROOT = os.path.abspath(os.path.join(__file__, "../.."))
+PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
 DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
 
-
+def load_all():
+    globalVars.initialize()
+    load_material_data() 
+    load_barra_data()
+    align_barra()
 #%% load data functions
+
 def load_data(dataFileDict, DATA_PATH, dictName = None):
     toReturnList = []
     if dictName is not None:
@@ -49,12 +53,14 @@ def load_data(dataFileDict, DATA_PATH, dictName = None):
             if k not in globalVars.__getattribute__(dictName):
                 data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
                 globalVars.__getattribute__(dictName)[k] = data
-                print('==================================================================\n\
-                      {} is now in globalVars.{}\n'.format(k, dictName), data)
+                # print('==================================================================\n\
+                #       {} is now in globalVars.{}\n'.format(k, dictName), data)
+                globalVars.logger.info('{} is now in globalVars.{}'.format(k, dictName))
                 toReturnList.append(k)
             else:
-                print('==================================================================\n\
-                      {} is already in globalVars.{}\n'.format(k, dictName))
+                # print('==================================================================\n\
+                #       {} is already in globalVars.{}\n'.format(k, dictName))
+                globalVars.logger.info('{} is already in globalVars.{}'.format(k, dictName))
     else:
         for k, v in dataFileDict.items():
             data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
@@ -63,29 +69,13 @@ def load_data(dataFileDict, DATA_PATH, dictName = None):
     return(toReturnList)
 
 def load_material_data(dataFileDict = materialDataFileDict, DATA_PATH = DATA_PATH+'materialData'):
-    toReturnList = []
-    
-    # add dictionary material_data to globalVars
-    if 'materialData' not in globalVars.varList:
-        globalVars.register('materialData', {})
-        
-    for k, v in dataFileDict.items():
-        if k not in globalVars.materialData:
-            data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
-            globalVars.materialData[k] = data
-            print('==================================================================\n\
-                  {} is now in globalVars.materialData\n'.format(k), data)
-            toReturnList.append(k)
-        else:
-            print('==================================================================\n\
-                  {} is already in globalVars.materialData\n'.format(k))
-    return(toReturnList)
+    return(load_data(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH, dictName='materialData'))
 
 
 def simple_load_factor(factorName):
     if 'factors' not in globalVars.varList:
         globalVars.register('factors', {})
-    globalVars.factors['{}_factor'.format(factorName)] = Factor('{}_factor'.format(factorName), globalVars.materialData['open'])
+    globalVars.factors['{}_factor'.format(factorName)] = Factor('{}_factor'.format(factorName), globalVars.materialData[factorName])
     print(factorName, 'is now in globalVars.factors')
     
     
@@ -132,8 +122,6 @@ if __name__ == '__main__':
     data = aB
     alignTo = aM
     print(align_data(aM, aB))
-    
-    
     
     simple_load_factor('close')
     align_barra()
