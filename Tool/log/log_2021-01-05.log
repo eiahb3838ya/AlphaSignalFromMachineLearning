@@ -1,0 +1,187 @@
+2021-01-05 15:02:43,364 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:02:44,079 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:02:44,787 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:02:45,494 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:02:46,203 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:02:46,927 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:02:47,737 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:02:48,534 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:02:49,312 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:02:49,314 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:02:52,288 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:02:55,254 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:14:22,294 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:14:23,030 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:14:23,777 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:14:24,483 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:14:25,188 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:14:25,893 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:14:26,676 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:14:27,442 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:14:28,200 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:14:28,201 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:14:31,071 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:14:34,019 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:14:34,096 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:14:34,097 logger.py[line:36] - INFO - log : start
+2021-01-05 15:16:19,910 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:16:19,910 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:16:20,624 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:16:20,624 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:16:21,368 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:16:21,368 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:16:22,105 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:16:22,105 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:16:22,842 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:16:22,842 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:16:23,551 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:16:23,551 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:16:24,334 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:16:24,334 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:16:25,108 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:16:25,108 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:16:25,868 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:16:25,868 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:16:25,870 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:16:25,870 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:16:28,751 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:16:28,751 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:16:31,710 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:16:31,710 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:16:31,788 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:16:31,788 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:16:31,790 logger.py[line:36] - INFO - log : start
+2021-01-05 15:16:31,790 logger.py[line:36] - INFO - log : start
+2021-01-05 15:16:31,791 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:16:31,791 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:16:31,793 logger.py[line:36] - INFO - log : evaluating initial pop......start
+2021-01-05 15:16:31,793 logger.py[line:36] - INFO - log : evaluating initial pop......start
+2021-01-05 15:18:13,804 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:18:13,804 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:18:13,804 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:18:14,558 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:18:14,558 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:18:14,558 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:18:15,284 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:18:15,284 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:18:15,284 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:18:15,998 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:18:15,998 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:18:15,998 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:18:16,778 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:18:16,778 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:18:16,778 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:18:17,475 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:18:17,475 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:18:17,475 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:18:18,262 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:18:18,262 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:18:18,262 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:18:19,030 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:18:19,030 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:18:19,030 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:18:19,784 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:18:19,784 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:18:19,784 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:18:19,786 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:18:19,786 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:18:19,786 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:18:22,651 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:18:22,651 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:18:22,651 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:18:34,663 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:18:35,372 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:18:36,078 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:18:36,786 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:18:37,487 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:18:38,189 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:18:38,969 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:18:39,736 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:18:40,494 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:18:40,495 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:18:43,382 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:18:46,334 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:18:46,412 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:18:46,413 logger.py[line:36] - INFO - log : start
+2021-01-05 15:18:46,413 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:18:46,415 logger.py[line:36] - INFO - log : evaluating initial pop......start
+2021-01-05 15:28:04,724 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:28:04,724 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:28:05,442 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:28:05,442 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:28:06,149 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:28:06,149 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:28:06,880 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:28:06,880 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:28:07,627 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:28:07,627 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:28:08,365 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:28:08,365 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:28:09,150 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:28:09,150 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:28:09,920 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:28:09,920 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:28:10,681 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:28:10,681 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:28:10,682 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:28:10,682 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:28:13,592 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:28:13,592 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:28:16,546 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:28:16,546 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:28:16,621 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:28:16,621 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:28:16,622 logger.py[line:36] - INFO - log : get 
+2021-01-05 15:28:16,622 logger.py[line:36] - INFO - log : get 
+2021-01-05 15:28:16,623 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:28:16,623 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:28:16,625 logger.py[line:36] - INFO - log : evaluating initial pop......start
+2021-01-05 15:28:16,625 logger.py[line:36] - INFO - log : evaluating initial pop......start
+2021-01-05 15:32:22,714 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:32:22,714 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:32:22,714 logger.py[line:36] - INFO - log : materialData:{} is now in global
+2021-01-05 15:32:23,458 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:32:23,458 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:32:23,458 logger.py[line:36] - INFO - log : close is now in globalVars.materialData
+2021-01-05 15:32:24,152 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:32:24,152 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:32:24,152 logger.py[line:36] - INFO - log : high is now in globalVars.materialData
+2021-01-05 15:32:24,851 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:32:24,851 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:32:24,851 logger.py[line:36] - INFO - log : low is now in globalVars.materialData
+2021-01-05 15:32:25,546 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:32:25,546 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:32:25,546 logger.py[line:36] - INFO - log : open is now in globalVars.materialData
+2021-01-05 15:32:26,248 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:32:26,248 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:32:26,248 logger.py[line:36] - INFO - log : preclose is now in globalVars.materialData
+2021-01-05 15:32:27,083 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:32:27,083 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:32:27,083 logger.py[line:36] - INFO - log : amount is now in globalVars.materialData
+2021-01-05 15:32:27,848 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:32:27,848 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:32:27,848 logger.py[line:36] - INFO - log : volume is now in globalVars.materialData
+2021-01-05 15:32:28,604 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:32:28,604 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:32:28,604 logger.py[line:36] - INFO - log : pctChange is now in globalVars.materialData
+2021-01-05 15:32:28,605 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:32:28,605 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:32:28,605 logger.py[line:36] - INFO - log : barra:{} is now in global
+2021-01-05 15:32:31,539 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:32:31,539 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:32:31,539 logger.py[line:36] - INFO - log : beta is now in globalVars.barra
+2021-01-05 15:32:34,532 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:32:34,532 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:32:34,532 logger.py[line:36] - INFO - log : blev is now in globalVars.barra
+2021-01-05 15:32:34,607 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:32:34,607 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:32:34,607 logger.py[line:39] - WARNING - log : load all
+2021-01-05 15:32:34,610 logger.py[line:36] - INFO - log : get 
+2021-01-05 15:32:34,610 logger.py[line:36] - INFO - log : get 
+2021-01-05 15:32:34,610 logger.py[line:36] - INFO - log : get 
+2021-01-05 15:32:34,611 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:32:34,611 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:32:34,611 logger.py[line:36] - INFO - log : start the easimple
+2021-01-05 15:32:34,614 logger.py[line:36] - INFO - log : evaluating initial pop......start
+2021-01-05 15:32:34,614 logger.py[line:36] - INFO - log : evaluating initial pop......start
+2021-01-05 15:32:34,614 logger.py[line:36] - INFO - log : evaluating initial pop......start
