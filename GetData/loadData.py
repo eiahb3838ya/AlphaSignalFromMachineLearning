@@ -32,7 +32,7 @@ barraDataFileDict = {
     }
 
 #%%
-PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local'
+PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/AlphaSignalFromMachineLearning'
 DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
 
 def load_all():

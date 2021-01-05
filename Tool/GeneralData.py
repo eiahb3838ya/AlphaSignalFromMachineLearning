@@ -35,7 +35,7 @@ class GeneralData(GeneralDataBase):
                 except Exception as e:
                     print(e)
                     print('We have a filePath but we can not load the generalData to pandas df structure')
-            
+                    raise e
 
         if isinstance(generalData, pd.DataFrame):
             try:

@@ -10,13 +10,17 @@ from .logger import Logger
 
 def initialize(logName = 'log'): 
     global varList
-    # global PROJECT_ROOT
-    PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\Local\\'
+    varList = []
+    
+    # global PROJECT_ROOT    
+    global PROJECT_ROOT
+    PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
     loggerFolder = PROJECT_ROOT+"Tool\\log\\"
     fileName = logName
+    
     global logger
     logger = Logger(loggerFolder, fileName)
-    varList = []
+    varList.append('logger')
     
 def register(name, aVar):
     globals()[name] =  aVar

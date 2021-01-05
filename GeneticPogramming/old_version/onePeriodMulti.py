@@ -1,27 +1,34 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan  5 14:49:02 2021
+Created on Fri Dec 25 13:08:35 2020
 
 @author: eiahb
 """
 #%% import 
-
-import warnings
 import random
+import warnings
+# import sys
 from time import time
-from functools import partial
+# import itertools
 
-
-from multiprocessing import Pool
-
+from multiprocessing import Pool, Manager
+# from tqdm import tqdm, trange
 from deap import tools
+# from inspect import getmembers, isfunction
 import numpy as np
 
-
+from Tool import globalVars as globalVarsModule
+# from Tool.GeneralData import GeneralData
+from GetData import load_all
+# from GeneticPogramming import scalarFunctions, singleDataFunctions, singleDataNFunctions, coupleDataFunctions
+try:
+    globalVarsModule.logger.info('start')
+except :
+    load_all()
+    globalVarsModule.logger.warning('load all')
+    globalVarsModule.logger.info('start')
 
 warnings.filterwarnings("ignore")
-
-
 #%% set parameters 設定參數 
 global POOL_SIZE, N_POP, N_GEN, TOURNSIZE, CXPB, MUTPB, TERMPB
 global initGenHeightMin, initGenHeightMax, mutGenHeightMin, mutGenHeightMax
@@ -50,8 +57,10 @@ initGenHeightMin, initGenHeightMax = 1, 3
 # the height min max of a mutate sub tree
 mutGenHeightMin, mutGenHeightMax = 0, 3
 
+
+
 #%%
-def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toRegFactorDict, logger):
+def easimple(toolbox, stats, logbook, evaluate):
     pop = toolbox.population(n = N_POP)
     # eval the population 评价初始族群
     # singleprocess ###################################
@@ -62,21 +71,17 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toR
     ############################################################
     # multiprocess
     
-    logger.info('evaluating initial pop......start')
+    globalVars.logger.info('evaluating initial pop......start')
     tic = time()
     # print('start evaluating initial pop......')
     
     with Pool(processes=POOL_SIZE) as pool: 
-        fitnesses = pool.map(partial(evaluate,
-                                     materialDataDict = materialDataDict,
-                                     barraDict = barraDict,
-                                     toRegFactorDict = toRegFactorDict),
-                             pop)       
+        fitnesses = pool.map(evaluate, pop)      
         
     for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
         ind.fitness.values = fit
     toc = time()
-    logger.info('evaluating initial pop......done  {}'.format(toc-tic))
+    globalVars.logger.info('evaluating initial pop......done  {}'.format(toc-tic))
     
     # start evolution
     for gen in range(N_GEN):
@@ -99,19 +104,15 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toR
           
         # 对于被改变的个体，重新评价其适应度
         # print('start evaluate for {}th Generation new individual......'.format(gen))
-        logger.info('start evaluate for {}th Generation new individual......'.format(gen))
+        globalVars.logger.info('start evaluate for {}th Generation new individual......'.format(gen))
         tic = time()
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         with Pool(processes=POOL_SIZE) as pool: 
-            fitnesses = pool.map(partial(evaluate,
-                                         materialDataDict = materialDataDict,
-                                         barraDict = barraDict,
-                                         toRegFactorDict = toRegFactorDict),
-                                 pop)  
+            fitnesses = pool.map(evaluate, pop)  
         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
         toc = time()
-        logger.info('evaluate for {}th Generation new individual......done  {}'.format(gen, toc-tic))
+        globalVars.logger.info('evaluate for {}th Generation new individual......done  {}'.format(gen, toc-tic))
 
         # select best 环境选择 - 保留精英
         pop = tools.selBest(offspring, N_POP, fit_attr='fitness') # 选择精英,保持种群规模
@@ -123,54 +124,55 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toR
         logbook.record(gen=gen, **record)
     return(pop)
         
-#%% main
-if __name__ == '__main__':
-    
-    from GeneticPogramming.createMultiProcessWorker import toolbox, evaluate
-    from Tool import globalVars
-    from GetData import load_all
-    
-    load_all()
-    globalVars.logger.warning('load all')
-    globalVars.logger.info('get ')
-    logger = globalVars.logger
-    
-    materialDataDict = globalVars.materialData
-    barraDict = globalVars.barra
-    toRegFactorDict = {}
-    
         
-
-
-    logger.info('start the easimple')
+if __name__ == '__main__':
     stats = tools.Statistics(key=lambda ind: ind.fitness.values)
     stats.register("avg", np.mean)
     stats.register("std", np.std)
     stats.register("min", np.min)
     stats.register("max", np.max)
     logbook = tools.Logbook()
-    pop = easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toRegFactorDict, logger)
     
+
+    from GeneticPogramming.gpMultiprocessWorker import toolbox, evaluate
+    manager = Manager()
+    globalVars = manager.Namespace()
+    globalVars
+    globalVarsModule
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    globalVars.logger.info('start the easimple')
+    pop = easimple(toolbox, stats, logbook, evaluate)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
