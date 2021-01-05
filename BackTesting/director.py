@@ -19,7 +19,7 @@ class SignalDirector:
     def __init__(self, signalGeneratorClass, logger=None):
         self.signalGeneratorClass = signalGeneratorClass
         self.logger = logger
-        # 回测的时候关心的factors
+        # factors used during back testing
         self.factorNameList = []
         # run的时候会有实例
         self.signalGenerator = None
@@ -43,7 +43,7 @@ class SignalDirector:
                          'volume'
                          ]
         # 给globalVars注册factors（dict）
-        # key：factor的名字，value：generalData
+        # key：factor.name，value：generalData
         if 'factors' not in globalVars.varList:
             globalVars.register('factors', {})
         # TODO: factorManager
