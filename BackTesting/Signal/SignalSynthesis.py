@@ -5,11 +5,10 @@ Created on Sat Jan 2 13:30:30 2021
 @author: Ye Donggua
 
 """
-import time
+
 import pandas as pd
 import numpy as np
 import numpy.ma as ma
-from abc import abstractmethod, ABCMeta, abstractstaticmethod
 from copy import copy
 from sklearn.pipeline import Pipeline
 from sklearn.base import TransformerMixin
@@ -24,22 +23,40 @@ from GeneticPogramming.utils import get_strided
 
 # %%
 
-class SignalSynthesis(SignalBase, metaclass=ABCMeta):
+class SignalSynthesis(SignalBase):
 
     def __init__(self, model=None, logger=None):
         super().__init__()
+        # ml model
         self.model = model
+        # 同一个logger
         self.logger = logger
-
+        # director传进来的
         self.factorNameList = []
+        # smoothing之前的signal
         self.rawSignals = None
+        # 因变量的dict
         self.dependents = {}
         self.metadata = {}
-        self.allTradeDatetime = []
+        # dateTimeIndex
+        self.allTradeDatetime = None
 
         self.initialize()
 
     def initialize(self):
+        '''
+        initialize self.dependents & allTradeDatetime
+
+        Raises
+        ------
+        AttributeError
+            'There\'s no pctChange in globalVars'
+
+        Returns
+        -------
+        None.
+
+        '''
         try:
             shiftedReturn = globalVars.materialData['pctChange'].get_shifted(-1)
         except AttributeError as ae:
@@ -73,11 +90,53 @@ class SignalSynthesis(SignalBase, metaclass=ABCMeta):
             raise IndexError("The given {0} days after date {1} out of the upper bound {2}"
                              .format(n, date, self.allTradeDatetime[-1]))
 
-    def generate_signals(self, startDate=None, endDate=None, panelSize=1, trainTestGap=1, maskList=None,
+    def generate_signals(self, startDate, endDate, panelSize=1, trainTestGap=1, maskList=None,
                          deExtremeMethod=None, imputeMethod=None,
                          standardizeMethod=None, pipeline=None, factorNameList=None,
                          modelParams=None, metric_func=None,
                          periods=10, method='linear'):
+        '''
+        
+
+        Parameters
+        ----------
+        startDate : TYPE
+            startDate of the back testing date interval (left-closed, right-closed).
+        endDate : TYPE
+            endDate of the back testing date interval (left-closed, right-closed).
+        panelSize : TYPE, optional
+            time length of the panel factor used. The default is 1: use one-period factor.
+        trainTestGap : TYPE, optional
+            gap between trainData and testData. 
+            The default is 1, use day-T to train model and feed day-T+1 testData to predict.
+        maskList : TYPE, optional
+            maskNameList. The default is None.
+        deExtremeMethod : TYPE, optional
+            method for deExtreme factors. The default is None.
+        imputeMethod : TYPE, optional
+            method for impute factors. The default is None.
+        standardizeMethod : TYPE, optional
+            method for standardize factors. The default is None.
+        pipeline : TYPE, optional
+            can input preprocessing method like deExtremeMethod...
+            can also input a pipeline directly. The default is None.
+        factorNameList : TYPE, optional
+            factors used to generateSignals. The default is None.
+        modelParams : TYPE, optional
+            paras of the model that generates signals. The default is None.
+        metric_func : TYPE, optional
+            DESCRIPTION. The default is None.
+        periods : TYPE, optional
+            smoothing params. The default is 10.
+        method : TYPE, optional
+            smoothing method. The default is 'linear'.
+
+        Returns
+        -------
+        resultDict : TYPE
+            DESCRIPTION.
+
+        '''
         # set startDate & endDate is input is None
         # [startDate,endDate] is the dates interval for backTesting, closed interval
         self.factorNameList = factorNameList
@@ -85,10 +144,7 @@ class SignalSynthesis(SignalBase, metaclass=ABCMeta):
         if maskList is None:
             maskList = []
 
-        # if startDate is None:
-        #     startDate = self.allTradeDatetime[0]
-        # if endDate is None:
-        #     endDate = self.allTradeDatetime[-1]
+        
         # assert whether panelSize is out of range
         # default panelSize should be 1
         toStart = len(self.allTradeDatetime[self.allTradeDatetime <= startDate]) - panelSize - trainTestGap + 1
@@ -97,7 +153,7 @@ class SignalSynthesis(SignalBase, metaclass=ABCMeta):
         backTestDates = self.allTradeDatetime[(self.allTradeDatetime >= startDate) &
                                               (self.allTradeDatetime <= endDateShiftOneDay)]
         self.logger.info('start to generate signals from {} ot {}'.format(startDate, endDateShiftOneDay))
-
+        # mL存mask的generalData
         mL = []
         for mask in maskList:
             mL.append(globalVars.factors[mask])
@@ -129,6 +185,7 @@ class SignalSynthesis(SignalBase, metaclass=ABCMeta):
                 factors=factorL, dependents=self.dependents,
                 trainStart=trainStart, trainEnd=trainEnd, testStart=testStart, testEnd=testEnd
             )
+            # preprocess factors
             processedTrainDict = self.preprocessing(factorTrainDict, maskTrainDict, deExtremeMethod=deExtremeMethod,
                                                     imputeMethod=imputeMethod, standardizeMethod=standardizeMethod,
                                                     pipeline=pipeline)
@@ -136,21 +193,24 @@ class SignalSynthesis(SignalBase, metaclass=ABCMeta):
             processedTestDict = self.preprocessing(factorTestDict, maskTestDict, deExtremeMethod=deExtremeMethod,
                                                    imputeMethod=imputeMethod, standardizeMethod=standardizeMethod,
                                                    pipeline=pipeline)
-
+            
+            # stack factorDict to 3D
             trainStack = np.ma.stack([processedTrainDict[factor] for factor in factorNameList]).transpose(2, 1, 0)
             testStack = np.ma.stack([processedTestDict[factor] for factor in factorNameList]).transpose(2, 1, 0)
-
+            # reshape to 2D: XTrain.shape = (nStocks, panelSize*nFields)
             XTrain = trainStack.reshape(trainStack.shape[0], -1)
             XTest = testStack.reshape(testStack.shape[0], -1)
 
             signalDict = {}
+            # there may be several dependents, for loop
             for k in dependentTrainDict.keys():
-                signal = np.zeros(dependentTrainDict[k].shape) * np.nan
-
+                signal = np.zeros(dependentTestDict[k].shape) * np.nan
+                # concantenate X and y
                 dataTrain = np.ma.concatenate([dependentTrainDict[k].reshape(-1, 1), XTrain], axis=1)
                 dataTest = np.ma.concatenate([dependentTestDict[k].reshape(-1, 1), XTest], axis=1)
 
                 # clean data
+                # 只要dataTrain或mask里有nan就直接mask
                 naOrMaskTrain = np.sum(np.logical_or(np.isnan(dataTrain).data, dataTrain.mask), axis=1)
                 naOrMaskTest = np.sum(np.logical_or(np.isnan(dataTest).data, dataTest.mask), axis=1)
 
@@ -171,13 +231,16 @@ class SignalSynthesis(SignalBase, metaclass=ABCMeta):
             self.logger.debug('{} finished'.format(backTestDate))
 
         resultDict = {}
+        rawSignals = {}
         for dependent in self.dependents.keys():
             signal = np.c_[[x[dependent] for x in signalList]]
             signalGeneralData = GeneralData(name=dependent, generalData=signal,
                                             timestamp=pd.DatetimeIndex(backTestDates),
                                             columnNames=factorL[0].columnNames)
+            rawSignals[dependent] = signalGeneralData
             smoothedSignalGeneralData = self.smoothing(signalGeneralData)
             resultDict[dependent] = smoothedSignalGeneralData
+        self.rawSignals = rawSignals
         return resultDict
 
     @staticmethod
