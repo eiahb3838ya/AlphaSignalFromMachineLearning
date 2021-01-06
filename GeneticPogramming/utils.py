@@ -38,8 +38,10 @@ def simple_corrcoef(factor, shiftedReturn):
         return(corrcoef[0, 1])
     
 def rowwise_corrcoef(factor, shiftedReturn):
-    validFactor = np.ma.masked_invalid(factor.generalData)
-    validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
+    # validFactor = np.ma.masked_invalid(factor.generalData)
+    # validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
+    validFactor = np.ma.masked_invalid(factor)
+    validShiftedReturn = np.ma.masked_invalid(shiftedReturn)
     msk = np.ma.mask_or(validFactor.mask, validShiftedReturn.mask)#(~validFactor.mask & ~validShiftedReturn.mask)
     validFactor.mask = msk
     validShiftedReturn.mask = msk
@@ -67,7 +69,7 @@ def rowwise_corrcoef(factor, shiftedReturn):
     
     toDivide = np.ma.dot(validFactor_m, validShiftedReturn_m.T).diagonal()
     divider = np.ma.sqrt(np.dot(ssA, ssB))
-    return((toDivide/divider).mean())
+    return((toDivide/divider))
 
 
 # 矩阵求解最主要的问题是数据中不能有空值，时间可以很快
@@ -106,17 +108,20 @@ def get_residual(x, y):
     masked_y = masked_invalid(y)
     mask_stocks = np.ma.mask_or(masked_x.mask.any(axis = 1), masked_y.mask)
     if mask_stocks.all():
-        print('all data points are invalid on the time')
+        print('all data points are invalid on certain time')
         return(np.full_like(y, np.nan), np.full(x.shape[1], np.nan))
     theta = linear_regression(x[~mask_stocks, :],y[~mask_stocks])
-    residual = y - np.dot(x, theta)
+    try:
+        residual = y - np.dot(x, theta)
+    except ValueError as ve:
+        raise ve(str(x.shape) + str(x) + str(x[~mask_stocks, :]))
     return(residual, theta)
 
 def add_constant(x):
     return np.c_[x,np.ones(x.shape[0])]
 
 
-
+#%%
 if __name__ == '__main__':
     b1 = np.random.uniform(size = (70)).reshape((5, 14))
     b2 = np.random.uniform(size = (70)).reshape((5, 14))

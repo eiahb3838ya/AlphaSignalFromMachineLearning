@@ -15,8 +15,14 @@ from GeneticPogramming.utils import rowwise_corrcoef, get_residual
 
 # evaluate function 评价函数
 def ic_evaluator(factor : GeneralData, pctChange:GeneralData) -> float:    
-    ic = rowwise_corrcoef(factor, pctChange.get_shifted(-1))
+    ic = rowwise_corrcoef(factor, pctChange.get_shifted(-1)).mean()
     return(ic)
+
+def icir_evaluator(factor : GeneralData, pctChange:GeneralData) -> float:    
+    corr = rowwise_corrcoef(factor, pctChange.get_shifted(-1))
+    ic = corr.mean()
+    ir = ic / corr.std()
+    return(ir)
 
 def residual_preprocess(factor, toRegStack):
     assert toRegStack.shape[:2] == factor.generalData.shape, 'make sure the factor shape is same as the risk factors'

@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.metrics import mean_squared_error
 
 from Tool import globalVars
+from Tool.GeneralData import GeneralData
 from Tool.Factor import Factor
 from Tool.DataPreProcessing import DeExtremeMethod, ImputeMethod, StandardizeMethod
 from GetData.loadData import load_material_data
@@ -16,14 +17,15 @@ from BackTesting.Signal.CrossSectionalModels.CrossSectionalModel import CrossSec
 
 
 class SignalDirector:
-    def __init__(self, signalGeneratorClass, logger=None):
+    def __init__(self,toTestFactor:GeneralData, signalGeneratorClass, logger=None):
         self.signalGeneratorClass = signalGeneratorClass
         self.logger = logger
         # factors used during back testing
         self.factorNameList = []
         # run的时候会有实例
         self.signalGenerator = None
-
+        self.toTestFactor = toTestFactor
+            
     def run(self):
         # initialize the globalVars
         globalVars.initialize()
@@ -36,6 +38,7 @@ class SignalDirector:
         # load factors
         # TODO: should load from some factor.json file latter rather than simply load from material data
         # self.factorNameList
+<<<<<<< Updated upstream
         toLoadFactors = ['close',
                          'high',
                          'low',
@@ -44,16 +47,31 @@ class SignalDirector:
                          ]
         # 给globalVars注册factors（dict）
         # key：factor.name，value：generalData
+=======
+        # toLoadFactors = ['close',
+        #                  'high',
+        #                  'low',
+        #                  'open',
+        #                  'volume'
+        #                  ]
+        # # 给globalVars注册factors（dict）
+        # # key：factor的名字，value：generalData
+        
+        
+        
+>>>>>>> Stashed changes
         if 'factors' not in globalVars.varList:
             globalVars.register('factors', {})
+        globalVars.factors['{}_factor'.format(self.toTestFactor.name)] = Factor('{}_factor'.format(self.toTestFactor.name),self.toTestFactor)
+        self.factorNameList.append('{}_factor'.format(self.toTestFactor.name))
         # TODO: factorManager
-        for factorName in toLoadFactors:
+        # for factorName in toLoadFactors:
 
-            globalVars.factors[factorName] = Factor(factorName, globalVars.materialData[factorName])
-            print(factorName, 'is now in globalVars.factors')
-            self.factorNameList.append(factorName)
-            self.logger.info("factor {0} is loaded".format(factorName))
-        self.logger.info("all factors are loaded")
+        #     globalVars.factors[factorName] = Factor(factorName, globalVars.materialData[factorName])
+        #     print(factorName, 'is now in globalVars.factors')
+        #     self.factorNameList.append(factorName)
+        #     self.logger.info("factor {0} is loaded".format(factorName))
+        # self.logger.info("all factors are loaded")
 
         # calculate the signal
         # 设置计算factors的参数
@@ -69,7 +87,7 @@ class SignalDirector:
             "imputeMethod": ImputeMethod.JustMask(),
             "standardizeMethod": StandardizeMethod.StandardScaler(),
             "pipeline": None,
-            "factorNameList": toLoadFactors,
+            "factorNameList": self.factorNameList,
             # params for XGBoost
             "modelParams": {
                 "jsonPath": None,
@@ -103,5 +121,5 @@ if __name__ == '__main__':
     logger = Logger("SignalDirector")
     logger.setLevel(logging.INFO)
 
-    director = SignalDirector(SignalSynthesis, logger=logger)
+    director = SignalDirector(toTestFactor = ????, SignalSynthesis, logger=logger)
     director.run()

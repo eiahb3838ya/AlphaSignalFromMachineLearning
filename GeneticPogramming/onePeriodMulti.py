@@ -13,6 +13,7 @@ from functools import partial
 
 
 from multiprocessing import Pool
+from multiprocessing_logging import install_mp_handler
 
 from deap import tools
 import numpy as np
@@ -23,32 +24,17 @@ warnings.filterwarnings("ignore")
 
 
 #%% set parameters 設定參數 
-global POOL_SIZE, N_POP, N_GEN, TOURNSIZE, CXPB, MUTPB, TERMPB
-global initGenHeightMin, initGenHeightMax, mutGenHeightMin, mutGenHeightMax
+POOL_SIZE = 8
 
-POOL_SIZE = 5
-
-N_POP = 100 # 族群中的个体数量
+N_POP = 10 # 族群中的个体数量
 N_GEN = 15 # 迭代代数
-
-# the tournsize of tourn selecetion
-TOURNSIZE = 15
 
 # prob to cross over
 CXPB = 0.4 # 交叉概率
 
 # prob to mutate
-MUTPB = 0.1 # 突变概率
+MUTPB = 0.2 # 突变概率
 
-# The parameter *termpb* sets the probability to choose between 
-# a terminal or non-terminal crossover point.
-TERMPB = 0.5
-
-# the height min max of a initial generate 
-initGenHeightMin, initGenHeightMax = 1, 3
-
-# the height min max of a mutate sub tree
-mutGenHeightMin, mutGenHeightMax = 0, 3
 
 #%%
 def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toRegFactorDict, logger):
@@ -61,22 +47,20 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toR
     #     ind.fitness.values = fit
     ############################################################
     # multiprocess
-    
+
     logger.info('evaluating initial pop......start')
     tic = time()
     # print('start evaluating initial pop......')
     
-    with Pool(processes=POOL_SIZE) as pool: 
-        fitnesses = pool.map(partial(evaluate,
-                                     materialDataDict = materialDataDict,
-                                     barraDict = barraDict,
-                                     toRegFactorDict = toRegFactorDict),
-                             pop)       
+    with Pool(processes=POOL_SIZE, initializer = install_mp_handler) as pool: 
+        fitnesses = pool.map(evaluate, pop)       
         
     for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
         ind.fitness.values = fit
     toc = time()
     logger.info('evaluating initial pop......done  {}'.format(toc-tic))
+    record = stats.compile(pop)
+    logger.info("The initial record:{}".format(str(record)))
     
     # start evolution
     for gen in range(N_GEN):
@@ -98,16 +82,11 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toR
                 del mutant.fitness.values
           
         # 对于被改变的个体，重新评价其适应度
-        # print('start evaluate for {}th Generation new individual......'.format(gen))
         logger.info('start evaluate for {}th Generation new individual......'.format(gen))
         tic = time()
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
-        with Pool(processes=POOL_SIZE) as pool: 
-            fitnesses = pool.map(partial(evaluate,
-                                         materialDataDict = materialDataDict,
-                                         barraDict = barraDict,
-                                         toRegFactorDict = toRegFactorDict),
-                                 pop)  
+        with Pool(processes=POOL_SIZE, initializer = install_mp_handler) as pool: 
+            fitnesses = pool.map(evaluate, pop)  
         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
         toc = time()
@@ -118,7 +97,7 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toR
         
         # 记录数据
         record = stats.compile(pop)
-        globalVars.logger.info("The {} th record:{}".format(gen, str(record)))
+        logger.info("The {} th record:{}".format(gen, str(record)))
 
         logbook.record(gen=gen, **record)
     return(pop)
@@ -127,19 +106,19 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toR
 if __name__ == '__main__':
     
     from GeneticPogramming.createMultiProcessWorker import toolbox, evaluate
+    from GeneticPogramming.factorEval import ic_evaluator, icir_evaluator
     from Tool import globalVars
     from GetData import load_all
     
     load_all()
-    globalVars.logger.warning('load all')
-    globalVars.logger.info('get ')
+    globalVars.logger.info('load all......done')
     logger = globalVars.logger
-    
+    install_mp_handler(logger = logger.logger)
     materialDataDict = globalVars.materialData
     barraDict = globalVars.barra
     toRegFactorDict = {}
     
-        
+    
 
 
     logger.info('start the easimple')
@@ -149,7 +128,23 @@ if __name__ == '__main__':
     stats.register("min", np.min)
     stats.register("max", np.max)
     logbook = tools.Logbook()
-    pop = easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraDict, toRegFactorDict, logger)
+    
+    evaluateIC = partial(evaluate,
+                         materialDataDict = materialDataDict,
+                         barraDict = barraDict,
+                         toRegFactorDict = toRegFactorDict,
+                         factorEvalFunc = partial(icir_evaluator, pctChange = globalVars.materialData['pctChange'])
+                         )
+    
+    pop = easimple(toolbox = toolbox,
+                   stats = stats,
+                   logbook = logbook,
+                   evaluate = evaluateIC,
+                   materialDataDict = materialDataDict,
+                   barraDict = barraDict,
+                   toRegFactorDict = toRegFactorDict,
+                   logger = logger.logger
+                   )
     
     
     
