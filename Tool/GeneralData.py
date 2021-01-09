@@ -40,6 +40,10 @@ class GeneralData(GeneralDataBase):
         if isinstance(generalData, pd.DataFrame):
             try:
                 self.columnNames = generalData.columns
+                if 'indexFormat' in kwargs:
+                    indexFormat = kwargs['indexFormat']
+                    generalData.index = pd.to_datetime(generalData.index, format = indexFormat)
+                self.timestamp = pd.DatetimeIndex(generalData.index)
                 self.timestamp = pd.DatetimeIndex(generalData.index.astype(str))
                 self.generalData = generalData.to_numpy()
             except Exception as e:
@@ -158,8 +162,8 @@ class GeneralData(GeneralDataBase):
         return(toReturn)
         
 if __name__ ==  "__main__":
-    DATA_PATH = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/Local\\GetData/tables/S_DQ_ADJOPEN.csv'
-    klass = GeneralData(name = 'adj_open', filePath = DATA_PATH)
+    DATA_PATH = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/AlphaSignalFromMachineLearning\\GetData/tables//materialData//S_DQ_ADJOPEN.csv'
+    klass = GeneralData(name = 'adj_open', filePath = DATA_PATH, indexFormat = "%Y%m%d")
     # klass.get_data('2005', '2014-01-06')
     isinstance(klass, GeneralData)
     

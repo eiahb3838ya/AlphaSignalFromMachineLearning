@@ -20,7 +20,7 @@ materialDataFileDict = {
         'high': 'S_DQ_ADJHIGH.csv',
         'low': 'S_DQ_ADJLOW.csv',
         'open': 'S_DQ_ADJOPEN.csv',
-        'preclose': 'S_DQ_ADJPRECLOSE.csv',
+        # 'preclose': 'S_DQ_ADJPRECLOSE.csv',
         'amount': 'S_DQ_AMOUNT.csv',
         'volume': 'S_DQ_VOLUME.csv',
         'pctChange': 'S_DQ_PCTCHANGE.csv',
@@ -41,9 +41,32 @@ materialDataFileDict = {
         # 'industry_zx1_name': ''  # 中信一级行业名称
         # 'industry_sw1_name': ''  # 申万一级行业名称
         # 'name': ''   # 股票简称
+
     }
 
 barraDataFileDict = {
+        'beta':'beta.csv',
+        'blev':'BLEV.csv',
+        'bp':'BP.csv',
+        'cetop':'CETOP.csv',
+        # 'cmra':'CMRA.csv',
+        'dastd':'DASTD.csv',
+        # 'dtoa':'DTOA.csv',
+        # 'egrlf':'EGRLF.csv',
+        # 'egro':'EGRO.csv',
+        # 'egrsf':'EGRSF.csv',
+        # 'epfwd':'EPFWD.csv',
+        'etop':'ETOP.csv',
+        # 'hsigma':'HSIGMA.csv',
+        # 'mlev':'MLEV.csv',
+        'mom':'momentum.csv',
+        'nonlinear_size':'Non_linear_size.csv',
+        # 'report_period':'REPORT_PERIOD.csv',
+        # 'sgro':'SGRO.csv',
+        'size':'size.csv',
+        'stoa':'STOA.csv',
+        'stom':'STOM.csv',
+        'stoq':'STOQ.csv'
         'beta': 'beta.csv',
         'blev': 'BLEV.csv'
     }
@@ -61,7 +84,7 @@ def load_all():
     align_barra()
 #%% load data functions
 
-def load_data(dataFileDict, DATA_PATH, dictName = None):
+def load_data(dataFileDict, DATA_PATH, dictName = None, **kwargs):
     toReturnList = []
     if dictName is not None:
         # add dictionary to globalVars
@@ -70,7 +93,7 @@ def load_data(dataFileDict, DATA_PATH, dictName = None):
             
         for k, v in dataFileDict.items():
             if k not in globalVars.__getattribute__(dictName):
-                data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
+                data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v), **kwargs)
                 globalVars.__getattribute__(dictName)[k] = data
                 # print('==================================================================\n\
                 #       {} is now in globalVars.{}\n'.format(k, dictName), data)
@@ -88,7 +111,7 @@ def load_data(dataFileDict, DATA_PATH, dictName = None):
     return(toReturnList)
 
 def load_material_data(dataFileDict = materialDataFileDict, DATA_PATH = DATA_PATH+'materialData'):
-    return(load_data(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH, dictName='materialData'))
+    return(load_data(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH, dictName='materialData', indexFormat = "%Y%m%d"))
 
 
 def simple_load_factor(factorName):

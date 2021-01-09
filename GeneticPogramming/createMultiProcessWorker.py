@@ -7,12 +7,12 @@ Created on Tue Jan  5 13:28:07 2021
 #%% import 
 import random
 import os
-import time
+from time import time
 from deap import base, creator, gp, tools
 from inspect import getmembers, isfunction
 import itertools
 import numpy as np
-import logging
+
 
 
 from Tool.GeneralData import GeneralData
@@ -25,10 +25,10 @@ materialDataNames = [
         'high',
         'low',
         'open',
-        'preclose',
+        # 'preclose',
         'amount',
-        'volume',
-        'pctChange'
+        'volume'
+        # 'pctChange'
     ]
 
 # the tournsize of tourn selecetion
@@ -36,7 +36,7 @@ TOURNSIZE = 10
 
 # The parameter *termpb* sets the probability to choose between 
 # a terminal or non-terminal crossover point.
-TERMPB = 0.5
+TERMPB = 0.1
 
 # the height min max of a initial generate 
 initGenHeightMin, initGenHeightMax = 1, 5
@@ -146,23 +146,19 @@ toolbox.register("mutate", multi_mutate, expr=toolbox.expr_mut, pset=pset)
 
 #%% define how to evaluate
 # import how to evaluate factors
-from GeneticPogramming.factorEval import residual_preprocess
-
-
-
+from GeneticPogramming.factorEval import residual_preprocess, MAD_preprocess, standard_scale_preprocess
 # evaluate function
 def evaluate(individual,
              materialDataDict : dict,
-             barraDict : dict,
-             toRegFactorDict : dict,
+             barraStack,
+             toRegFactorStack,
              factorEvalFunc,
              pset = pset):
-    logger.debug('evaluate in pid {}'.format(os.getpid()))
-    
-    tic = time.time()
+    tic = time()
+    logger.debug('evaluate in pid {} time {} '.format(os.getpid(), tic))
     func = gp.compile(expr=individual, pset = pset)
     factor = func(**materialDataDict)
-    toc = time.time()
+    toc = time()
     
     #如果新因子全是空值或者都相同则拋棄
     if (~np.isfinite(factor.generalData).any() or np.nanstd(factor.generalData) == 0) : 
@@ -172,39 +168,179 @@ def evaluate(individual,
 
     logger.debug('{} used {}s to calculate the factor'.format(os.getpid(), toc-tic))
     
+    # mad
+    tic = time()
+    factor = MAD_preprocess(factor)
+    toc = time()
+    logger.debug('{} used {}s to apply mad'.format(os.getpid(), toc-tic))
+    
+    # scale
+    tic = time()
+    factor = standard_scale_preprocess(factor)
+    toc = time()
+    logger.debug('{} used {}s to apply scale'.format(os.getpid(), toc-tic))
+    
     # prepare the factor stack to reg in latter function    
+    try:
+        toRegStack = np.stack([barraStack, toRegFactorStack], axis = 2)
+    except:
+        logger.debug('{} fail to stack barra and toRegFactor'.format(os.getpid()))
+        toRegStack = barraStack
+  
+    # get the residual after mutualize with existing factors
+    if toRegStack is not None:
+        tic = time()
+        toScoreFactor = residual_preprocess(factor, toRegStack)
+        toc = time()
+        logger.debug('{} used {}s to apply regression to the factor'.format(os.getpid(), toc-tic))
+    else:
+        logger.debug('{} did not reg the factor'.format(os.getpid()))
+        toScoreFactor = factor
+
+    # evaluate the factor with certain way
+    # typically ic, icir, factorReturn, Monotonicity(單調性)
+    tic = time()
+    score = factorEvalFunc(toScoreFactor)
+    toc = time()
+    logger.debug('{} used {}s to evaluate the factor'.format(os.getpid(), toc-tic))
+    
+    if score == np.ma.masked:
+        return (-1.),
+    return (score),
+
+#%%
+if __name__ == '__main__':
+    N_POP = 10 # 族群中的个体数量
+    N_GEN = 15 # 迭代代数
+    
+    # prob to cross over
+    CXPB = 0.4 # 交叉概率
+    
+    # prob to mutate
+    MUTPB = 0.2 # 突变概率
+#%%
+    def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraStack, toRegFactorStack, logger):
+        pop = toolbox.population(n = N_POP)
+        # eval the population 评价初始族群
+        # singleprocess ###################################
+        # fitnesses = map(evaluate, pop)
+        # for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
+        #     print(i, fit)
+        #     ind.fitness.values = fit
+        ############################################################
+        # multiprocess
+    
+        logger.info('evaluating initial pop......start')
+        tic = time()
+        
+ 
+        fitnesses = map(evaluate, pop)       
+            
+        for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
+            ind.fitness.values = fit
+        toc = time()
+        logger.info('evaluating initial pop......done  {}'.format(toc-tic))
+        record = stats.compile(pop)
+        logger.info("The initial record:{}".format(str(record)))
+        
+        # start evolution
+        for gen in range(N_GEN):
+            # 配种选择
+            offspring = toolbox.select(pop, 2*N_POP)
+            offspring = list(map(toolbox.clone, offspring)) # 复制个体，供交叉变异用
+            
+            # 对选出的育种族群两两进行交叉，对于被改变个体，删除其适应度值
+            for child1, child2 in zip(offspring[::2], offspring[1::2]):
+                if random.random() < CXPB:
+                    toolbox.crossover(child1, child2)
+                    del child1.fitness.values
+                    del child2.fitness.values
+                    
+            # 对选出的育种族群进行变异，对于被改变个体，删除适应度值
+            for mutant in offspring:
+                if random.random() < MUTPB:
+                    toolbox.mutate(mutant)
+                    del mutant.fitness.values
+              
+            # 对于被改变的个体，重新评价其适应度
+            logger.info('start evaluate for {}th Generation new individual......'.format(gen))
+            tic = time()
+            invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
+           
+            fitnesses = map(evaluate, pop)  
+            for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
+                ind.fitness.values = fit
+            toc = time()
+            logger.info('evaluate for {}th Generation new individual......done  {}'.format(gen, toc-tic))
+    
+            # select best 环境选择 - 保留精英
+            pop = tools.selBest(offspring, N_POP, fit_attr='fitness') # 选择精英,保持种群规模
+            
+            # 记录数据
+            record = stats.compile(pop)
+            logger.info("The {} th record:{}".format(gen, str(record)))
+    
+            logbook.record(gen=gen, **record)
+        return(pop)
+    
+
+    
+    
+   #%% 
+    from Tool import globalVars
+    from GetData import load_all, load_material_data, load_barra_data, align_barra
+    
+    globalVars.initialize()
+    load_material_data() 
+    load_barra_data()
+    align_barra()
+
+    globalVars.logger.info('load all......done')
+    logger = globalVars.logger
+    materialDataDict = globalVars.materialData
+    barraDict = globalVars.barra
+    toRegFactorDict = {}
+    open_df = globalVars.materialData['open'].to_DataFrame()
+
+    shiftedPctChange = GeneralData('shiftedOpen', open_df.pct_change().shift(-2))
+    del open_df
+    
+
+
+    logger.info('start the easimple')
+    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+    stats.register("avg", np.mean)
+    stats.register("std", np.std)
+    stats.register("min", np.min)
+    stats.register("max", np.max)
+    logbook = tools.Logbook()
+    
+    from functools import partial
+    from GeneticPogramming.factorEval import ic_evaluator, icir_evaluator
+    EVALUATE_FUNC = icir_evaluator
+    
+    evaluateIC = partial(evaluate,
+                         materialDataDict = materialDataDict,
+                         barraDict = barraDict,
+                         toRegFactorDict = toRegFactorDict,
+                         factorEvalFunc = partial(EVALUATE_FUNC, shiftedPctChange = shiftedPctChange)
+                         )
     barraStack = None
     toRegFactorStack =  None
     if len(barraDict)>0:
         barraStack = np.stack([aB.generalData for aB in barraDict.values()],axis = 2)
     if len(toRegFactorDict)>0:
         toRegFactorStack = np.stack([aB.generalData for aB in toRegFactorDict.values()],axis = 2)
-    try:
-        toRegStack = np.stack([barraStack, toRegFactorStack], axis = 2)
-    except:
-        logger.debug('{} fail to stack barra and toRegFactor'.format(os.getpid()))
-        toRegStack = barraStack
-        
-    # get the residual after mutualize with existing factors
-    if toRegStack is not None:
-        tic = time.time()
-        toScoreFactor = residual_preprocess(factor, toRegStack)
-        toc = time.time()
-        logger.debug('{} used {}s to apply regression to the factor'.format(os.getpid(), toc-tic))
-    else:
-        logger.debug('{} did not reg the factor'.format(os.getpid()))
-        toScoreFactor = factor
-    
-    # evaluate the factor with certain way
-    # typically ic, icir, factorReturn, Monotonicity(單調性)
-    tic = time.time()
-    score = factorEvalFunc(toScoreFactor)
-    toc = time.time()
-    logger.debug('{} used {}s to evaluate the factor'.format(os.getpid(), toc-tic))
-    
-    if score == np.ma.masked:
-        return (-1.),
-    return (score),
+    #%%
+    pop = easimple(toolbox = toolbox,
+                   stats = stats,
+                   logbook = logbook,
+                   evaluate = evaluateIC,
+                   materialDataDict = materialDataDict,
+                   barraStack = barraStack,
+                   toRegFactorStack = toRegFactorStack,
+                   logger = logger.logger
+                   )
 
 
 
