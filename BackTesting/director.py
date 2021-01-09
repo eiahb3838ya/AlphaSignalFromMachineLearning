@@ -38,16 +38,7 @@ class SignalDirector:
         # load factors
         # TODO: should load from some factor.json file latter rather than simply load from material data
         # self.factorNameList
-<<<<<<< Updated upstream
-        toLoadFactors = ['close',
-                         'high',
-                         'low',
-                         'open',
-                         'volume'
-                         ]
-        # 给globalVars注册factors（dict）
-        # key：factor.name，value：generalData
-=======
+
         # toLoadFactors = ['close',
         #                  'high',
         #                  'low',
@@ -57,9 +48,7 @@ class SignalDirector:
         # # 给globalVars注册factors（dict）
         # # key：factor的名字，value：generalData
         
-        
-        
->>>>>>> Stashed changes
+
         if 'factors' not in globalVars.varList:
             globalVars.register('factors', {})
         globalVars.factors['{}_factor'.format(self.toTestFactor.name)] = Factor('{}_factor'.format(self.toTestFactor.name),self.toTestFactor)

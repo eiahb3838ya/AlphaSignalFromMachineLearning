@@ -5,8 +5,9 @@ Created on Thu Dec  3 11:33:44 2020
 @author: eiahb
 """
 
-
+import os
 from .logger import Logger
+
 
 def initialize(logName = 'log'): 
     global varList
@@ -14,7 +15,9 @@ def initialize(logName = 'log'):
     
     # global PROJECT_ROOT    
     global PROJECT_ROOT
-    PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+    # PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+    cur_path = os.path.abspath(os.path.dirname(__file__))
+    PROJECT_ROOT = os.path.join(cur_path, '../')
     loggerFolder = PROJECT_ROOT+"Tool\\log\\"
     fileName = logName
     

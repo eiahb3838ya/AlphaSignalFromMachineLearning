@@ -40,7 +40,7 @@ class GeneralData(GeneralDataBase):
         if isinstance(generalData, pd.DataFrame):
             try:
                 self.columnNames = generalData.columns
-                self.timestamp = pd.DatetimeIndex(generalData.index)
+                self.timestamp = pd.DatetimeIndex(generalData.index.astype(str))
                 self.generalData = generalData.to_numpy()
             except Exception as e:
                 raise(e)

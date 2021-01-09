@@ -12,7 +12,7 @@ import numpy.ma as ma
 from copy import copy
 from sklearn.pipeline import Pipeline
 from sklearn.base import TransformerMixin
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
@@ -305,8 +305,9 @@ class SignalSynthesis(SignalBase):
             for _, maskData in maskDict.items():
                 assert (data.shape == maskData.shape)
             if mask is None:
-                mask = np.zeros(data.shape)
-            maskedData = ma.masked_array(data, mask=mask)
+                maskedData = ma.masked_array(data, mask=np.zeros(data.shape))
+            else:
+                maskData = ma.masked_array(data, mask=mask)
 
             # transforming horizontally(stocks-level)
 

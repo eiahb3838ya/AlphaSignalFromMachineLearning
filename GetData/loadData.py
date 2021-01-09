@@ -16,23 +16,42 @@ from Tool.Factor import Factor
 
 
 materialDataFileDict = {
-        'close':'S_DQ_ADJCLOSE.csv',
-        'high':'S_DQ_ADJHIGH.csv',
-        'low':'S_DQ_ADJLOW.csv',
-        'open':'S_DQ_ADJOPEN.csv',
-        'preclose':'S_DQ_ADJPRECLOSE.csv',
-        'amount':'S_DQ_AMOUNT.csv',
-        'volume':'S_DQ_VOLUME.csv',
-        'pctChange':'S_DQ_PCTCHANGE.csv'
+        'close': 'S_DQ_ADJCLOSE.csv',
+        'high': 'S_DQ_ADJHIGH.csv',
+        'low': 'S_DQ_ADJLOW.csv',
+        'open': 'S_DQ_ADJOPEN.csv',
+        'preclose': 'S_DQ_ADJPRECLOSE.csv',
+        'amount': 'S_DQ_AMOUNT.csv',
+        'volume': 'S_DQ_VOLUME.csv',
+        'pctChange': 'S_DQ_PCTCHANGE.csv',
+
+        # 'raw_close': 'S_DQ_ADJCLOSE.csv',
+        # 'raw_high': 'S_DQ_ADJHIGH.csv',
+        # 'raw_low': 'S_DQ_ADJLOW.csv',
+        # 'raw_open': 'S_DQ_ADJOPEN.csv',
+        # 'is_buy_limit': 'S_DQ_BUYLIMIT.csv',  # 是否涨停
+        # 'is_sell_limit': 'S_DQ_SELLLIMIT.csv',  # 是否跌停
+        'is_trading': 'S_DQ_TRADE.csv',
+        'market_cap': 'S_VAL_MV.csv',  # 总市值
+        'circulating_market_cap': 'S_DQ_MV.csv',  # 流通市值
+        'free_circulating_market_cap': 'S_FREE_MV.csv',  # 自由流通市值
+        # 'ipo_date': ''  # 上市日期
+        # 'is_exist': ''  # 是否存续中
+        # 'is_st': ''  # 是否st
+        # 'industry_zx1_name': ''  # 中信一级行业名称
+        # 'industry_sw1_name': ''  # 申万一级行业名称
+        # 'name': ''   # 股票简称
     }
 
 barraDataFileDict = {
-        'beta':'beta.csv',
-        'blev':'BLEV.csv'
+        'beta': 'beta.csv',
+        'blev': 'BLEV.csv'
     }
 
 #%%
-PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/AlphaSignalFromMachineLearning'
+# PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/AlphaSignalFromMachineLearning'
+cur_path = os.path.abspath(os.path.dirname(__file__))
+PROJ_ROOT = os.path.join(cur_path, '../')
 DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
 
 def load_all():

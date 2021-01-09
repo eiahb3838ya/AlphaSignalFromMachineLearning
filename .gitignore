@@ -6,5 +6,6 @@ __pycache__/
 .idea/
 .vscode/
 .spyproject
+.GetData/tables/config.py
 
 barra/
