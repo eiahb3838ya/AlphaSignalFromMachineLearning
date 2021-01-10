@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
 
-from .backtestDatabase import BacktestDatabase as DatabaseReader
+from GetData.backtestDatabase import BacktestDatabase as DatabaseReader
 
 
 class BacktestDataApi:
@@ -40,7 +40,7 @@ class BacktestDataApi:
         :param factor_list: 具体返回哪些因子列表 
         :return:
         """
-        pd_data = DatabaseReader.get_index_weight(index_id, start_date=date, end_date=date)
+        pd_data = DatabaseReader.get_index_weight(index_id, start_date=date, end_date=date).copy(deep=True)
         if pd_data is not None:
             pd_data.set_index("code", inplace=True)
             # 列名重命名 权重 isST 重命名为 ST 保持和股票因子 ST数据一致
@@ -64,7 +64,7 @@ class BacktestDataApi:
         """
         result = dict()
         for date in date_list:
-            pd_data = DatabaseReader.get_index_weight(index_id, start_date=date, end_date=date)
+            pd_data = DatabaseReader.get_index_weight(index_id, start_date=date, end_date=date).copy(deep=True)
             if pd_data is not None:
                 pd_data.set_index("code", inplace=True)
                 pd_data.rename(columns={"weight": "权重"}, inplace=True)
@@ -165,13 +165,18 @@ class BacktestDataApi:
 
 if __name__ == "__main__":
     import time
+    from GetData.loadData import load_material_data
+    from Tool import globalVars
+
+    globalVars.initialize()
+    load_material_data()
 
     s = time.time()
-    print(BacktestDataApi.get_universe('沪深300', '2020-05-20', ['close', 'circulating_market_cap']))
+    print(BacktestDataApi.get_universe('沪深300', '2020-05-20', ['close', ]))
     print(time.time() - s)
 
     s = time.time()
-    print(BacktestDataApi.get_index_weight('000300.SH', '2020-05-20', ['close', 'circulating_market_cap']))
+    print(BacktestDataApi.get_index_weight('000300.SH', '2020-05-20', ['close', ]))
     print(time.time() - s)
 
     s = time.time()

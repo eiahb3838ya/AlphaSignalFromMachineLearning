@@ -56,6 +56,7 @@ for index_code in index_code_list:
     df['code'] = index_code
     df['datetime'] = pd.DatetimeIndex(df.index)
     df.reset_index(inplace=True, drop=True)
+    df.rename(columns={'money': 'amount', 'pre_close': 'preclose', 'ret': 'pctChange'}, inplace=True)
     df.to_pickle(os.path.join(INDEX_QUOTE_DATA_DIR, index_code))
 
 
@@ -74,6 +75,7 @@ for index_code in index_code_list:
     df['index_code'] = index_code
     df.reset_index(inplace=True)
     df['code'] = df['code'].apply(func=jq2wind)
+    df['datetime'] = to_get_date_list[0]
     for date in to_get_date_list:
         if date in end_of_month_list and date != to_get_date_list[0]:
             df = get_index_weights(wind2jq(index_code), date=date)
@@ -82,9 +84,10 @@ for index_code in index_code_list:
             df['index_code'] = index_code
             df.reset_index(inplace=True)
             df['code'] = df['code'].apply(func=jq2wind)
-
-        df['datetime'] = date
-        l.append(df)
+        t_df = df.copy(deep=True)
+        t_df['datetime'] = date
+        l.append(t_df)
     result = pd.concat(l)
+    result['weight'] /= 100.
     result.to_pickle(os.path.join(INDEX_WEIGHT_DATA_DIR, index_code))
     print(result.head())

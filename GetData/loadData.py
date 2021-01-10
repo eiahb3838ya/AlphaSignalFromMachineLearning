@@ -20,7 +20,7 @@ materialDataFileDict = {
         'high': 'S_DQ_ADJHIGH.csv',
         'low': 'S_DQ_ADJLOW.csv',
         'open': 'S_DQ_ADJOPEN.csv',
-        # 'preclose': 'S_DQ_ADJPRECLOSE.csv',
+        'preclose': 'S_DQ_ADJPRECLOSE.csv',
         'amount': 'S_DQ_AMOUNT.csv',
         'volume': 'S_DQ_VOLUME.csv',
         'pctChange': 'S_DQ_PCTCHANGE.csv',
@@ -66,7 +66,7 @@ barraDataFileDict = {
         'size':'size.csv',
         'stoa':'STOA.csv',
         'stom':'STOM.csv',
-        'stoq':'STOQ.csv'
+        'stoq':'STOQ.csv',
         'beta': 'beta.csv',
         'blev': 'BLEV.csv'
     }

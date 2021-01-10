@@ -191,7 +191,7 @@ class FactorAnalyserBase(object):
 
         self.director = director
         general_data = self.director.run()["shiftedReturn"]
-        self.signals = pd.DataFrame(general_data, columns=general_data.columnNames, index=general_data.timestamp)
+        self.signals = general_data.to_DataFrame()
 
     def _get_date_list(self):
         """重新算持仓日期和调仓日期"""
@@ -304,7 +304,7 @@ class FactorAnalyserBase(object):
                     # 把权重添加到raw和processed的df里，列名为group_label：Q1、Q2.....
                     self.processed_universe_df_dict[date].loc[weight_series.index, group_label] = weight_series
                     self.raw_universe_df_dict[date].loc[weight_series.index, group_label] = weight_series
-                result_count_series_dict[date] = df.groupby('grouping')['code'].count().sort_index()
+                result_count_series_dict[date] = df.reset_index().groupby('grouping')['code'].count().sort_index()
 
         # 控制变量
         else:
@@ -375,6 +375,8 @@ class FactorAnalyserBase(object):
             benchmark_ret_df = all_stock_ret_df[benchmark_df.index]
             benchmark_ret_df = benchmark_ret_df[(benchmark_ret_df.index > refresh_date) &
                                                 (benchmark_ret_df.index <= next_refresh_date)]
+            if len(benchmark_ret_df) == 0:
+                continue
             for group_label in group_list:
                 # 算组合收益率时间序列
                 pos_df = all_pos_df[all_pos_df[group_label] > 0]   # 取权重大于0的出来。
@@ -545,9 +547,7 @@ if __name__ == '__main__':
         # metric function for machine learning models
         "metric_func": mean_squared_error,
         # smoothing params
-        "periods": 10,
-        # smoothing的时候用的方式
-        "method": "linear"
+        "smoothing_params": None
     }
 
     director = SignalDirector(SignalSynthesis, params=params, logger=logger)
@@ -559,15 +559,15 @@ if __name__ == '__main__':
 
         def filter(self):
             for date, df in self.raw_universe_df_dict.items():
-                df['上市天数'] = (date-df['listed_date']).dt.days + 1  # 自然日
-                self.set_filter((~df['is_st']) & (df['上市天数'] > 180) & df['is_exist'], date)
+                df['上市天数'] = (date-df['ipo_date']).dt.days + 1  # 自然日
+                self.set_filter(df['is_trading'].astype(bool) & (df['上市天数'] > 180) & df['is_exist'], date)
 
         def rate_stock(self):
             """
             选股逻辑，去极值、中性化、标准化等。需要用户自己定义
             """
             for date, df in self.processed_universe_df_dict.items():
-                score = self.signals.loc[date, df['code'].to_list()]
+                score = self.signals.loc[date, df.index.to_list()]
                 self.set_score(score, date)
 
 
@@ -578,12 +578,9 @@ if __name__ == '__main__':
     fab.rate_stock()
 
     start_ = datetime.datetime.now()
-    result = fab.grouping_test(5, OrderedDict([('industry_zx1_name', ''), ('circulating_market_cap', 5)]),
+    result = fab.grouping_test(5, OrderedDict([('industry_zx1_name', '')]),
                                group_by_benchmark=True, weight_method='LVW')
     print(datetime.datetime.now() - start_)
-    # result = fab.grouping_test(10, {}, weight_method='VW')
-
-    # result = fab.grouping_test(5, {}, weight_method='EW')
     # print(result.__dict__)
     result.get_annual_return_statistic()
 

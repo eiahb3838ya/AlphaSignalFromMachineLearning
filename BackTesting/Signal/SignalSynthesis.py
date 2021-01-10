@@ -94,7 +94,7 @@ class SignalSynthesis(SignalBase):
                          deExtremeMethod=None, imputeMethod=None,
                          standardizeMethod=None, pipeline=None, factorNameList=None,
                          modelParams=None, metric_func=None,
-                         periods=10, method='linear'):
+                         smoothing_params=None):
         '''
         
 
@@ -238,8 +238,12 @@ class SignalSynthesis(SignalBase):
                                             timestamp=pd.DatetimeIndex(backTestDates),
                                             columnNames=factorL[0].columnNames)
             rawSignals[dependent] = signalGeneralData
-            smoothedSignalGeneralData = self.smoothing(signalGeneralData)
-            resultDict[dependent] = smoothedSignalGeneralData
+            if smoothing_params is not None:
+                smoothedSignalGeneralData = self.smoothing(signalGeneralData,
+                                                           smoothing_params['periods'], smoothing_params['method'])
+                resultDict[dependent] = smoothedSignalGeneralData
+            else:
+                resultDict[dependent] = signalGeneralData
         self.rawSignals = rawSignals
         return resultDict
 
@@ -307,7 +311,7 @@ class SignalSynthesis(SignalBase):
             if mask is None:
                 maskedData = ma.masked_array(data, mask=np.zeros(data.shape))
             else:
-                maskData = ma.masked_array(data, mask=mask)
+                maskedData = ma.masked_array(data, mask=mask)
 
             # transforming horizontally(stocks-level)
 
@@ -346,7 +350,7 @@ class SignalSynthesis(SignalBase):
         if method == 'linear':
             npdata = toOutputGeneral.generalData
             strided = get_strided(npdata, periods)
-            toOutput = strided.mean(axis=1)
+            toOutput = strided.mean(axis=1)  # Todo: 使得信号出现太多NaN， 可能需要调整
             toOutputGeneral.generalData = toOutput
         elif method == 'exp':
             pass

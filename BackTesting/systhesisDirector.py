@@ -94,9 +94,7 @@ if __name__ == '__main__':
         # metric function for machine learning models
         "metric_func": mean_squared_error,
         # smoothing params
-        "periods": 10,
-        # smoothing的时候用的方式
-        "method": "linear"
+        "smoothing_params": None
     }
 
     director = SignalDirector(SignalSynthesis, params=params, logger=logger)

@@ -88,9 +88,7 @@ class SignalDirector:
             # metric function for machine learning models
             "metric_func": mean_squared_error,
             # smoothing params
-            "periods": 10,
-            # smoothing的时候用的方式
-            "method": "linear"
+            "smoothing_params": None
         }
         self.logger.info("start to generate signalGenerator")
         self.signalGenerator = self.signalGeneratorClass(model=CrossSectionalModelXGBoost, logger=self.logger)

@@ -18,7 +18,7 @@ INDEX_WEIGHT_DATA_DIR = os.path.join(INDEX_DATA_DIR, 'indexWeight')
 class BacktestDatabase:
     fields = ['industry_sw1_name', 'industry_zx1_name', 'name', 'listed_date', 'is_st',
               'is_exist', 'industry_zx1_name', 'is_trading', 'market_cap', 'circulating_market_cap',
-              'free_circulating_market_cap']
+              'free_circulating_market_cap', 'open', 'high', 'low', 'close', 'volume', 'amount']
 
     @classmethod
     @lru_cache(maxsize=1000)
@@ -77,7 +77,10 @@ class BacktestDatabase:
         l = []
         for field in factor_list:
             general_data = globalVars.materialData[field]
-            data = general_data.get_data(start=start_date, end=cls.get_next_trade_date(end_date))
+            if start_date == end_date:
+                data = general_data.get_data(at=start_date).reshape(1, -1)
+            else:
+                data = general_data.get_data(start=start_date, end=cls.get_next_trade_date(end_date))
             df = pd.DataFrame(data, columns=general_data.columnNames)
             df['datetime'] = trade_dates
             melted = df.melt(id_vars=['datetime'], value_vars=code_list, value_name=field, var_name='code')
@@ -98,8 +101,24 @@ class BacktestDatabase:
         :param code_list: 返回特定的几只股票的数据
         :return:
         """
-        quote_list = ['open', 'high', 'low', 'close', 'volume', 'preclose', 'pctChange', 'amount']
-        return cls.get_daily_factor(code_list, quote_list, start_date, end_date)
+        index_code_list = []
+        for code in ["000300.SH", "000905.SH"]:
+            if code in code_list:
+                index_code_list.append(code)
+                code_list.remove(code)
+        quote_list = ['open', 'high', 'low', 'close', 'volume', 'preclose', 'amount']
+        stock_df = cls.get_daily_factor(code_list, quote_list, start_date, end_date)
+        for index_code in index_code_list:
+            index_df = cls._load_index_quote(index_code)
+            index_df = index_df[(index_df['datetime'] >= start_date) & (index_df['datetime'] <= end_date)]
+            stock_df = pd.concat([stock_df, index_df[stock_df.columns]])
+        stock_df['pctChange'] = stock_df['close'] / stock_df['preclose'] - 1
+        return stock_df
+
+    @classmethod
+    @lru_cache(maxsize=1000)
+    def _load_index_quote(cls, index_code):
+        return pd.read_pickle(os.path.join(INDEX_QUOTE_DATA_DIR, index_code))
 
     @classmethod
     @lru_cache(maxsize=1000)
@@ -153,7 +172,7 @@ class BacktestDatabase:
                        'industry_sw': 'industry_sw1_name',
                        'industry_citic': 'industry_zx1_name'}
         for field in temp_fileds:
-            d = np.load(f'./tables/tempData/{field}.npy').item()
+            d = np.load(f'{cur_path}/tables/tempData/{field}.npy', allow_pickle=True).item()
             df[rename_dict[field]] = df['code'].map(d)
         df['is_exist'] = (df['ipo_date'] <= df['datetime']) & (df['delist_date'] >= df['datetime'])
         # Todo: 'is_st'  # 是否st
@@ -166,11 +185,33 @@ if __name__ == '__main__':
     BacktestDatabase.get_all_trade_days()
     globalVars.initialize()
     load_material_data()
-
+    BacktestDatabase.get_daily_quote(['000300.SH'], pd.to_datetime("2020-01-01"),
+                                     pd.to_datetime("2020-02-28"))
     BacktestDatabase.get_daily_factor(['000001.SZ', '000002.SZ'], ["close", "open"], pd.to_datetime("2020-01-01"),
                                       pd.to_datetime("2020-02-28"))
-    BacktestDatabase.get_index_weight('沪深300', pd.to_datetime("2020-01-01"),
-                                      pd.to_datetime("2020-02-28"))
+    BacktestDatabase.get_index_weight('沪深300', pd.to_datetime("2020-01-22"),
+                                      pd.to_datetime("2020-01-22"))
+
+    # start_date = pd.to_datetime('2016-01-01')
+    # end_date = pd.to_datetime('2021-01-05')
+    # all_trade_days = BacktestDatabase.get_all_trade_days()
+    # to_get_date_list = all_trade_days[(all_trade_days >= start_date) & (all_trade_days <= end_date)]
+    # for index_code in ['000300.SH', '000905.SH']:
+    #     df = pd.read_pickle(os.path.join(INDEX_WEIGHT_DATA_DIR, index_code))
+    #     l = []
+    #     for date in to_get_date_list:
+    #         if date not in df['datetime']:
+    #             sl = df['datetime'][df['datetime'] <= date]
+    #             if len(sl) == 0:
+    #                 print(date)
+    #                 continue
+    #             shift_date = sl.iat[-1]
+    #             tmp_df = df[df['datetime'] == shift_date].copy(deep=True)
+    #             tmp_df['datetime'] = date
+    #             l.append(tmp_df)
+    #     l.append(df)
+    #     res_df = pd.concat(l)
+    #     res_df.sort_values('datetime').to_pickle(os.path.join(INDEX_WEIGHT_DATA_DIR, index_code))
 
 
 
