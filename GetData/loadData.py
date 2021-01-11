@@ -35,6 +35,10 @@ materialDataFileDict = {
         'market_cap': 'S_VAL_MV.csv',  # 总市值
         'circulating_market_cap': 'S_DQ_MV.csv',  # 流通市值
         'free_circulating_market_cap': 'S_FREE_MV.csv',  # 自由流通市值
+        'large_sell_rate': 'S_LI_LARGESELLRATE.csv',  # 大卖比率
+        'large_buy_rate': 'S_LI_LARGEBUYRATE.csv',  # 大买比率
+        'initiative_sell_rate': 'S_LI_INITIATIVESELLRATE.csv',  # 主卖比率
+        'initiative_buy_rate': 'S_LI_INITIATIVEBUYRATE.csv',  # 主买比率
         # 'ipo_date': ''  # 上市日期
         # 'is_exist': ''  # 是否存续中
         # 'is_st': ''  # 是否st

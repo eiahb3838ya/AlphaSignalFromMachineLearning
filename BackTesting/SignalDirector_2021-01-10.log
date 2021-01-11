@@ -1,0 +1,554 @@
+2021-01-10 14:09:55,607 logger.py[line:40] - INFO - root : globalVars is initialized
+2021-01-10 14:09:55,608 logger.py[line:40] - INFO - root : materialData:{} is now in global
+2021-01-10 14:09:56,709 logger.py[line:40] - INFO - root : close is now in globalVars.materialData
+2021-01-10 14:09:57,828 logger.py[line:40] - INFO - root : high is now in globalVars.materialData
+2021-01-10 14:09:58,933 logger.py[line:40] - INFO - root : low is now in globalVars.materialData
+2021-01-10 14:10:00,202 logger.py[line:40] - INFO - root : open is now in globalVars.materialData
+2021-01-10 14:10:01,291 logger.py[line:40] - INFO - root : preclose is now in globalVars.materialData
+2021-01-10 14:10:02,474 logger.py[line:40] - INFO - root : amount is now in globalVars.materialData
+2021-01-10 14:10:03,609 logger.py[line:40] - INFO - root : volume is now in globalVars.materialData
+2021-01-10 14:10:05,042 logger.py[line:40] - INFO - root : pctChange is now in globalVars.materialData
+2021-01-10 14:10:06,108 logger.py[line:40] - INFO - root : is_trading is now in globalVars.materialData
+2021-01-10 14:10:07,930 logger.py[line:40] - INFO - root : market_cap is now in globalVars.materialData
+2021-01-10 14:10:10,124 logger.py[line:40] - INFO - root : circulating_market_cap is now in globalVars.materialData
+2021-01-10 14:10:12,299 logger.py[line:40] - INFO - root : free_circulating_market_cap is now in globalVars.materialData
+2021-01-10 14:10:12,300 logger.py[line:40] - INFO - root : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange', 'is_trading', 'market_cap', 'circulating_market_cap', 'free_circulating_market_cap'] is loaded
+2021-01-10 14:10:12,301 logger.py[line:40] - INFO - root : factors:{} is now in global
+2021-01-10 14:10:12,304 logger.py[line:40] - INFO - root : factor close is loaded
+2021-01-10 14:10:12,306 logger.py[line:40] - INFO - root : factor amount is loaded
+2021-01-10 14:10:12,307 logger.py[line:40] - INFO - root : factor open is loaded
+2021-01-10 14:10:12,309 logger.py[line:40] - INFO - root : factor high is loaded
+2021-01-10 14:10:12,313 logger.py[line:40] - INFO - root : factor low is loaded
+2021-01-10 14:10:12,314 logger.py[line:40] - INFO - root : all factors are loaded
+2021-01-10 14:10:12,315 logger.py[line:40] - INFO - root : start to generate signalGenerator
+2021-01-10 14:10:12,419 logger.py[line:40] - INFO - root : start to generate signals from 2020-01-01 00:00:00 ot 2020-03-02 00:00:00
+2021-01-10 14:10:12,524 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.75% (3748 / 4176)
+2021-01-10 14:10:12,524 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.80% (3750 / 4176)
+2021-01-10 14:10:12,705 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 3.344184638015829, testing loss: 6.751261404403668
+2021-01-10 14:10:12,707 logger.py[line:37] - DEBUG - root : 2020-01-02 00:00:00 finished
+2021-01-10 14:10:12,801 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.80% (3750 / 4176)
+2021-01-10 14:10:12,801 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.82% (3751 / 4176)
+2021-01-10 14:10:12,960 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.298597817373551, testing loss: 6.299000032860303
+2021-01-10 14:10:12,962 logger.py[line:37] - DEBUG - root : 2020-01-03 00:00:00 finished
+2021-01-10 14:10:13,051 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.82% (3751 / 4176)
+2021-01-10 14:10:13,051 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.80% (3750 / 4176)
+2021-01-10 14:10:13,214 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.965392827232416, testing loss: 5.980822136293877
+2021-01-10 14:10:13,216 logger.py[line:37] - DEBUG - root : 2020-01-06 00:00:00 finished
+2021-01-10 14:10:13,307 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.80% (3750 / 4176)
+2021-01-10 14:10:13,308 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.80% (3750 / 4176)
+2021-01-10 14:10:13,466 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.253683477794484, testing loss: 14.316033910667675
+2021-01-10 14:10:13,468 logger.py[line:37] - DEBUG - root : 2020-01-07 00:00:00 finished
+2021-01-10 14:10:13,559 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.80% (3750 / 4176)
+2021-01-10 14:10:13,560 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.87% (3753 / 4176)
+2021-01-10 14:10:13,728 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 5.405289051724763, testing loss: 14.667731681818402
+2021-01-10 14:10:13,730 logger.py[line:37] - DEBUG - root : 2020-01-08 00:00:00 finished
+2021-01-10 14:10:13,819 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.87% (3753 / 4176)
+2021-01-10 14:10:13,819 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.87% (3753 / 4176)
+2021-01-10 14:10:13,982 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 3.9436693262928086, testing loss: 8.491550311744835
+2021-01-10 14:10:13,984 logger.py[line:37] - DEBUG - root : 2020-01-09 00:00:00 finished
+2021-01-10 14:10:14,073 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.87% (3753 / 4176)
+2021-01-10 14:10:14,073 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.87% (3753 / 4176)
+2021-01-10 14:10:14,287 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.037649747487158, testing loss: 6.5824335953881645
+2021-01-10 14:10:14,289 logger.py[line:37] - DEBUG - root : 2020-01-10 00:00:00 finished
+2021-01-10 14:10:14,386 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.87% (3753 / 4176)
+2021-01-10 14:10:14,387 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.89% (3754 / 4176)
+2021-01-10 14:10:14,564 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 3.9523961753504397, testing loss: 6.799186709349821
+2021-01-10 14:10:14,566 logger.py[line:37] - DEBUG - root : 2020-01-13 00:00:00 finished
+2021-01-10 14:10:14,661 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.89% (3754 / 4176)
+2021-01-10 14:10:14,661 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.89% (3754 / 4176)
+2021-01-10 14:10:14,826 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.365125992644804, testing loss: 5.4473693570945985
+2021-01-10 14:10:14,829 logger.py[line:37] - DEBUG - root : 2020-01-14 00:00:00 finished
+2021-01-10 14:10:14,921 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.89% (3754 / 4176)
+2021-01-10 14:10:14,922 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.92% (3755 / 4176)
+2021-01-10 14:10:15,113 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 3.930411090031863, testing loss: 5.099598101442576
+2021-01-10 14:10:15,117 logger.py[line:37] - DEBUG - root : 2020-01-15 00:00:00 finished
+2021-01-10 14:10:15,209 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.92% (3755 / 4176)
+2021-01-10 14:10:15,209 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.97% (3757 / 4176)
+2021-01-10 14:10:15,396 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.2114189770312835, testing loss: 5.864109861620195
+2021-01-10 14:10:15,398 logger.py[line:37] - DEBUG - root : 2020-01-16 00:00:00 finished
+2021-01-10 14:10:15,489 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.97% (3757 / 4176)
+2021-01-10 14:10:15,489 logger.py[line:37] - DEBUG - root : Actual available testing data account for 89.99% (3758 / 4176)
+2021-01-10 14:10:15,700 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.718409232703778, testing loss: 8.592880584569185
+2021-01-10 14:10:15,702 logger.py[line:37] - DEBUG - root : 2020-01-17 00:00:00 finished
+2021-01-10 14:10:15,792 logger.py[line:37] - DEBUG - root : Actual available training data account for 89.99% (3758 / 4176)
+2021-01-10 14:10:15,793 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.01% (3759 / 4176)
+2021-01-10 14:10:15,945 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 6.161248368140615, testing loss: 12.609092469760785
+2021-01-10 14:10:15,947 logger.py[line:37] - DEBUG - root : 2020-01-20 00:00:00 finished
+2021-01-10 14:10:16,036 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.01% (3759 / 4176)
+2021-01-10 14:10:16,036 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.04% (3760 / 4176)
+2021-01-10 14:10:16,207 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 6.422946773153474, testing loss: 11.015002087179582
+2021-01-10 14:10:16,209 logger.py[line:37] - DEBUG - root : 2020-01-21 00:00:00 finished
+2021-01-10 14:10:16,300 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.04% (3760 / 4176)
+2021-01-10 14:10:16,301 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.06% (3761 / 4176)
+2021-01-10 14:10:16,471 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 5.882923511894422, testing loss: 22.089059984396474
+2021-01-10 14:10:16,473 logger.py[line:37] - DEBUG - root : 2020-01-22 00:00:00 finished
+2021-01-10 14:10:16,562 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.06% (3761 / 4176)
+2021-01-10 14:10:16,562 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.09% (3762 / 4176)
+2021-01-10 14:10:16,725 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 6.500552898090847, testing loss: 46.69022983348504
+2021-01-10 14:10:16,727 logger.py[line:37] - DEBUG - root : 2020-01-23 00:00:00 finished
+2021-01-10 14:10:16,815 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.09% (3762 / 4176)
+2021-01-10 14:10:16,815 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.11% (3763 / 4176)
+2021-01-10 14:10:16,971 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 12.1431673895238, testing loss: 81.7034618978248
+2021-01-10 14:10:16,973 logger.py[line:37] - DEBUG - root : 2020-02-03 00:00:00 finished
+2021-01-10 14:10:17,061 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.11% (3763 / 4176)
+2021-01-10 14:10:17,061 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.16% (3765 / 4176)
+2021-01-10 14:10:17,247 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 10.206406588901967, testing loss: 18.666477725000775
+2021-01-10 14:10:17,249 logger.py[line:37] - DEBUG - root : 2020-02-04 00:00:00 finished
+2021-01-10 14:10:17,324 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.16% (3765 / 4176)
+2021-01-10 14:10:17,325 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.16% (3765 / 4176)
+2021-01-10 14:10:17,525 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 6.492906400761451, testing loss: 9.9541504826524
+2021-01-10 14:10:17,527 logger.py[line:37] - DEBUG - root : 2020-02-05 00:00:00 finished
+2021-01-10 14:10:17,614 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.16% (3765 / 4176)
+2021-01-10 14:10:17,614 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.18% (3766 / 4176)
+2021-01-10 14:10:17,770 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 6.604906429943358, testing loss: 13.746280231194614
+2021-01-10 14:10:17,772 logger.py[line:37] - DEBUG - root : 2020-02-06 00:00:00 finished
+2021-01-10 14:10:17,861 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.18% (3766 / 4176)
+2021-01-10 14:10:17,861 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.23% (3768 / 4176)
+2021-01-10 14:10:18,016 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 8.994324164389637, testing loss: 11.534633823177407
+2021-01-10 14:10:18,018 logger.py[line:37] - DEBUG - root : 2020-02-07 00:00:00 finished
+2021-01-10 14:10:18,107 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.23% (3768 / 4176)
+2021-01-10 14:10:18,107 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.25% (3769 / 4176)
+2021-01-10 14:10:18,265 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 8.574437090748065, testing loss: 13.292941641495887
+2021-01-10 14:10:18,267 logger.py[line:37] - DEBUG - root : 2020-02-10 00:00:00 finished
+2021-01-10 14:10:18,355 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.25% (3769 / 4176)
+2021-01-10 14:10:18,355 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.28% (3770 / 4176)
+2021-01-10 14:10:18,516 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 6.267574687404167, testing loss: 11.898029476286593
+2021-01-10 14:10:18,519 logger.py[line:37] - DEBUG - root : 2020-02-11 00:00:00 finished
+2021-01-10 14:10:18,596 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.28% (3770 / 4176)
+2021-01-10 14:10:18,596 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.30% (3771 / 4176)
+2021-01-10 14:10:18,773 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.705209075427795, testing loss: 13.686328230014201
+2021-01-10 14:10:18,775 logger.py[line:37] - DEBUG - root : 2020-02-12 00:00:00 finished
+2021-01-10 14:10:18,864 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.30% (3771 / 4176)
+2021-01-10 14:10:18,864 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.35% (3773 / 4176)
+2021-01-10 14:10:19,022 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 5.715403864769744, testing loss: 7.302932730663761
+2021-01-10 14:10:19,024 logger.py[line:37] - DEBUG - root : 2020-02-13 00:00:00 finished
+2021-01-10 14:10:19,110 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.35% (3773 / 4176)
+2021-01-10 14:10:19,110 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.40% (3775 / 4176)
+2021-01-10 14:10:19,332 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.982530203124146, testing loss: 16.21113373221661
+2021-01-10 14:10:19,334 logger.py[line:37] - DEBUG - root : 2020-02-14 00:00:00 finished
+2021-01-10 14:10:19,430 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.40% (3775 / 4176)
+2021-01-10 14:10:19,430 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.45% (3777 / 4176)
+2021-01-10 14:10:19,614 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 4.941299600718445, testing loss: 10.509253413352587
+2021-01-10 14:10:19,616 logger.py[line:37] - DEBUG - root : 2020-02-17 00:00:00 finished
+2021-01-10 14:10:19,712 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.45% (3777 / 4176)
+2021-01-10 14:10:19,712 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.45% (3777 / 4176)
+2021-01-10 14:10:19,870 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 6.217091215352629, testing loss: 15.106486605378176
+2021-01-10 14:10:19,873 logger.py[line:37] - DEBUG - root : 2020-02-18 00:00:00 finished
+2021-01-10 14:10:19,963 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.45% (3777 / 4176)
+2021-01-10 14:10:19,963 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.47% (3778 / 4176)
+2021-01-10 14:10:20,129 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 7.751265241684819, testing loss: 12.773517509259687
+2021-01-10 14:10:20,131 logger.py[line:37] - DEBUG - root : 2020-02-19 00:00:00 finished
+2021-01-10 14:10:20,220 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.47% (3778 / 4176)
+2021-01-10 14:10:20,220 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.52% (3780 / 4176)
+2021-01-10 14:10:20,417 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 5.368411072205198, testing loss: 7.938640366811759
+2021-01-10 14:10:20,419 logger.py[line:37] - DEBUG - root : 2020-02-20 00:00:00 finished
+2021-01-10 14:10:20,510 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.52% (3780 / 4176)
+2021-01-10 14:10:20,511 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.52% (3780 / 4176)
+2021-01-10 14:10:20,683 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 5.528056669413347, testing loss: 10.200062660456128
+2021-01-10 14:10:20,685 logger.py[line:37] - DEBUG - root : 2020-02-21 00:00:00 finished
+2021-01-10 14:10:20,774 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.52% (3780 / 4176)
+2021-01-10 14:10:20,774 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.52% (3780 / 4176)
+2021-01-10 14:10:20,929 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 8.27786125755347, testing loss: 12.969578670585367
+2021-01-10 14:10:20,932 logger.py[line:37] - DEBUG - root : 2020-02-24 00:00:00 finished
+2021-01-10 14:10:21,020 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.52% (3780 / 4176)
+2021-01-10 14:10:21,020 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.59% (3783 / 4176)
+2021-01-10 14:10:21,173 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 9.126702640647462, testing loss: 21.869883665924522
+2021-01-10 14:10:21,176 logger.py[line:37] - DEBUG - root : 2020-02-25 00:00:00 finished
+2021-01-10 14:10:21,261 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.59% (3783 / 4176)
+2021-01-10 14:10:21,261 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.61% (3784 / 4176)
+2021-01-10 14:10:21,444 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 9.99673802952975, testing loss: 14.72255188807598
+2021-01-10 14:10:21,446 logger.py[line:37] - DEBUG - root : 2020-02-26 00:00:00 finished
+2021-01-10 14:10:21,539 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.61% (3784 / 4176)
+2021-01-10 14:10:21,539 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.61% (3784 / 4176)
+2021-01-10 14:10:21,737 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 8.119855103661493, testing loss: 44.96261638766447
+2021-01-10 14:10:21,740 logger.py[line:37] - DEBUG - root : 2020-02-27 00:00:00 finished
+2021-01-10 14:10:21,827 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.61% (3784 / 4176)
+2021-01-10 14:10:21,827 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.66% (3786 / 4176)
+2021-01-10 14:10:21,993 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 10.382117728925317, testing loss: 95.23307948633307
+2021-01-10 14:10:21,995 logger.py[line:37] - DEBUG - root : 2020-02-28 00:00:00 finished
+2021-01-10 14:10:22,082 logger.py[line:37] - DEBUG - root : Actual available training data account for 90.66% (3786 / 4176)
+2021-01-10 14:10:22,083 logger.py[line:37] - DEBUG - root : Actual available testing data account for 90.68% (3787 / 4176)
+2021-01-10 14:10:22,239 logger.py[line:40] - INFO - root : Model XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=1, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints='',
+             learning_rate=0.300000012, max_delta_step=0, max_depth=2,
+             min_child_weight=1, missing=nan, monotone_constraints='()',
+             n_estimators=50, n_jobs=4, num_parallel_tree=1, random_state=42,
+             reg_alpha=0, reg_lambda=1, scale_pos_weight=1, subsample=1,
+             tree_method='exact', validate_parameters=1, verbosity=None) training loss: 5.985344152867381, testing loss: 14.544009387587439
+2021-01-10 14:10:22,242 logger.py[line:37] - DEBUG - root : 2020-03-02 00:00:00 finished
+2021-01-10 14:10:27,583 utils.py[line:141] - INFO - numexpr.utils : NumExpr defaulting to 4 threads.
+2021-01-10 14:32:18,801 logger.py[line:40] - INFO - root : globalVars is initialized
+2021-01-10 14:32:18,831 logger.py[line:40] - INFO - root : materialData:{} is now in global
+2021-01-10 14:32:19,940 logger.py[line:40] - INFO - root : close is now in globalVars.materialData
+2021-01-10 14:32:20,973 logger.py[line:40] - INFO - root : high is now in globalVars.materialData
+2021-01-10 14:32:22,154 logger.py[line:40] - INFO - root : low is now in globalVars.materialData
+2021-01-10 14:32:23,217 logger.py[line:40] - INFO - root : open is now in globalVars.materialData
+2021-01-10 14:32:24,330 logger.py[line:40] - INFO - root : preclose is now in globalVars.materialData
+2021-01-10 14:32:25,542 logger.py[line:40] - INFO - root : amount is now in globalVars.materialData
+2021-01-10 14:32:26,882 logger.py[line:40] - INFO - root : volume is now in globalVars.materialData
+2021-01-10 14:32:28,070 logger.py[line:40] - INFO - root : pctChange is now in globalVars.materialData
+2021-01-10 14:32:29,101 logger.py[line:40] - INFO - root : is_trading is now in globalVars.materialData
+2021-01-10 14:32:30,853 logger.py[line:40] - INFO - root : market_cap is now in globalVars.materialData
+2021-01-10 14:32:32,816 logger.py[line:40] - INFO - root : circulating_market_cap is now in globalVars.materialData
+2021-01-10 14:32:34,810 logger.py[line:40] - INFO - root : free_circulating_market_cap is now in globalVars.materialData
+2021-01-10 14:32:34,811 logger.py[line:40] - INFO - root : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange', 'is_trading', 'market_cap', 'circulating_market_cap', 'free_circulating_market_cap'] is loaded
+2021-01-10 14:32:34,829 logger.py[line:40] - INFO - root : factors:{} is now in global
+2021-01-10 14:37:59,300 logger.py[line:40] - INFO - root : globalVars is initialized
+2021-01-10 14:37:59,348 logger.py[line:40] - INFO - root : materialData:{} is now in global
+2021-01-10 14:38:00,399 logger.py[line:40] - INFO - root : close is now in globalVars.materialData
+2021-01-10 14:38:01,476 logger.py[line:40] - INFO - root : high is now in globalVars.materialData
+2021-01-10 14:38:02,719 logger.py[line:40] - INFO - root : low is now in globalVars.materialData
+2021-01-10 14:38:03,730 logger.py[line:40] - INFO - root : open is now in globalVars.materialData
+2021-01-10 14:38:04,747 logger.py[line:40] - INFO - root : preclose is now in globalVars.materialData
+2021-01-10 14:38:05,859 logger.py[line:40] - INFO - root : amount is now in globalVars.materialData
+2021-01-10 14:38:06,961 logger.py[line:40] - INFO - root : volume is now in globalVars.materialData
+2021-01-10 14:38:08,240 logger.py[line:40] - INFO - root : pctChange is now in globalVars.materialData
+2021-01-10 14:38:09,229 logger.py[line:40] - INFO - root : is_trading is now in globalVars.materialData
+2021-01-10 14:38:10,921 logger.py[line:40] - INFO - root : market_cap is now in globalVars.materialData
+2021-01-10 14:38:12,897 logger.py[line:40] - INFO - root : circulating_market_cap is now in globalVars.materialData
+2021-01-10 14:38:14,694 logger.py[line:40] - INFO - root : free_circulating_market_cap is now in globalVars.materialData
+2021-01-10 14:38:14,695 logger.py[line:40] - INFO - root : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange', 'is_trading', 'market_cap', 'circulating_market_cap', 'free_circulating_market_cap'] is loaded
+2021-01-10 14:38:14,696 logger.py[line:40] - INFO - root : factors:{} is now in global
+2021-01-10 14:39:06,809 cache.py[line:143] - DEBUG - parso.cache : pickle loaded: C:\Users\Mengjie Ye\anaconda3\lib\site-packages\jedi\third_party\typeshed\stdlib\2and3\builtins.pyi
+2021-01-11 10:39:12,799 logger.py[line:40] - INFO - root : globalVars is initialized
+2021-01-11 10:39:12,846 logger.py[line:40] - INFO - root : materialData:{} is now in global
+2021-01-11 10:39:14,202 logger.py[line:40] - INFO - root : close is now in globalVars.materialData
+2021-01-11 10:39:15,345 logger.py[line:40] - INFO - root : high is now in globalVars.materialData
+2021-01-11 10:39:16,425 logger.py[line:40] - INFO - root : low is now in globalVars.materialData
+2021-01-11 10:39:17,477 logger.py[line:40] - INFO - root : open is now in globalVars.materialData
+2021-01-11 10:39:18,545 logger.py[line:40] - INFO - root : preclose is now in globalVars.materialData
+2021-01-11 10:39:19,679 logger.py[line:40] - INFO - root : amount is now in globalVars.materialData
+2021-01-11 10:39:20,810 logger.py[line:40] - INFO - root : volume is now in globalVars.materialData
+2021-01-11 10:39:21,923 logger.py[line:40] - INFO - root : pctChange is now in globalVars.materialData
+2021-01-11 10:39:22,957 logger.py[line:40] - INFO - root : is_trading is now in globalVars.materialData
+2021-01-11 10:39:24,619 logger.py[line:40] - INFO - root : market_cap is now in globalVars.materialData
+2021-01-11 10:39:26,382 logger.py[line:40] - INFO - root : circulating_market_cap is now in globalVars.materialData
+2021-01-11 10:39:28,229 logger.py[line:40] - INFO - root : free_circulating_market_cap is now in globalVars.materialData
+2021-01-11 10:39:28,230 logger.py[line:40] - INFO - root : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange', 'is_trading', 'market_cap', 'circulating_market_cap', 'free_circulating_market_cap'] is loaded
+2021-01-11 10:39:28,231 logger.py[line:40] - INFO - root : factors:{} is now in global
+2021-01-11 10:46:00,141 logger.py[line:40] - INFO - root : globalVars is initialized
+2021-01-11 10:46:00,196 logger.py[line:40] - INFO - root : materialData:{} is now in global
+2021-01-11 10:46:01,293 logger.py[line:40] - INFO - root : close is now in globalVars.materialData
+2021-01-11 10:46:02,404 logger.py[line:40] - INFO - root : high is now in globalVars.materialData
+2021-01-11 10:46:03,485 logger.py[line:40] - INFO - root : low is now in globalVars.materialData
+2021-01-11 10:46:04,524 logger.py[line:40] - INFO - root : open is now in globalVars.materialData
+2021-01-11 10:46:05,564 logger.py[line:40] - INFO - root : preclose is now in globalVars.materialData
+2021-01-11 10:46:06,701 logger.py[line:40] - INFO - root : amount is now in globalVars.materialData
+2021-01-11 10:46:07,869 logger.py[line:40] - INFO - root : volume is now in globalVars.materialData
+2021-01-11 10:46:09,041 logger.py[line:40] - INFO - root : pctChange is now in globalVars.materialData
+2021-01-11 10:46:10,073 logger.py[line:40] - INFO - root : is_trading is now in globalVars.materialData
+2021-01-11 10:46:11,790 logger.py[line:40] - INFO - root : market_cap is now in globalVars.materialData
+2021-01-11 10:46:13,558 logger.py[line:40] - INFO - root : circulating_market_cap is now in globalVars.materialData
+2021-01-11 10:46:15,409 logger.py[line:40] - INFO - root : free_circulating_market_cap is now in globalVars.materialData
+2021-01-11 10:46:15,410 logger.py[line:40] - INFO - root : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange', 'is_trading', 'market_cap', 'circulating_market_cap', 'free_circulating_market_cap'] is loaded
+2021-01-11 10:46:15,411 logger.py[line:40] - INFO - root : factors:{} is now in global
+2021-01-11 11:01:31,604 logger.py[line:40] - INFO - root : globalVars is initialized
+2021-01-11 11:01:31,652 logger.py[line:40] - INFO - root : materialData:{} is now in global
+2021-01-11 11:01:32,937 logger.py[line:40] - INFO - root : close is now in globalVars.materialData
+2021-01-11 11:01:34,003 logger.py[line:40] - INFO - root : high is now in globalVars.materialData
+2021-01-11 11:01:35,067 logger.py[line:40] - INFO - root : low is now in globalVars.materialData
+2021-01-11 11:01:36,111 logger.py[line:40] - INFO - root : open is now in globalVars.materialData
+2021-01-11 11:01:37,148 logger.py[line:40] - INFO - root : preclose is now in globalVars.materialData
+2021-01-11 11:01:38,304 logger.py[line:40] - INFO - root : amount is now in globalVars.materialData
+2021-01-11 11:01:39,401 logger.py[line:40] - INFO - root : volume is now in globalVars.materialData
+2021-01-11 11:01:40,508 logger.py[line:40] - INFO - root : pctChange is now in globalVars.materialData
+2021-01-11 11:01:41,480 logger.py[line:40] - INFO - root : is_trading is now in globalVars.materialData
+2021-01-11 11:01:43,109 logger.py[line:40] - INFO - root : market_cap is now in globalVars.materialData
+2021-01-11 11:01:44,867 logger.py[line:40] - INFO - root : circulating_market_cap is now in globalVars.materialData
+2021-01-11 11:01:46,661 logger.py[line:40] - INFO - root : free_circulating_market_cap is now in globalVars.materialData
+2021-01-11 11:01:46,661 logger.py[line:40] - INFO - root : material data ['close', 'high', 'low', 'open', 'preclose', 'amount', 'volume', 'pctChange', 'is_trading', 'market_cap', 'circulating_market_cap', 'free_circulating_market_cap'] is loaded
+2021-01-11 11:01:46,662 logger.py[line:40] - INFO - root : factors:{} is now in global
+2021-01-11 11:01:51,412 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:51,412 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:51,412 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:51,414 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:51,415 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end
+2021-01-11 11:01:51,482 cache.py[line:143] - DEBUG - parso.cache : pickle loaded: C:\Users\Mengjie Ye\anaconda3\lib\site-packages\jedi\third_party\typeshed\stdlib\3\sys.pyi
+2021-01-11 11:01:54,075 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:54,075 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:54,075 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:54,076 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:54,076 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end
+2021-01-11 11:01:54,221 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:54,222 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:54,222 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:54,223 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:54,224 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end
+2021-01-11 11:01:54,307 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:54,307 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:54,308 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:54,308 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:54,308 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end
+2021-01-11 11:01:55,265 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:55,265 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:55,266 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:55,266 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:55,266 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end
+2021-01-11 11:01:55,492 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:55,493 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:55,493 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:55,493 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:55,493 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end
+2021-01-11 11:01:55,724 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:55,725 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:55,725 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:55,725 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:55,725 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end
+2021-01-11 11:01:56,140 diff.py[line:282] - DEBUG - parso.python.diff : diff parser start
+2021-01-11 11:01:56,140 diff.py[line:293] - DEBUG - parso.python.diff : line_lengths old: 1; new: 1
+2021-01-11 11:01:56,140 diff.py[line:296] - DEBUG - parso.python.diff : -> code[replace] old[1:1] new[1:1]
+2021-01-11 11:01:56,141 diff.py[line:421] - DEBUG - parso.python.diff : parse_part from 1 to 1 (to 0 in part parser)
+2021-01-11 11:01:56,141 diff.py[line:339] - DEBUG - parso.python.diff : diff parser end

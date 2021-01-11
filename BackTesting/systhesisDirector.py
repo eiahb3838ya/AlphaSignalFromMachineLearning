@@ -82,7 +82,8 @@ if __name__ == '__main__':
         "imputeMethod": ImputeMethod.JustMask(),
         "standardizeMethod": StandardizeMethod.StandardScaler(),
         "pipeline": None,
-        "factorNameList": ['close', 'amount', 'free_circulating_market_cap'],
+        # "factorNameList": ['close', 'amount', 'free_circulating_market_cap'],
+        "factorNameList": ['large_sell_rate', 'large_buy_rate', 'initiative_sell_rate', 'initiative_buy_rate'],
         # params for XGBoost
         "modelParams": {
             "jsonPath": None,
