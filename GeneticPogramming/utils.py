@@ -8,6 +8,8 @@ Created on Wed Dec  9 10:07:25 2020
 import numpy as np
 from numpy.lib import stride_tricks
 from numpy.ma import masked_invalid
+from scipy.stats.stats import pearsonr
+from Tool.GeneralData import GeneralData
 
 
 
@@ -38,10 +40,15 @@ def simple_corrcoef(factor, shiftedReturn):
         return(corrcoef[0, 1])
     
 def rowwise_corrcoef(factor, shiftedReturn):
-    # validFactor = np.ma.masked_invalid(factor.generalData)
-    # validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
-    validFactor = np.ma.masked_invalid(factor)
-    validShiftedReturn = np.ma.masked_invalid(shiftedReturn)
+
+    try:
+        if isinstance(factor, GeneralData):validFactor = np.ma.masked_invalid(factor.generalData)
+        else:validFactor = np.ma.masked_invalid(factor)  
+        if isinstance(shiftedReturn, GeneralData):validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
+        else:validShiftedReturn = np.ma.masked_invalid(shiftedReturn)
+    except Exception as e:
+        raise(e, 'The input must be np.array or GeneralData either one')
+        
     msk = np.ma.mask_or(validFactor.mask, validShiftedReturn.mask)#(~validFactor.mask & ~validShiftedReturn.mask)
     validFactor.mask = msk
     validShiftedReturn.mask = msk
@@ -60,16 +67,43 @@ def rowwise_corrcoef(factor, shiftedReturn):
     #=======================================================
     
     # Rowwise mean of input arrays & subtract from input arrays themeselves
-    validFactor_m = validFactor - validFactor.mean(1)[:, None]
-    validShiftedReturn_m = validShiftedReturn - validShiftedReturn.mean(1)[:, None]
+    validFactor_dm = validFactor - validFactor.mean(1)[:, None]
+    validShiftedReturn_dm = validShiftedReturn - validShiftedReturn.mean(1)[:, None]
     
     # Sum of squares across rows
-    ssA = (validFactor_m**2).sum(1)
-    ssB = (validShiftedReturn_m**2).sum(1)
+    ssA = (validFactor_dm**2).sum(1)
+    ssB = (validShiftedReturn_dm**2).sum(1)
     
-    toDivide = np.ma.dot(validFactor_m, validShiftedReturn_m.T).diagonal()
-    divider = np.ma.sqrt(np.dot(ssA, ssB))
-    return((toDivide/divider))
+    toDivide = np.ma.dot(validFactor_dm, validShiftedReturn_dm.T).diagonal()
+    divider = np.ma.sqrt(ssA *ssB)
+    try:
+        toReturn = toDivide/divider
+    except:
+        toReturn = np.full(validFactor.shape[0], np.nan)
+        
+    return(toReturn)
+
+# def rowwise_corrcoef(factor, shiftedReturn):
+#     '''use from scipy.stats.stats import pearsonr to calculate'''
+#     try:
+#         if isinstance(factor, GeneralData):validFactor = np.ma.masked_invalid(factor.generalData)
+#         else:validFactor = np.ma.masked_invalid(factor)  
+#         if isinstance(shiftedReturn, GeneralData):validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
+#         else:validShiftedReturn = np.ma.masked_invalid(shiftedReturn)
+#     except Exception as e:
+#         raise(e, 'The input must be np.array or GeneralData either one')
+        
+    
+#     msk = np.ma.mask_or(validFactor.mask, validShiftedReturn.mask, shrink=False) #(~validFactor.mask & ~validShiftedReturn.mask)
+#     validFactor.mask = msk
+#     validShiftedReturn.mask = msk
+#     corr_array = np.full(validFactor.shape[0], np.nan)
+#     for i in range(validFactor.shape[0]):
+#         if msk[i].sum()<2:
+#             corr_array[i] = pearsonr(validFactor[i].compressed(), validShiftedReturn[i].compressed())[0]
+#     # corr_array = np.array([pearsonr(validFactor[i].compressed(), validShiftedReturn[i].compressed())[0] for i in range(validFactor.shape[0]) if msk[i].sum()<2])
+        
+#     return(corr_array)
 
 
 # 矩阵求解最主要的问题是数据中不能有空值，时间可以很快
@@ -108,13 +142,13 @@ def get_residual(x, y):
     masked_y = masked_invalid(y)
     mask_stocks = np.ma.mask_or(masked_x.mask.any(axis = 1), masked_y.mask)
     if mask_stocks.all():
-        print('all data points are invalid on certain time')
+        # print('all data points are invalid on certain time')
         return(np.full_like(y, np.nan), np.full(x.shape[1], np.nan))
     theta = linear_regression(x[~mask_stocks, :],y[~mask_stocks])
     try:
         residual = y - np.dot(x, theta)
     except ValueError as ve:
-        raise ve(str(x.shape) + str(x) + str(x[~mask_stocks, :]))
+        raise (ve,str(x.shape) + str(x) + str(x[~mask_stocks, :]) + str(mask_stocks))
     return(residual, theta)
 
 def add_constant(x):
