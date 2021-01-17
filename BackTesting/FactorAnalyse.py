@@ -571,14 +571,14 @@ if __name__ == '__main__':
                 self.set_score(score, date)
 
 
-    fab = SampleStrategy(params['startDate'], params['endDate'], '000300.SH', '沪深300',
+    fab = SampleStrategy(params['startDate'], params['endDate'], '000300.SH', '全A',
                          {"换仓日期模式": "每日换"})
     fab.prepare_data()
     fab.filter()
     fab.rate_stock()
 
     start_ = datetime.datetime.now()
-    result = fab.grouping_test(5, OrderedDict([('industry_zx1_name', '')]),
+    result = fab.grouping_test(5, OrderedDict([('circulating_market_cap', 5)]),
                                group_by_benchmark=True, weight_method='LVW')
     print(datetime.datetime.now() - start_)
     # print(result.__dict__)

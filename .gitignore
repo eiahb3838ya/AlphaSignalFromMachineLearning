@@ -1,11 +1,13 @@
 
 *.pkl
 *.pyc
+*.log
 .ipynb_checkpoints/
 __pycache__/
 .idea/
 .vscode/
 .spyproject
 .GetData/tables/config.py
+
 
 barra/

@@ -206,6 +206,8 @@ class GroupingMethod(object):
         for index, temp_df in gb:
             pos_df = filter_df.copy()
             # 按照基准股票池的分组标准取出股票池对应的股票到pos_df
+            if isinstance(index, str) or isinstance(index, pd.Interval):
+                index = [index]
             for i, sub_group in enumerate(index):
                 control_factor_list = list(control_dict.keys())
                 # 数字型
