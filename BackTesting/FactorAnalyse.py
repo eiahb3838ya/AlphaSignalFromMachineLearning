@@ -297,7 +297,7 @@ class FactorAnalyserBase(object):
         group_list.reverse()
         # 如果不需要控制变量
         if not control_dict:
-            for date, df in self.processed_universe_df_dict.items():
+            for date, df in tqdm(self.processed_universe_df_dict.items()):
                 weight_sr_dict = GroupingMethod.Method_Blank_QCut(df, group_num, group_list,
                                                                   weight_method, max_stock_num)
                 for group_label, weight_series in weight_sr_dict.items():
@@ -313,7 +313,7 @@ class FactorAnalyserBase(object):
             # 基于benchmark去确定分组区间
             if group_by_benchmark:
                 # 这种控制变量方法下只能通过原始值去分组，而不能用处理过的因子数据。
-                for date, df in self.raw_universe_df_dict.items():
+                for date, df in tqdm(self.raw_universe_df_dict.items()):
                     benchmark_df = self.benchmark_weight_df_dict.get(date, None)
                     weight_sr_dict, result_count_df = GroupingMethod.Method_Group_By_Benchmark(
                         df, benchmark_df, control_dict, group_num, group_list, factor_group_list,
@@ -326,7 +326,7 @@ class FactorAnalyserBase(object):
 
             # 基于股票池确定因子分组区间
             else:
-                for date, df in self.processed_universe_df_dict.items():
+                for date, df in tqdm(self.processed_universe_df_dict.items()):
                     benchmark_df = self.benchmark_weight_df_dict.get(date, None)
                     weight_sr_dict, result_count_df = GroupingMethod.Method_Group_By_Universe(
                         df, benchmark_df, control_dict, group_num, group_list, factor_group_list,
@@ -526,9 +526,9 @@ if __name__ == '__main__':
     logger.setLevel(logging.INFO)
 
     params = {
-        "startDate": pd.to_datetime('20200101'),
-        "endDate": pd.to_datetime('20200301'),
-        "panelSize": 3,
+        "startDate": pd.to_datetime('20170301'),
+        "endDate": pd.to_datetime('20201231'),
+        "panelSize": 5,
         "trainTestGap": 1,
         "maskList": None,
         "deExtremeMethod": DeExtremeMethod.MeanStd(),
@@ -571,15 +571,17 @@ if __name__ == '__main__':
                 self.set_score(score, date)
 
 
-    fab = SampleStrategy(params['startDate'], params['endDate'], '000300.SH', '全A',
-                         {"换仓日期模式": "每日换"})
+    fab = SampleStrategy(params['startDate'], params['endDate'], '000905.SH', '全A',
+                         {"换仓日期模式": "每日换", '单边交易费率': 0.})
     fab.prepare_data()
     fab.filter()
     fab.rate_stock()
 
     start_ = datetime.datetime.now()
-    result = fab.grouping_test(5, OrderedDict([('industry_zx1_name', ''), ('circulating_market_cap', 5)]),
-                               group_by_benchmark=True, weight_method='LVW')
+    # result = fab.grouping_test(5, OrderedDict([('industry_zx1_name', ''), ('circulating_market_cap', 5)]),
+    #                            group_by_benchmark=True, weight_method='LVW')
+    result = fab.grouping_test(5, OrderedDict([('circulating_market_cap', 5)]),
+                               group_by_benchmark=True, weight_method='VW')
     print(datetime.datetime.now() - start_)
     # print(result.__dict__)
     result.get_annual_return_statistic()

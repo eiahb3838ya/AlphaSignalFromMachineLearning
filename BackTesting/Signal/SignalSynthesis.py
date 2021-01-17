@@ -344,7 +344,7 @@ class SignalSynthesis(SignalBase):
 
         self.train_loss_list.append(trainLoss)
         self.test_loss_list.append(testLoss)
-        self.features_importance.append(model.feature_importances_)
+        self.features_importance.append(model.get_model().feature_importances_)
 
         # self.logger.info("Model {} training loss: {}, testing loss: {}".format(model.model, trainLoss, testLoss))
 
