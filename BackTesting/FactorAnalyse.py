@@ -578,7 +578,7 @@ if __name__ == '__main__':
     fab.rate_stock()
 
     start_ = datetime.datetime.now()
-    result = fab.grouping_test(5, OrderedDict([('circulating_market_cap', 5)]),
+    result = fab.grouping_test(5, OrderedDict([('industry_zx1_name', ''), ('circulating_market_cap', 5)]),
                                group_by_benchmark=True, weight_method='LVW')
     print(datetime.datetime.now() - start_)
     # print(result.__dict__)

@@ -240,8 +240,11 @@ class GroupingMethod(object):
 
             elif group_num < length:
                 # 如果股票池在这个细分小组里的股票数量大于分组数，那么可以按score去排序分层
-                pos_df['grouping'] = pd.qcut(pos_df['score'], group_num, labels=group_list,
-                                             duplicates='drop', precision=10)
+                try:
+                    pos_df['grouping'] = pd.qcut(pos_df['score'], group_num, labels=group_list,
+                                                 duplicates='drop', precision=10)
+                except:
+                    a = 1
                 ggb = pos_df.groupby('grouping')
                 for group_label, temp_df1 in ggb:
                     temp_df1 = temp_df1.sort_values('score', ascending=False).head(max_stock_num)
