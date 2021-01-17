@@ -41,6 +41,11 @@ class SignalSynthesis(SignalBase):
         # dateTimeIndex
         self.allTradeDatetime = None
 
+        # 机器学习模型的训练结果
+        self.train_loss_list = []
+        self.test_loss_list = []
+        self.features_importance = []
+
         self.initialize()
 
     def initialize(self):
@@ -337,7 +342,11 @@ class SignalSynthesis(SignalBase):
         trainLoss = metric_func(model.predict(X_train), y_train)
         testLoss = metric_func(pred_y, y_test)
 
-        self.logger.info("Model {} training loss: {}, testing loss: {}".format(model.model, trainLoss, testLoss))
+        self.train_loss_list.append(trainLoss)
+        self.test_loss_list.append(testLoss)
+        self.features_importance.append(model.feature_importances_)
+
+        # self.logger.info("Model {} training loss: {}, testing loss: {}".format(model.model, trainLoss, testLoss))
 
         return pred_y
 
