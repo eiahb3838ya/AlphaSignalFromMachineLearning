@@ -16,6 +16,15 @@ from Tool.Factor import Factor
 
 
 materialDataFileDict = {
+        'hx1': 'hx1.csv',
+        'hx2': 'hx2.csv',
+        'hx3': 'hx3.csv',
+        'alpha3': 'alpha3.csv',
+        'alpha13': 'alpha13.csv',
+        'alpha14': 'alpha14.csv',
+        'alpha15': 'alpha15.csv',
+        'alpha16': 'alpha16.csv',
+        'alpha17': 'alpha17.csv',
         'close': 'S_DQ_ADJCLOSE.csv',
         'high': 'S_DQ_ADJHIGH.csv',
         'low': 'S_DQ_ADJLOW.csv',
