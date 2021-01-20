@@ -8,6 +8,7 @@ Created on Tue Jan  5 14:49:02 2021
 
 import warnings
 import random
+import os
 
 from time import time
 from functools import partial
@@ -17,44 +18,40 @@ from deap import tools
 import numpy as np
 
 from GeneticPogramming.factorEval import ic_evaluator, icir_evaluator
+from GeneticPogramming.utils import save_factor
 from Tool.GeneralData import GeneralData
 warnings.filterwarnings("ignore")
-#%% set parameters 設定參數 
+#%% set parameters 設定參數
+ITERTIMES = 30
+PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+FACTOR_RECORD_PATH = os.path.join(PROJECT_ROOT, "GeneticPogramming\\factors\\usefulFactors")
+
 POOL_SIZE = 4
 
 N_POP = 100 # 族群中的个体数量
-N_GEN = 15 # 迭代代数
+N_GEN = 5 # 迭代代数
 
 # prob to cross over
-CXPB = 0.4 # 交叉概率
+CXPB = 0.6 # 交叉概率
 
 # prob to mutate
-MUTPB = 0.2 # 突变概率
+MUTPB = 0.15 # 突变概率
 
-EVALUATE_FUNC = icir_evaluator
-#%%
-def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraStack, toRegFactorStack, logger):
+EVALUATE_FUNC = ic_evaluator
+#%% easimple
+def easimple(toolbox, stats, logbook, evaluate, logger):
     pop = toolbox.population(n = N_POP)
-    # eval the population 评价初始族群
-    # singleprocess ###################################
-    # fitnesses = map(evaluate, pop)
-    # for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
-    #     print(i, fit)
-    #     ind.fitness.values = fit
-    ############################################################
-    # multiprocess
 
-    logger.info('evaluating initial pop......start')
     tic = time()
-    # print('start evaluating initial pop......')
-    logger.info('time in parent is {}'.format(tic))
+    logger.info('start easimple at {:.2f}'.format(tic))
+    logger.info('evaluating initial pop......start')
     with Pool(processes=POOL_SIZE) as pool: 
         fitnesses = pool.map(evaluate, pop)     
         
     for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
         ind.fitness.values = fit
     toc = time()
-    logger.info('evaluating initial pop......done  {}'.format(toc-tic))
+    logger.info('evaluating initial pop......done with {:.5f} sec'.format(toc-tic))
     record = stats.compile(pop)
     logger.info("The initial record:{}".format(str(record)))
     
@@ -89,77 +86,114 @@ def easimple(toolbox, stats, logbook, evaluate, materialDataDict, barraStack, to
             
         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
-            if fit[0]>3:
-                print(str(ind))
+            if(fit[0]>0.03):
+                # get something useful
+                logger.info('got a expr useful in gen:{}, end gp algorithm'.format(gen))
+                return(True, ind, logbook)
+
         toc = time()
-        logger.info('evaluate for {}th Generation new individual......done  {}'.format(gen, toc-tic))
+        logger.info('evaluate for {}th Generation new individual......done with {:.5f} sec'.format(gen, toc-tic))
         
         # select best 环境选择 - 保留精英
         pop = tools.selBest(offspring, N_POP, fit_attr='fitness') # 选择精英,保持种群规模
         
+        
         # 记录数据
         record = stats.compile(pop)
         logger.info("The {} th record:{}".format(gen, str(record)))
-
         logbook.record(gen=gen, **record)
-    return(pop)
+    ind = tools.selBest(offspring, 1, fit_attr='fitness')
+    logger.info('none expr useful, terminate easimple')
+    logger.info('end easimple {:.2f}'.format(tic))
+    return(False, ind, logbook)
+#%% define main
+def main(startEvaluateDate = "2017-01-01", endEvaluateDate = "2019-01-01"):
+    from GeneticPogramming.createMultiProcessWorker import toolbox, evaluate, materialDataNames, stats, logbook, compileFactor
+    from Tool import globalVars, Logger
+    from GetData import load_material_data, load_barra_data, align_all_to
+    
+    # set up logger
+    loggerFolder = PROJECT_ROOT+"Tool\\log\\"
+    logger = Logger(loggerFolder, 'log')
+    globalVars.initialize(logger)
+    
+    # load data to globalVars
+    load_material_data() 
+    load_barra_data()
+    globalVars.logger.info('load all......done')
+    
+    # prepare data
+    materialDataDict = {k:globalVars.materialData[k] for k in materialDataNames} # only take the data specified in materialDataNames
+    barraDict = globalVars.barra
+    toRegFactorDict = {}
+    
+    # get the return to compare 
+    open_ = globalVars.materialData['open']
+    shiftedPctChange_df = open_.to_DataFrame().pct_change().shift(-2)
+        
+    # align data within 2Y
+    shiftedPctChange2Y_df = shiftedPctChange_df.loc[startEvaluateDate:endEvaluateDate]
+    shiftedPctChange2Y = GeneralData('shiftedPctChange2Y', shiftedPctChange2Y_df)
+    materialDataDict2Y = align_all_to(materialDataDict, shiftedPctChange2Y)
+    barraDict2Y = align_all_to(barraDict, shiftedPctChange2Y)
+    del shiftedPctChange_df, shiftedPctChange2Y_df
+        
+    # stack barra data
+    barraStack = None
+    toRegFactorStack =  None
+    if len(barraDict)>0:
+        barraStack = np.stack([aB.generalData for aB in barraDict2Y.values()],axis = 2)
+    if len(toRegFactorDict)>0:
+        toRegFactorStack = np.stack([aB.generalData for aB in toRegFactorDict.values()],axis = 2)
+
+    evaluate2Y = partial(
+        evaluate,
+        materialDataDict = materialDataDict2Y,
+        barraStack = barraStack,
+        toRegFactorStack = toRegFactorStack,
+        factorEvalFunc = partial(EVALUATE_FUNC, shiftedPctChange = shiftedPctChange2Y)
+    )
+       
+
+    for i in range(ITERTIMES):
+        logger.info("start easimple algorithm from iteration {}th time".format(i+1))
+
+        findFactor, returnIndividual, logbook = easimple(
+                                        toolbox = toolbox,
+                                        stats = stats,
+                                        logbook = logbook,
+                                        evaluate = evaluate2Y,
+                                        logger = globalVars.logger
+                                    )
+        if findFactor:
+            func, factor = compileFactor(individual = returnIndividual, materialDataDict = materialDataDict2Y)
+            factor.name = str(returnIndividual)
+            save_factor(factor, FACTOR_RECORD_PATH)
+            toRegFactorDict.update({str(returnIndividual):factor})
+            if len(toRegFactorDict)>0:
+                toRegFactorStack = np.stack([aB.generalData for aB in toRegFactorDict.values()],axis = 2)
+        
+            evaluate2Y = partial(
+                evaluate,
+                materialDataDict = materialDataDict2Y,
+                barraStack = barraStack,
+                toRegFactorStack = toRegFactorStack,
+                factorEvalFunc = partial(EVALUATE_FUNC, shiftedPctChange = shiftedPctChange2Y)
+            )
+                
+        else:
+            logger.info("end easimple algorithm {} time".format(i+1))
 
 
     
         
 #%% main
 if __name__ == '__main__':
+    import os
+    print(os.getcwd())
+    main()
     
-    from GeneticPogramming.createMultiProcessWorker import toolbox, evaluate
 
-    from Tool import globalVars
-    from GetData import load_all
-    
-    
-    
-    load_all()
-    globalVars.logger.info('load all......done')
-    logger = globalVars.logger
-    materialDataDict = globalVars.materialData
-    barraDict = globalVars.barra
-    toRegFactorDict = {}
-    open_df = globalVars.materialData['open'].to_DataFrame()
-
-    shiftedPctChange = GeneralData('shiftedOpenPct', open_df.pct_change().shift(-2))
-    del open_df
-    
-    logger.info('start the easimple')
-    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
-    stats.register("avg", np.mean)
-    stats.register("std", np.std)
-    stats.register("min", np.min)
-    stats.register("max", np.max)
-    logbook = tools.Logbook()
-        
-    barraStack = None
-    toRegFactorStack =  None
-    if len(barraDict)>0:
-        barraStack = np.stack([aB.generalData for aB in barraDict.values()],axis = 2)
-    if len(toRegFactorDict)>0:
-        toRegFactorStack = np.stack([aB.generalData for aB in toRegFactorDict.values()],axis = 2)
-
-    
-    evaluateIC = partial(evaluate,
-                         materialDataDict = materialDataDict,
-                         barraStack = barraStack,
-                         toRegFactorStack = toRegFactorStack,
-                         factorEvalFunc = partial(EVALUATE_FUNC, shiftedPctChange = shiftedPctChange)
-                         )
-
-    pop = easimple(toolbox = toolbox,
-                   stats = stats,
-                   logbook = logbook,
-                   evaluate = evaluateIC,
-                   materialDataDict = materialDataDict,
-                   barraStack = barraStack,
-                   toRegFactorStack = toRegFactorStack,
-                   logger = logger.logger
-                   )
     
     
     

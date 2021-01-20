@@ -5,11 +5,15 @@ Created on Wed Dec  9 10:07:25 2020
 @author: Evan Hu (Yi Fan Hu)
 
 """
+
+import os
+
 import numpy as np
 from numpy.lib import stride_tricks
 from numpy.ma import masked_invalid
 from scipy.stats.stats import pearsonr
 from Tool.GeneralData import GeneralData
+
 
 
 
@@ -117,7 +121,7 @@ def linear_regression(x,y):
     xtx = np.dot(x.T, x)
     if np.linalg.det(xtx) == 0.0: # 判断xtx行列式是否等于0，奇异矩阵不能求逆
         print('the det(xtx) is 0')
-        return np.full(x.shape[0], np.nan)
+        return (np.nan)
     tmp = np.dot(np.linalg.inv(xtx), x.T)
     try:
         theta = np.dot(tmp, y)
@@ -148,11 +152,22 @@ def get_residual(x, y):
     try:
         residual = y - np.dot(x, theta)
     except ValueError as ve:
-        raise (ve,str(x.shape) + str(x) + str(x[~mask_stocks, :]) + str(mask_stocks))
+        if np.isnan(theta):
+            theta = np.full(x.shape[1], theta)
+            residual = np.full_like(y, np.nan)
+        else:
+            raise ve
+
+        
     return(residual, theta)
 
 def add_constant(x):
     return np.c_[x,np.ones(x.shape[0])]
+
+def save_factor(factor, path = '.'):
+    filepath = os.path.join(path, "{}.csv".format(factor.name))
+    df = factor.to_DataFrame()
+    df.to_csv(filepath)
 
 
 #%%

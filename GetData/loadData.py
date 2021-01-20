@@ -8,6 +8,7 @@ Created on Fri Dec  4 14:43:53 2020
 
 import os
 import pandas as pd
+from copy import deepcopy
 
 from Tool import globalVars
 from Tool.GeneralData import GeneralData
@@ -16,23 +17,23 @@ from Tool.Factor import Factor
 
 
 materialDataFileDict = {
-        'hx1': 'hx1.csv',
-        'hx2': 'hx2.csv',
-        'hx3': 'hx3.csv',
-        'alpha3': 'alpha3.csv',
-        'alpha13': 'alpha13.csv',
-        'alpha14': 'alpha14.csv',
-        'alpha15': 'alpha15.csv',
-        'alpha16': 'alpha16.csv',
-        'alpha17': 'alpha17.csv',
+        # 'hx1': 'hx1.csv',
+        # 'hx2': 'hx2.csv',
+        # 'hx3': 'hx3.csv',
+        # 'alpha3': 'alpha3.csv',
+        # 'alpha13': 'alpha13.csv',
+        # 'alpha14': 'alpha14.csv',
+        # 'alpha15': 'alpha15.csv',
+        # 'alpha16': 'alpha16.csv',
+        # 'alpha17': 'alpha17.csv',
         'close': 'S_DQ_ADJCLOSE.csv',
         'high': 'S_DQ_ADJHIGH.csv',
         'low': 'S_DQ_ADJLOW.csv',
         'open': 'S_DQ_ADJOPEN.csv',
-        'preclose': 'S_DQ_ADJPRECLOSE.csv',
+        # 'preclose': 'S_DQ_ADJPRECLOSE.csv',
         'amount': 'S_DQ_AMOUNT.csv',
         'volume': 'S_DQ_VOLUME.csv',
-        'pctChange': 'S_DQ_PCTCHANGE.csv',
+        'pctChange': 'S_DQ_PCTCHANGE.csv'
 
         # 'raw_close': 'S_DQ_ADJCLOSE.csv',
         # 'raw_high': 'S_DQ_ADJHIGH.csv',
@@ -40,14 +41,14 @@ materialDataFileDict = {
         # 'raw_open': 'S_DQ_ADJOPEN.csv',
         # 'is_buy_limit': 'S_DQ_BUYLIMIT.csv',  # 是否涨停
         # 'is_sell_limit': 'S_DQ_SELLLIMIT.csv',  # 是否跌停
-        'is_trading': 'S_DQ_TRADE.csv',
-        'market_cap': 'S_VAL_MV.csv',  # 总市值
-        'circulating_market_cap': 'S_DQ_MV.csv',  # 流通市值
-        'free_circulating_market_cap': 'S_FREE_MV.csv',  # 自由流通市值
-        'large_sell_rate': 'S_LI_LARGESELLRATE.csv',  # 大卖比率
-        'large_buy_rate': 'S_LI_LARGEBUYRATE.csv',  # 大买比率
-        'initiative_sell_rate': 'S_LI_INITIATIVESELLRATE.csv',  # 主卖比率
-        'initiative_buy_rate': 'S_LI_INITIATIVEBUYRATE.csv',  # 主买比率
+        # 'is_trading': 'S_DQ_TRADE.csv',
+        # 'market_cap': 'S_VAL_MV.csv',  # 总市值
+        # 'circulating_market_cap': 'S_DQ_MV.csv',  # 流通市值
+        # 'free_circulating_market_cap': 'S_FREE_MV.csv',  # 自由流通市值
+        # 'large_sell_rate': 'S_LI_LARGESELLRATE.csv',  # 大卖比率
+        # 'large_buy_rate': 'S_LI_LARGEBUYRATE.csv',  # 大买比率
+        # 'initiative_sell_rate': 'S_LI_INITIATIVESELLRATE.csv',  # 主卖比率
+        # 'initiative_buy_rate': 'S_LI_INITIATIVEBUYRATE.csv',  # 主买比率
         # 'ipo_date': ''  # 上市日期
         # 'is_exist': ''  # 是否存续中
         # 'is_st': ''  # 是否st
@@ -94,7 +95,7 @@ def load_all():
     globalVars.initialize()
     load_material_data() 
     load_barra_data()
-    align_barra()
+
 #%% load data functions
 
 def load_data(dataFileDict, DATA_PATH, dictName = None, **kwargs):
@@ -149,13 +150,13 @@ def align_data(data, alignTo):
     toReturn = GeneralData(data.name, generalData=reindexed)
     return(toReturn)
 
-def align_barra():
-    try:
-        for k, v in globalVars.barra.items():
-            globalVars.barra[k] = align_data(v, globalVars.materialData['close'])
-        return(True)
-    except :
-        return(False)
+def align_all_to(dict_, alignTo):
+    dict__ = deepcopy(dict_)
+    
+    for k, v in dict__.items():
+        dict__[k] = align_data(v, alignTo)
+    return(dict__)
+
         
     
     

@@ -14,7 +14,7 @@ class Logger(object):
     u need to create a folder log under the folder tool
     problem may be found using spyder, use cmd instead
     '''
-    def __init__(self,loggerFolder ="log\\",exeFileName="", level=logging.DEBUG):
+    def __init__(self, loggerFolder ="log\\", exeFileName="", level=logging.DEBUG):
         self.logger = logging.getLogger()
         self.logger.setLevel(level)
         fmt = '%(asctime)-15s %(filename)s[line:%(lineno)d] - %(levelname)s - %(name)s : %(message)s'

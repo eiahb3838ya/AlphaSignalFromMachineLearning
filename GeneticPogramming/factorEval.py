@@ -6,22 +6,33 @@ Created on Fri Dec 25 13:35:48 2020
 """
 
 # from functools import partial
+import os
+
 import numpy as np
 from copy import copy, deepcopy
 from Tool.GeneralData import GeneralData
-from GeneticPogramming.utils import rowwise_corrcoef, get_residual   
+from GeneticPogramming.utils import rowwise_corrcoef, get_residual, save_factor
 
 
 
 # evaluate function 评价函数
 def ic_evaluator(factor : GeneralData, shiftedPctChange:GeneralData) -> float:   
     corr_np = rowwise_corrcoef(factor, shiftedPctChange)
-    ic = np.nanmean(corr_np)
-
+    print("fail eval {} of {} days".format(corr_np.mask.sum(), shiftedPctChange.generalData.shape[0]))
+    if corr_np.mask.sum() > len(corr_np)/2:
+        try:
+            save_factor(factor,"./factors/troubleFactors")
+        except FileNotFoundError as fnfe:
+            print(fnfe)
+        except Exception as e:
+            print(e)
+            raise e
+        ic = -1
+    else:
+        ic = np.nanmean(corr_np)
     return(ic)
 
 def icir_evaluator(factor : GeneralData, shiftedPctChange:GeneralData) -> float: 
-    
     corr_np = rowwise_corrcoef(factor, shiftedPctChange)
     if not corr_np.mask.all():
         ic = np.nanmean(corr_np)
@@ -91,7 +102,8 @@ def standard_scale_preprocess(factor):
     outFactor.name = factor.name+"_scaled"
     outFactor.generalData = X_scaled.T
     return(outFactor)
-    
+
+
     
     
     
