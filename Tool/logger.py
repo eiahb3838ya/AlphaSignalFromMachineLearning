@@ -38,6 +38,7 @@ class Logger(object):
     
     def info(self, msg):
         self.logger.info(msg)
+
     
     def warning(self, msg):
         self.logger.warning(msg)

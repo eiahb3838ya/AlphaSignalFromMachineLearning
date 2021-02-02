@@ -88,8 +88,12 @@ barraDataFileDict = {
 #%%
 # PROJ_ROOT = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/AlphaSignalFromMachineLearning'
 cur_path = os.path.abspath(os.path.dirname(__file__))
-PROJ_ROOT = os.path.join(cur_path, '../')
-DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
+PROJECT_ROOT = os.path.join(cur_path, '..')
+# print(PROJECT_ROOT)
+DATA_PATH = os.path.join(PROJECT_ROOT, 'GetData')
+# print(DATA_PATH)
+TABLE_PATH = os.path.join(DATA_PATH, 'table')
+H5_PATH =  os.path.join(DATA_PATH, 'h5')
 
 def load_all():
     globalVars.initialize()
@@ -98,16 +102,18 @@ def load_all():
 
 #%% load data functions
 
-def load_data(dataFileDict, DATA_PATH, dictName = None, **kwargs):
+def load_data_csv(dataFileDict, TABLE_PATH, dictName = None, **kwargs):
     toReturnList = []
+    TABLE_PATH = os.path.join(TABLE_PATH, dictName)
     if dictName is not None:
         # add dictionary to globalVars
         if dictName not in globalVars.varList:
             globalVars.register(dictName, {})
             
+        
         for k, v in dataFileDict.items():
             if k not in globalVars.__getattribute__(dictName):
-                data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v), **kwargs)
+                data = GeneralData(name = k, filePath = os.path.join(TABLE_PATH,v), **kwargs)
                 globalVars.__getattribute__(dictName)[k] = data
                 # print('==================================================================\n\
                 #       {} is now in globalVars.{}\n'.format(k, dictName), data)
@@ -119,13 +125,31 @@ def load_data(dataFileDict, DATA_PATH, dictName = None, **kwargs):
                 globalVars.logger.info('{} is already in globalVars.{}'.format(k, dictName))
     else:
         for k, v in dataFileDict.items():
-            data = GeneralData(name = k, filePath = os.path.join(DATA_PATH,v))
+            data = GeneralData(name = k, filePath = os.path.join(TABLE_PATH,v))
             globalVars.register(k, data)
             toReturnList.append(k)
     return(toReturnList)
 
-def load_material_data(dataFileDict = materialDataFileDict, DATA_PATH = DATA_PATH+'materialData'):
-    return(load_data(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH, dictName='materialData', indexFormat = "%Y%m%d"))
+def load_data(dataFileDict, name, DATA_PATH, indexFormat):    
+    H5_PATH =  os.path.join(DATA_PATH, 'h5')
+    try:
+        if name not in globalVars.varList:
+            globalVars.register(name, {})
+        hdf = pd.HDFStore(os.path.join(H5_PATH, '{}.h5'.format(name)))
+        for k in dataFileDict.keys():
+            v = GeneralData(k, hdf.get(k))
+            globalVars.__getattribute__(name)[k] = v
+    except:
+        TABLE_PATH = os.path.join(DATA_PATH, 'tables')
+        print(DATA_PATH)
+        return(load_data_csv(dataFileDict = dataFileDict, TABLE_PATH = TABLE_PATH, dictName=name, indexFormat = indexFormat))
+
+def load_material_data():    
+    return(load_data(materialDataFileDict, 'materialData', DATA_PATH, "%Y%m%d"))
+
+    
+def load_barra_data():
+    return(load_data(barraDataFileDict, 'barra', DATA_PATH, "%Y-%m-%d"))
 
 
 def simple_load_factor(factorName):
@@ -133,12 +157,6 @@ def simple_load_factor(factorName):
         globalVars.register('factors', {})
     globalVars.factors['{}_factor'.format(factorName)] = Factor('{}_factor'.format(factorName), globalVars.materialData[factorName])
     print(factorName, 'is now in globalVars.factors')
-    
-    
-    
-def load_barra_data(dataFileDict = barraDataFileDict, DATA_PATH = DATA_PATH+'barra'):
-    return(load_data(dataFileDict = dataFileDict, DATA_PATH = DATA_PATH, dictName='barra'))
-
 
 
 #%%
@@ -164,7 +182,7 @@ def align_all_to(dict_, alignTo):
 #%% main
 if __name__ == '__main__':
     try:
-        DATA_PATH = os.path.join(PROJ_ROOT, 'GetData/tables/')
+        DATA_PATH = os.path.join(PROJECT_ROOT, 'GetData/tables/')
         load_material_data()
         load_barra_data()
     except :

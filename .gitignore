@@ -2,6 +2,7 @@
 *.pkl
 *.pyc
 *.log
+*.h5
 .ipynb_checkpoints/
 __pycache__/
 .idea/

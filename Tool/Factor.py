@@ -16,17 +16,17 @@ except :
     from GeneralData import GeneralData
 
 class Factor(FactorProfileBase, GeneralData):
-    def __init__(self, name, generalData = None, timestamp = None, columnNames = None,\
+    def __init__(self, name = None, generalData = None, timestamp = None, columnNames = None,\
                  functionName = None, reliedDatasetNames_list = None, parameters_dict = None, **kwargs):
-       
+            
         FactorProfileBase.__init__(self)
         GeneralData.__init__(self, name, generalData, timestamp, columnNames, **kwargs)
         
-        self.factorName = name
+
         self.functionName = functionName
         self.reliedDatasetNames_list = reliedDatasetNames_list
-        
-        # TODO __init__ with GeneralData
+        self.parameters_dict = parameters_dict
+
         
         
     def get_relied_dataset(self):

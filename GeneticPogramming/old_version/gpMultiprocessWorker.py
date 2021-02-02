@@ -40,8 +40,6 @@ initGenHeightMin, initGenHeightMax = 1, 3
 # the height min max of a mutate sub tree
 mutGenHeightMin, mutGenHeightMax = 0, 3
 
-#%% initialize global vars
-# load_data 
 
     
 #%% add primitives

@@ -9,6 +9,7 @@ Created on Wed Dec  9 10:07:25 2020
 import os
 
 import numpy as np
+from deap import gp
 from numpy.lib import stride_tricks
 from numpy.ma import masked_invalid
 from scipy.stats.stats import pearsonr
@@ -121,8 +122,10 @@ def linear_regression(x,y):
     xtx = np.dot(x.T, x)
     if np.linalg.det(xtx) == 0.0: # 判断xtx行列式是否等于0，奇异矩阵不能求逆
         print('the det(xtx) is 0')
-        return (np.nan)
-    tmp = np.dot(np.linalg.inv(xtx), x.T)
+        tmp = np.dot(np.linalg.pinv(xtx), x.T)
+        print(tmp)
+    else:
+        tmp = np.dot(np.linalg.inv(xtx), x.T)
     try:
         theta = np.dot(tmp, y)
     except ValueError as ve:
@@ -163,6 +166,12 @@ def get_residual(x, y):
 
 def add_constant(x):
     return np.c_[x,np.ones(x.shape[0])]
+
+#%%
+def compileFactor(individual, materialDataDict, pset):
+    func = gp.compile(expr=individual, pset = pset)
+    factor = func(**materialDataDict)
+    return(func, factor)
 
 def save_factor(factor, path = '.'):
     filepath = os.path.join(path, "{}.csv".format(factor.name))

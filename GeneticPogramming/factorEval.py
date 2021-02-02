@@ -18,7 +18,7 @@ from GeneticPogramming.utils import rowwise_corrcoef, get_residual, save_factor
 # evaluate function 评价函数
 def ic_evaluator(factor : GeneralData, shiftedPctChange:GeneralData) -> float:   
     corr_np = rowwise_corrcoef(factor, shiftedPctChange)
-    print("fail eval {} of {} days".format(corr_np.mask.sum(), shiftedPctChange.generalData.shape[0]))
+    # print("fail eval {} of {} days".format(corr_np.mask.sum(), shiftedPctChange.generalData.shape[0]))
     if corr_np.mask.sum() > len(corr_np)/2:
         try:
             save_factor(factor,"./factors/troubleFactors")

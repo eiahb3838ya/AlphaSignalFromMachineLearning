@@ -17,7 +17,7 @@ class FactorProfileBase(object, metaclass=abc.ABCMeta):
         datasetName_list: list[str]
         parameters_dict: dict()
         """
-        print('FactorProfileBase __init__')
+        
         self.factorName = ""
         self.functionName = ""
         self.reliedDatasetNames = []
