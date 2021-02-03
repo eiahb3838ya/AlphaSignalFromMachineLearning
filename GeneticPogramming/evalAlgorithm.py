@@ -20,10 +20,10 @@ import logging
 # # logger
 # loggerFolder = PROJECT_ROOT+"Tool\\log\\"
 # logger = Logger(loggerFolder, 'log')
-logger = logging.getLogger()
+# logger = logging.getLogger()
 #%% define how to evaluate
 
-from GeneticPogramming.factorEval import residual_preprocess, MAD_preprocess, standard_scale_preprocess
+from GeneticPogramming.factorPreprocess import residual_preprocess, MAD_preprocess, standard_scale_preprocess
 
 # evaluate function
 def preprocess_eval_single_period(individual,
@@ -31,13 +31,17 @@ def preprocess_eval_single_period(individual,
                                 barraStackID,
                                 toRegFactorStackID,
                                 factorEvalFunc,
-                                pset):
+                                pset,
+                                loggerID = None):
     ######################################################
     materialDataDict = ray.get(materialDataDictID)
     barraStack = ray.get(barraStackID)
     toRegFactorStack = ray.get(toRegFactorStackID)
     ######################################################
-    
+    if loggerID == None:
+        logger = logging.getLogger()
+    else:
+        logger = ray.get(loggerID)
     tiic = time()
     tic = time()
     logger.debug('evaluate in pid {:6} time {} '.format(os.getpid(), str(datetime.now().time())))

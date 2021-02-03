@@ -88,28 +88,6 @@ def rowwise_corrcoef(factor, shiftedReturn):
         
     return(toReturn)
 
-# def rowwise_corrcoef(factor, shiftedReturn):
-#     '''use from scipy.stats.stats import pearsonr to calculate'''
-#     try:
-#         if isinstance(factor, GeneralData):validFactor = np.ma.masked_invalid(factor.generalData)
-#         else:validFactor = np.ma.masked_invalid(factor)  
-#         if isinstance(shiftedReturn, GeneralData):validShiftedReturn = np.ma.masked_invalid(shiftedReturn.generalData)
-#         else:validShiftedReturn = np.ma.masked_invalid(shiftedReturn)
-#     except Exception as e:
-#         raise(e, 'The input must be np.array or GeneralData either one')
-        
-    
-#     msk = np.ma.mask_or(validFactor.mask, validShiftedReturn.mask, shrink=False) #(~validFactor.mask & ~validShiftedReturn.mask)
-#     validFactor.mask = msk
-#     validShiftedReturn.mask = msk
-#     corr_array = np.full(validFactor.shape[0], np.nan)
-#     for i in range(validFactor.shape[0]):
-#         if msk[i].sum()<2:
-#             corr_array[i] = pearsonr(validFactor[i].compressed(), validShiftedReturn[i].compressed())[0]
-#     # corr_array = np.array([pearsonr(validFactor[i].compressed(), validShiftedReturn[i].compressed())[0] for i in range(validFactor.shape[0]) if msk[i].sum()<2])
-        
-#     return(corr_array)
-
 
 # 矩阵求解最主要的问题是数据中不能有空值，时间可以很快
 def linear_regression(x,y):
@@ -122,8 +100,8 @@ def linear_regression(x,y):
     xtx = np.dot(x.T, x)
     if np.linalg.det(xtx) == 0.0: # 判断xtx行列式是否等于0，奇异矩阵不能求逆
         print('the det(xtx) is 0')
+        print("use pinv to get inv(xtx")
         tmp = np.dot(np.linalg.pinv(xtx), x.T)
-        print(tmp)
     else:
         tmp = np.dot(np.linalg.inv(xtx), x.T)
     try:

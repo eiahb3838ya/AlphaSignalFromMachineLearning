@@ -6,6 +6,7 @@ Created on Sun Dec 20 20:00:54 2020
 """
 import logging
 import datetime
+import os
 
 
 class Logger(object):
@@ -25,7 +26,7 @@ class Logger(object):
             streamHandler.setLevel(logging.INFO)
             self.logger.addHandler(streamHandler)
             
-            logRecordFile = loggerFolder+exeFileName+"_"+datetime.datetime.now().strftime("%Y-%m-%d.log")
+            logRecordFile = os.path.join(loggerFolder, exeFileName+"_"+datetime.datetime.now().strftime("%Y-%m-%d.log"))
             fileHandler=logging.FileHandler(logRecordFile, encoding='utf-8')
             fileHandler.setFormatter(formatter)
             fileHandler.setLevel(logging.DEBUG)

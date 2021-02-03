@@ -518,7 +518,7 @@ if __name__ == '__main__':
     from Tool.logger import Logger
     from Tool.DataPreProcessing import DeExtremeMethod, ImputeMethod, StandardizeMethod
     from BackTesting.Signal.SignalSynthesis import SignalSynthesis
-    from BackTesting.systhesisDirector import SignalDirector
+    from BackTesting.systhesisDirector import Director
 
     np.warnings.filterwarnings('ignore')
 
@@ -550,7 +550,7 @@ if __name__ == '__main__':
         "smoothing_params": None
     }
 
-    director = SignalDirector(SignalSynthesis, params=params, logger=logger)
+    director = Director(SignalSynthesis, params=params, logger=logger)
 
     class SampleStrategy(FactorAnalyserBase):
         def __init__(self, start_date, end_date, benchmark_id, universe, props):

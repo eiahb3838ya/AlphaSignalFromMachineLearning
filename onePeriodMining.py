@@ -9,9 +9,11 @@ Created on Tue Jan 26 14:06:31 2021
 import sys
 import os
 import ray
+import json
 import numpy as np
 import numpy.random as random
 
+from datetime import datetime
 from deap import base, creator, gp, tools
 from functools import partial
 try:
@@ -19,10 +21,10 @@ try:
     from GeneticPogramming.rayMapper import ray_deap_map
     from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
     from GeneticPogramming.evolutionAlgorithm import easimple
-    from GeneticPogramming.factorEval import ic_evaluator, icir_evaluator
+    from GeneticPogramming.factorEvaluator import ic_evaluator, icir_evaluator
     from GeneticPogramming.utils import save_factor, compileFactor
     from Tool import Logger, GeneralData, Factor
-    from GetData import load_material_data, load_barra_data, align_all_to
+    from GetData import load_data, align_all_to
 except :
     PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
     os.chdir(PROJECT_ROOT)
@@ -30,16 +32,16 @@ except :
     from GeneticPogramming.rayMapper import ray_deap_map
     from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
     from GeneticPogramming.evolutionAlgorithm import easimple
-    from GeneticPogramming.factorEval import ic_evaluator, icir_evaluator
+    from GeneticPogramming.factorEvaluator import ic_evaluator, icir_evaluator
     from GeneticPogramming.utils import save_factor, compileFactor
     from Tool import Logger, GeneralData, Factor
-    from GetData import load_material_data, load_barra_data, align_all_to
+    from GetData import load_data, align_all_to
 
 os.environ['NUMEXPR_MAX_THREADS'] = '16'
 #%% set parameters 挖因子過程參數
 PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
-USEFUL_FACTOR_RECORD_PATH = os.path.join(PROJECT_ROOT, "GeneticPogramming\\factors\\usefulFactors")
-BEST_FACTOR_RECORD_PATH = os.path.join(PROJECT_ROOT, "GeneticPogramming\\factors\\bestFactors")
+FACTOR_PATH = os.path.join(PROJECT_ROOT,"data\\factors")
+
 
 PERIOD_START = "2017-01-01"
 PERIOD_END = "2019-01-01"
@@ -85,6 +87,32 @@ barraNames = [
     'stom',
     'stoq'
 ]
+config = {}
+config.update({
+    "PERIOD_START":PERIOD_START,
+    "PERIOD_END":PERIOD_END,
+    "ITERTIMES":ITERTIMES,
+    "POOL_SIZE":POOL_SIZE,
+    "EVALUATE_FUNC":EVALUATE_FUNC.__name__,
+    "N_POP":N_POP,
+    "N_GEN":N_GEN,
+    "CXPB":CXPB,
+    "MUTPB":MUTPB,
+    "TOURNSIZE":TOURNSIZE,
+    "TERMPB":TERMPB,
+    "initGenHeightMin":initGenHeightMin,
+    "initGenHeightMax":initGenHeightMax,
+    "mutGenHeightMin":mutGenHeightMin,
+    "mutGenHeightMax":mutGenHeightMax,
+    "materialDataNames":materialDataNames,
+    "barraNames":barraNames
+})
+# TODO
+# import configparser
+# config = configparser.ConfigParser()
+# config['DEFAULT'] = {'ServerAliveInterval': '45',
+#                       'Compression': 'yes',                  
+#                       'CompressionLevel': '9'}
 
 #%% pset & creator
 def creator_setup():
@@ -136,21 +164,32 @@ mstats.register("max", np.max)
 #%% define main 
 def main():
     random.seed(318)
-    # try:
-    #     ray.init(num_cpus=POOL_SIZE)
-    # except:
-    #     ray.shutdown()
     ray.init(num_cpus=POOL_SIZE, ignore_reinit_error=True)
     logbook = tools.Logbook()
-    
+    # make a new folder
+
+    test_number = datetime.now().strftime("%Y%m%d_%H_%M_%S")
+    this_test_path = os.path.join(FACTOR_PATH,test_number)
+    os.makedirs(this_test_path, exist_ok=True)
+    os.makedirs(os.path.join(this_test_path, "best_factors"), exist_ok=True)
+    os.makedirs(os.path.join(this_test_path, "found_factors"), exist_ok=True)
+
+    with open(os.path.join(this_test_path,'config.json'), 'w') as outfile:
+        json.dump(config, outfile)
+
     # set up logger
-    loggerFolder = PROJECT_ROOT+"Tool\\log\\"
-    logger = Logger(loggerFolder, 'log')
+    loggerFolder = os.path.join(this_test_path, 'log')
+    os.makedirs(loggerFolder, exist_ok=True)
+    logger = Logger(loggerFolder=loggerFolder, exeFileName='log')
     globalVars.initialize(logger)
     
     # load data to globalVars
-    load_material_data() 
-    load_barra_data()
+    load_data("barra",
+        os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5")
+    )
+    load_data("materialData",
+        os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5")
+    )
     globalVars.logger.info('load all......done')
     
     # prepare data
@@ -207,9 +246,19 @@ def main():
                                                          MUTPB = MUTPB
                                                         )
         if findFactor:
-            func, factor = compileFactor(individual = returnIndividual, materialDataDict = periodMaterialDataDict, pset = pset)
-            factor.name = str(returnIndividual)
-            save_factor(factor, USEFUL_FACTOR_RECORD_PATH)
+            func, factor_data = compileFactor(individual = returnIndividual, materialDataDict = periodMaterialDataDict, pset = pset)
+            factor = Factor(name=str(returnIndividual),
+                            generalData=factor_data,
+                            functionName=str(returnIndividual),
+                            reliedDatasetNames={"materialData":list(materialDataDict.keys())},
+                            parameters_dict={},
+                            **config
+                        )
+            factor.save(os.path.join(this_test_path,"found_factors\\{}.pickle".format(factor.name)))
+
+
+
+            # save_factor(factor, USEFUL_FACTOR_RECORD_PATH)
             toRegFactorDict.update({str(returnIndividual):factor})
             if len(toRegFactorDict)>0:
                 toRegFactorStack = np.stack([aB.generalData for aB in toRegFactorDict.values()],axis = 2)
@@ -227,9 +276,15 @@ def main():
             continue;
                 
         else:
-            func, factor = compileFactor(individual = returnIndividual, materialDataDict = periodMaterialDataDict, pset = pset)
-            factor.name = str(returnIndividual)
-            save_factor(factor, BEST_FACTOR_RECORD_PATH)
+            func, factor_data = compileFactor(individual = returnIndividual, materialDataDict = periodMaterialDataDict, pset = pset)
+            factor = Factor(name=str(returnIndividual),
+                generalData=factor_data,
+                functionName=str(returnIndividual),
+                reliedDatasetNames={"materialData":list(materialDataDict.keys())},
+                parameters_dict={},
+                **config
+            )
+            factor.save(os.path.join(this_test_path,"best_factors\\{}.pickle".format(factor.name)))
             logger.info("end easimple algorithm from iteration {}th time".format(i+1))
 
 

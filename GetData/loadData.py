@@ -11,14 +11,9 @@ import pandas as pd
 from copy import deepcopy
 
 from Tool import globalVars
-from Tool.GeneralData import GeneralData
+from Tool import GeneralData
 from Tool.Factor import Factor
 
-# cur_path = os.path.abspath(os.path.dirname(__file__))
-# PROJECT_ROOT = os.path.join('C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning')
-# DATA_PATH = os.path.join(PROJECT_ROOT, 'GetData')
-# TABLE_PATH = os.path.join(DATA_PATH, 'table')
-# H5_PATH =  os.path.join(DATA_PATH, 'h5')
 try:
     logger = globalVars.logger
 except :
@@ -157,7 +152,8 @@ def load_data(name, filedir, filetype = 'h5', dataFileDict = None,**kwargs):
             print("try with {}".format(os.path.join(filedir, '{}.h5'.format(name))))
             assert os.path.exists(os.path.join(filedir, '{}.h5'.format(name))), "FileNotFound, please check the file path is currect"
             hdf = pd.HDFStore(os.path.join(filedir, '{}.h5'.format(name)))
-        for k in hdf.keys():
+        for rawk in hdf.keys():
+            k = rawk.split('/')[1]
             v = GeneralData(k, hdf.get(k))
             globalVars.__getattribute__(name)[k] = v
         logger.info('{} is now in globalVars.{}'.format(list(hdf.keys()), name))
@@ -211,12 +207,7 @@ def align_all_to(dict_, alignTo):
     
 #%% main
 if __name__ == '__main__':
-    from Tool import Logger
-    PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
-    loggerFolder = PROJECT_ROOT+"Tool\\log\\"
-    logger = Logger(loggerFolder, 'log')
-    globalVars.initialize(logger)
-
+    globalVars.initialize()
     # read h5
     # 用例 1 
     load_data("barra",

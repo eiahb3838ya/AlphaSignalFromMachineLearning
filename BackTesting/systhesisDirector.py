@@ -15,7 +15,7 @@ from GetData.loadData import load_material_data
 from BackTesting.Signal.CrossSectionalModels.CrossSectionalModel import CrossSectionalModelXGBoost
 
 
-class SignalDirector:
+class Director:
     def __init__(self, signalGeneratorClass, params, logger=None):
         self.signalGeneratorClass = signalGeneratorClass
         self.params = params
@@ -98,5 +98,5 @@ if __name__ == '__main__':
         "smoothing_params": None
     }
 
-    director = SignalDirector(SignalSynthesis, params=params, logger=logger)
+    director = Director(SignalSynthesis, params=params, logger=logger)
     director.run()

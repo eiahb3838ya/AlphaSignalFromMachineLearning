@@ -8,8 +8,8 @@ Created on Tue Dec  1 15:24:11 2020
 # use python -m Factor is the standard way to call modules main function
 
 try:
-    from .GeneralDataBase import GeneralDataBase
-    # print('from .GeneralDataBase import GeneralDataBase')
+    from Tool.GeneralDataBase import GeneralDataBase
+    # print('from Tool.GeneralDataBase import GeneralDataBase')
 except Exception:
     from GeneralDataBase import GeneralDataBase 
     # print('from GeneralDataBase import GeneralDataBase')
@@ -59,16 +59,17 @@ class GeneralData(GeneralDataBase):
             assert timestamp is not None and columnNames is not None
             self.generalData = generalData
             
-        elif isinstance(generalData, GeneralData):
-            assert timestamp is None and columnNames is None
-            self.generalData = generalData.generalData
-            self.columnNames = generalData.columnNames
-            self.timestamp = generalData.timestamp
-            if self.name == None:
-                self.name = generalData.name
-            
         else:
-            raise TypeError('Must be np ndarray or pandas DataFrame')
+        # isinstance(generalData, GeneralData):
+            assert timestamp is None and columnNames is None
+            try:
+                self.generalData = generalData.generalData
+                self.columnNames = generalData.columnNames
+                self.timestamp = generalData.timestamp
+                if self.name == None:
+                    self.name = generalData.name
+            except:
+                raise TypeError('Must be np ndarray or pandas DataFrame or GeneralData like')
                     
         if timestamp is not None:
             assert len(timestamp) == self.generalData.shape[0], 'the timestammp should \
@@ -166,6 +167,12 @@ class GeneralData(GeneralDataBase):
         reindexed = data_df.reindex(index=alignTo.timestamp, columns=alignTo.columnNames)
         toReturn = GeneralData(self.name, generalData=reindexed)
         return(toReturn)
+
+    def __str__(self):
+        return(str(self.to_DataFrame()))
+    
+    def __repr__(self):
+        return(str(self.to_DataFrame()))
         
 if __name__ ==  "__main__":
     DATA_PATH = 'C:/Users/eiahb/Documents/MyFiles/WorkThing/tf/01task/GeneticProgrammingProject/AlphaSignalFromMachineLearning\\GetData/tables//materialData//S_DQ_ADJOPEN.csv'

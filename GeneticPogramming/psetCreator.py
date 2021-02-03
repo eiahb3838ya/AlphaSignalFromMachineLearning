@@ -10,10 +10,10 @@ from Tool import GeneralData, Logger
 
 #%% set up
 #PROJECT_ROOT
-PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
-# logger
-loggerFolder = PROJECT_ROOT+"Tool\\log\\"
-logger = Logger(loggerFolder, 'log')
+# PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+# # logger
+# loggerFolder = PROJECT_ROOT+"Tool\\log\\"
+# logger = Logger(loggerFolder, 'log')
 #%%
 def pset_creator(materialDataNames):
     '''
@@ -75,8 +75,8 @@ def pset_creator(materialDataNames):
         pset.addEphemeralConstant(name = 'EphemeralConstant_int',
                                   ephemeral = lambda: random.randint(1, 10),
                                   ret_type = int)
-        logger.warning(str(gp.EphemeralConstant_flaot)+"is ready")
-        logger.warning(str(gp.EphemeralConstant_int)+"is ready")
+        print(str(gp.EphemeralConstant_flaot)+"is ready")
+        print(str(gp.EphemeralConstant_int)+"is ready")
         
     return(pset)
     
