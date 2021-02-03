@@ -8,17 +8,25 @@ Created on Thu Dec  3 11:33:44 2020
 
 
 
-def initialize(): 
+
+def initialize(inputLogger = None): 
+    if inputLogger ==None:
+        import logging
+        inputLogger = logging.getLogger()
     global varList
-    varList = []
-    
+    varList = []    
+    register("logger", inputLogger)
+    register("factor", {})
+    register("barra", {})
+    register("materialData", {})
+    register("utilData", {})
+
     
 def register(name, aVar):
-  
     globals()[name] =  aVar
     globals()['varList'].append(name)
-    print('{}:\n{} \n is now in global\n'.format(name, aVar))
+    logger.info('{}:{} is now in global'.format(name, aVar))
     return(globals()['varList'])
-    
+
 def list_vars():
     return(globals()['varList'])

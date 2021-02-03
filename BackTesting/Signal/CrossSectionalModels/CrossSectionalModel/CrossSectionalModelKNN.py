@@ -7,7 +7,7 @@ Created on Mon Dec 14 14:18:58 2020
 
 import sys
 sys.path.append("../../")
-from CrossSectionalModelBase import CrossSectionalModelBase
+from BackTesting.Signal.CrossSectionalModels.Base.CrossSectionalModelBase import CrossSectionalModelBase
 from sklearn.neighbors import KNeighborsClassifier 
 import json
 

@@ -22,21 +22,25 @@ class GeneralDataBase(object, metaclass=abc.ABCMeta):
         self.metadata = {}
         
     def __str__(self):
-        head = ""
         if self.generalData.shape[0]>=6:
-            head = self.generalData[:6, :]
-        outputString = "{} : datashape of {} \n{}".format(self.name,\
-                                                          self.generalData.shape,\
-                                                              head)
+            outputString = "{} : datashape of {} \nhead:\n{}\ntail:\n{}".format(self.name,\
+                                                                  self.generalData.shape,\
+                                                                  self.generalData[:6, :],\
+                                                                  self.generalData[-6:, :])
+        else:
+            outputString = "{} : datashape of {}".format(self.name,\
+                                                         self.generalData.shape)
         return(outputString)
     
     def __repr__(self):
-        head = ""
         if self.generalData.shape[0]>=6:
-            head = self.generalData[:6, :]
-        outputString = "{} : datashape of {} \n{}".format(self.name,\
-                                                          self.generalData.shape,\
-                                                              head)
+            outputString = "{} : datashape of {} \nhead:\n{}\ntail:\n{}".format(self.name,\
+                                                                  self.generalData.shape,\
+                                                                  self.generalData[:6, :],\
+                                                                  self.generalData[-6:, :])
+        else:
+            outputString = "{} : datashape of {}".format(self.name,\
+                                                         self.generalData.shape)
         return(outputString)
     
     @abc.abstractmethod

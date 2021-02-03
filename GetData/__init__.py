@@ -6,3 +6,4 @@ Created on Fri Dec  4 15:20:00 2020
 
 """
 
+from .loadData import *

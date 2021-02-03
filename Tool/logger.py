@@ -6,6 +6,8 @@ Created on Sun Dec 20 20:00:54 2020
 """
 import logging
 import datetime
+import os
+
 
 class Logger(object):
     '''
@@ -13,24 +15,31 @@ class Logger(object):
     u need to create a folder log under the folder tool
     problem may be found using spyder, use cmd instead
     '''
-    def __init__(self, exeFileName="", level=logging.DEBUG):
-        self.logger = logging.getLogger(exeFileName)
+    def __init__(self, loggerFolder ="log\\", exeFileName="", level=logging.DEBUG):
+        self.logger = logging.getLogger()
         self.logger.setLevel(level)
         fmt = '%(asctime)-15s %(filename)s[line:%(lineno)d] - %(levelname)s - %(name)s : %(message)s'
-        formatter = logging.Formatter(fmt=fmt)
-        streamHandler  = logging.StreamHandler()
-        streamHandler.setFormatter(formatter)
-        self.logger.addHandler(streamHandler)
-        logRecordFile = "log/"+exeFileName+"_"+datetime.datetime.now().strftime("%Y-%m-%d.log")
-        fileHandler=logging.FileHandler(logRecordFile, encoding='utf-8')
-        fileHandler.setFormatter(formatter)
-        self.logger.addHandler(fileHandler)
+        if len(self.logger.handlers) == 0:
+            formatter = logging.Formatter(fmt=fmt)
+            streamHandler  = logging.StreamHandler()
+            streamHandler.setFormatter(formatter)
+            streamHandler.setLevel(logging.INFO)
+            self.logger.addHandler(streamHandler)
+            
+            logRecordFile = os.path.join(loggerFolder, exeFileName+"_"+datetime.datetime.now().strftime("%Y-%m-%d.log"))
+            fileHandler=logging.FileHandler(logRecordFile, encoding='utf-8')
+            fileHandler.setFormatter(formatter)
+            fileHandler.setLevel(logging.DEBUG)
+            self.logger.addHandler(fileHandler)
+
+        
         
     def debug(self,msg):
         self.logger.debug(msg)
     
     def info(self, msg):
         self.logger.info(msg)
+
     
     def warning(self, msg):
         self.logger.warning(msg)
