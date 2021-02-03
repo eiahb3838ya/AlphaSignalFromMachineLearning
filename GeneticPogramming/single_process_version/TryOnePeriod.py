@@ -8,6 +8,7 @@ Created on Fri Dec  4 14:03:16 2020
 
 import  random
 from inspect import getmembers, isfunction
+#%% initialize global vars
 
 import numpy as np
 from deap import base,creator,gp,tools
@@ -64,7 +65,6 @@ pset.addEphemeralConstant(name = 'EphemeralConstant_flaot',
 pset.addEphemeralConstant(name = 'EphemeralConstant_int',
                          ephemeral = lambda: random.randint(1, 180),
                          ret_type = int)
-
 
 #%%
 #creating fitness function and individual

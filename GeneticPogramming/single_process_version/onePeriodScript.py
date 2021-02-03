@@ -194,7 +194,6 @@ for gen in trange(N_GEN, file=sys.stdout):
     # 配种选择
     selectedTour = toolbox.tourSel(pop, N_POP) # 选择N_POP个体
     selectedInd = list(map(toolbox.clone, selectedTour)) # 复制个体，供交叉变异用
-
     
     # 对选出的育种族群两两进行交叉，对于被改变个体，删除其适应度值
     for child1, child2 in zip(selectedInd[::2], selectedInd[1::2]):
