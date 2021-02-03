@@ -3,6 +3,7 @@
 *.pyc
 *.log
 *.h5
+*.pickle
 .ipynb_checkpoints/
 __pycache__/
 .idea/
