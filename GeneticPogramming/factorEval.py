@@ -20,13 +20,14 @@ def ic_evaluator(factor : GeneralData, shiftedPctChange:GeneralData) -> float:
     corr_np = rowwise_corrcoef(factor, shiftedPctChange)
     # print("fail eval {} of {} days".format(corr_np.mask.sum(), shiftedPctChange.generalData.shape[0]))
     if corr_np.mask.sum() > len(corr_np)/2:
-        try:
-            save_factor(factor,"./factors/troubleFactors")
-        except FileNotFoundError as fnfe:
-            print(fnfe)
-        except Exception as e:
-            print(e)
-            raise e
+        print("trouble factor with unevaluate days {} out of {} days".format(corr_np.mask.sum(), len(corr_np)))
+        # try:
+        #     save_factor(factor,"./factors/troubleFactors")
+        # except FileNotFoundError as fnfe:
+        #     print(fnfe)
+        # except Exception as e:
+        #     print(e)
+        #     raise e
         ic = -1
     else:
         ic = np.nanmean(corr_np)

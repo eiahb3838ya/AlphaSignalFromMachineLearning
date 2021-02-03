@@ -9,10 +9,8 @@ from Tool import GeneralData, Logger
 
 
 #%% set up
-
 #PROJECT_ROOT
 PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
-
 # logger
 loggerFolder = PROJECT_ROOT+"Tool\\log\\"
 logger = Logger(loggerFolder, 'log')

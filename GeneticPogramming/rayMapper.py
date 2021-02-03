@@ -84,5 +84,4 @@ def ray_deap_map(func, pop, creator_setup=None, pset_creator=None):
     # Manager will determine if batching is needed and crate remote actors to do work
     map_ray_manager = Ray_Deap_Map_Manager(creator_setup, pset_creator)
     results = map_ray_manager.map(func, pop)
-
     return results

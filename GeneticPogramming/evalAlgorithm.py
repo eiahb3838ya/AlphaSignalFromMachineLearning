@@ -4,6 +4,7 @@ Created on Tue Jan 26 14:34:07 2021
 
 @author: eiahb
 """
+#%%
 import ray
 import os
 import numpy as np
@@ -13,13 +14,13 @@ from time import time
 from datetime import datetime
 
 from Tool import Logger
-
-
-
-PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
-# logger
-loggerFolder = PROJECT_ROOT+"Tool\\log\\"
-logger = Logger(loggerFolder, 'log')
+import logging
+#%%
+# PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+# # logger
+# loggerFolder = PROJECT_ROOT+"Tool\\log\\"
+# logger = Logger(loggerFolder, 'log')
+logger = logging.getLogger()
 #%% define how to evaluate
 
 from GeneticPogramming.factorEval import residual_preprocess, MAD_preprocess, standard_scale_preprocess

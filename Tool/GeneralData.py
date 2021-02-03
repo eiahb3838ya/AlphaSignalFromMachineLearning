@@ -34,7 +34,10 @@ class GeneralData(GeneralDataBase):
                     generalData = pd.read_csv(filePath, index_col=0)
                     if '300186.SZ' in generalData.columns:
                         generalData.drop(columns='300186.SZ', inplace=True)  # Todo: 数据bug处理完后删掉
-
+                except FileNotFoundError as fnfe:
+                    print(fnfe)
+                    print("please check the file path is currect")
+                    raise fnfe
                 except Exception as e:
                     print(e)
                     print('We have a filePath but we can not load the generalData to pandas df structure')
