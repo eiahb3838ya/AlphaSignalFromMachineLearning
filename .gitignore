@@ -1,16 +1,10 @@
-*.rar
+
 *.pkl
 *.pyc
-*.log
-*.h5
-*.pickle
 .ipynb_checkpoints/
 __pycache__/
 .idea/
 .vscode/
 .spyproject
-.GetData/tables/config.py
 
-
-barra/
-data/
+/data
