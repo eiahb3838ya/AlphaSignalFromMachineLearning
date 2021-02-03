@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Dec 25 13:35:48 2020
+
+在這裡定義所有對單因子前處理的單一函數
+輸入因子的 shape 應該和輸出一樣
+
+@author: eiahb
+"""
 import os
 import numpy as np
 from copy import copy, deepcopy

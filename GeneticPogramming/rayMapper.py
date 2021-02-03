@@ -1,7 +1,3 @@
-# See example (GA) onemax_ray.py
-# See example (GP) symbreg_ray.py
-# See example (GP) symbreg_numpy_ray.py
-
 # Derek M Tishler
 # Jul 23 2020
 

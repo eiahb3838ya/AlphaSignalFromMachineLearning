@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec  9 10:07:25 2020
-
 @author: Evan Hu (Yi Fan Hu)
 
 """
@@ -89,13 +88,14 @@ def rowwise_corrcoef(factor, shiftedReturn):
     return(toReturn)
 
 
-# 矩阵求解最主要的问题是数据中不能有空值，时间可以很快
+
 def linear_regression(x,y):
     '''
     get the theta in of OLS regression 
     the function doesn't deal with nan in the matrix
     make sure all value is valid and the shape is correct
     最小二乘法直接求解回归系数
+    矩阵求解最主要的问题是数据中不能有空值，时间可以很快
     '''
     xtx = np.dot(x.T, x)
     if np.linalg.det(xtx) == 0.0: # 判断xtx行列式是否等于0，奇异矩阵不能求逆
@@ -144,19 +144,11 @@ def get_residual(x, y):
 
 def add_constant(x):
     return np.c_[x,np.ones(x.shape[0])]
-
-#%%
+    
 def compileFactor(individual, materialDataDict, pset):
     func = gp.compile(expr=individual, pset = pset)
     factor = func(**materialDataDict)
     return(func, factor)
-
-def save_factor(factor, path = '.'):
-    filepath = os.path.join(path, "{}.csv".format(factor.name))
-    df = factor.to_DataFrame()
-    df.to_csv(filepath)
-
-
 #%%
 if __name__ == '__main__':
     b1 = np.random.uniform(size = (70)).reshape((5, 14))

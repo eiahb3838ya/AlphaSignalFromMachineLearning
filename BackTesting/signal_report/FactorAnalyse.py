@@ -518,7 +518,7 @@ if __name__ == '__main__':
     from Tool.logger import Logger
     from Tool.DataPreProcessing import DeExtremeMethod, ImputeMethod, StandardizeMethod
     from BackTesting.Signal.SignalSynthesis import SignalSynthesis
-    from BackTesting.systhesisDirector import Director
+    from BackTesting.systhesisDirector import SysthesisDirector as Director
 
     np.warnings.filterwarnings('ignore')
 

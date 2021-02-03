@@ -79,6 +79,7 @@ def preprocess_eval_single_period(individual,
         toRegStack = barraStack
   
     # get the residual after mutualize with existing factors
+    # 中性化 取 殘值
     if toRegStack is not None:
         tic = time()
         toScoreFactor = residual_preprocess(factor, toRegStack)

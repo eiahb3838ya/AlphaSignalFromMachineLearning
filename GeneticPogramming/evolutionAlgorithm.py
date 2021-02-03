@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Jan 26 14:54:46 2021
+定義遺傳算法的進化的算法，對應的是 deap.algorithm
 
 @author: eiahb
 """
@@ -16,12 +17,12 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
     tic = time()
     logger.info('start easimple at {:.2f}'.format(tic))
     logger.info('evaluating initial pop......start')
-    
-    # with Pool(processes=POOL_SIZE) as pool: 
-    #     fitnesses = pool.map(evaluate, pop)    
+
+    # 對初始種群進行適應度評價 
     fitnesses = toolbox.map(evaluate, pop)    
         
     for i, (ind, fit) in enumerate(zip(pop, fitnesses)):
+        # 將適應度給他成績單
         ind.fitness.values = fit
     toc = time()
     logger.info('evaluating initial pop......done with {:.5f} sec'.format(toc-tic))
@@ -29,8 +30,10 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
     logger.info("The initial record:{}".format(str(record)))
     
     # start evolution
+    # 開始進化
     for gen in range(N_GEN):
         # 配种选择
+        # 這裡使用簡單 兩倍複製
         offspring = toolbox.select(pop, 2*N_POP)
         offspring = list(map(toolbox.clone, offspring)) # 复制个体，供交叉变异用
         
@@ -47,29 +50,24 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
                 toolbox.mutate(mutant)
                 del mutant.fitness.values
           
-        # 对于被改变的个体，重新评价其适应度
-
-        
+        # 对于被改变的个体，重新评价其适应度        
         tic = time()
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         logger.info('start evaluate for {}th Generation new {} individuals......'.format(gen, len(invalid_ind)))
-
-        # with Pool(processes=POOL_SIZE) as pool: 
-        #     fitnesses = pool.map(evaluate, invalid_ind)  
         fitnesses = toolbox.map(evaluate, invalid_ind)   
         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
             if(fit[0]>0.01):
                 # get something useful
+                # 找到合格的因子
                 logger.info('got a expr useful in gen:{}, end gp algorithm'.format(gen))
                 return(True, ind, logbook)
-
         toc = time()
         logger.info('evaluate for {}th Generation new individual......done with {:.5f} sec'.format(gen, toc-tic))
         
-        # select best 环境选择 - 保留精英
+        # select best 环境选择保留精英
+        # 只留下 N_POP 個菁英
         pop = tools.selBest(offspring, N_POP, fit_attr='fitness') # 选择精英,保持种群规模
-        
         
         # 记录数据
         record = stats.compile(pop)
@@ -78,4 +76,6 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
     ind = tools.selBest(offspring, 1, fit_attr='fitness')[0]
     logger.info('none expr useful, terminate easimple')
     logger.info('end easimple {:.2f}'.format(tic))
+    
+    # 跑完都沒找到合格的因子，回傳最好的那個
     return(False, ind, logbook)

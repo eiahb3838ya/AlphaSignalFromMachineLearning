@@ -2,10 +2,14 @@
 """
 Created on Fri Dec 25 13:35:48 2020
 
+在這裡定義所有對單因子評價的方式，輸入的因子是已經輸出成 GeneralData 的因子值
+而後面也可以使用其他的數據， typically 就是用收益率做 ic, icir 等等
+回傳一個數值
+
 @author: eiahb
 """
 
-# from functools import partial
+
 import os
 
 import numpy as np
@@ -34,22 +38,5 @@ def icir_evaluator(factor : GeneralData, shiftedPctChange:GeneralData) -> float:
         icir_y = icir * np.sqrt(250)
         return(icir_y)
     else:
-        return(-1)
+        return(-1)    
 
-
-
-
-    
-    
-    
-if __name__  ==  '__main__':
-    from Tool import globalVars
-    try:
-        barraStack = np.stack([aB.generalData for aB in globalVars.barra.values()],axis = 2)
-    except:
-        from GetData import load_all
-        globalVars.logger.warning('factorEval is loading things')
-        load_all()
-        barraStack = np.stack([aB.generalData for aB in globalVars.barra.values()],axis = 2)
-    factor = globalVars.materialData['open']
-    residual_preprocess(factor, barraStack)
