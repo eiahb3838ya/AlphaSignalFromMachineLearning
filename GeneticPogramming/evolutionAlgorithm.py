@@ -57,7 +57,7 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
         fitnesses = toolbox.map(evaluate, invalid_ind)   
         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
-            if(fit[0]>0.01):
+            if(fit[0]>0.03):
                 # get something useful
                 # 找到合格的因子
                 logger.info('got a expr useful in gen:{}, end gp algorithm'.format(gen))

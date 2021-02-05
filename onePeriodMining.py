@@ -16,33 +16,26 @@ import numpy.random as random
 from datetime import datetime
 from deap import base, creator, gp, tools
 from functools import partial
-try:
-    from GeneticPogramming.psetCreator import pset_creator
-    from GeneticPogramming.rayMapper import ray_deap_map
-    from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
-    from GeneticPogramming.evolutionAlgorithm import easimple
-    from GeneticPogramming.factorEvaluator import ic_evaluator, icir_evaluator
-    from GeneticPogramming.utils import save_factor, compileFactor
-    from Tool import Logger, GeneralData, Factor
-    from GetData import load_data, align_all_to
-except :
-    # 如果import 失敗的話 可能是因為 working directory 不在最上層
-    PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
-    os.chdir(PROJECT_ROOT)
-    print("change wd to {}".format(PROJECT_ROOT))
-    from GeneticPogramming.psetCreator import pset_creator
-    from GeneticPogramming.rayMapper import ray_deap_map
-    from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
-    from GeneticPogramming.evolutionAlgorithm import easimple
-    from GeneticPogramming.factorEvaluator import ic_evaluator, icir_evaluator
-    from GeneticPogramming.utils import save_factor, compileFactor
-    from Tool import Logger, GeneralData, Factor
-    from GetData import load_data, align_all_to
+
+PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+os.chdir(PROJECT_ROOT)
+print("change wd to {}".format(PROJECT_ROOT))
+from GeneticPogramming.psetCreator import pset_creator
+
+# from GeneticPogramming.rayMapper import ray_deap_map
+from GeneticPogramming.rayMapperEvan import ray_deap_map
+
+from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
+from GeneticPogramming.evolutionAlgorithm import easimple
+from GeneticPogramming.factorEvaluator import *
+from GeneticPogramming.utils import compileFactor
+from Tool import Logger, GeneralData, Factor
+from GetData import load_data, align_all_to
 
 # use up to 16 core as limit
 os.environ['NUMEXPR_MAX_THREADS'] = '16'
+os.environ["PYTHONPATH"] = PROJECT_ROOT + ";" + os.environ.get("PYTHONPATH", "")
 #%% set parameters 挖因子過程參數
-PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
 
 # data path to save factors 用來儲存挖到的因子的路徑
 FACTOR_PATH = os.path.join(PROJECT_ROOT,"data\\factors")
@@ -55,10 +48,10 @@ PERIOD_END = "2019-01-01"
 ITERTIMES = 30
 
 # core count to use in multiprocessing 多進程使用的邏輯數
-POOL_SIZE = 4
+POOL_SIZE = 16
 
 # 以及這次使用的適應度，適應度函數在別的地方定義
-EVALUATE_FUNC = ic_evaluator
+EVALUATE_FUNC = rankic_evaluator
 #%% hyperparameters 魔仙超參數
 
 # population count in initialization and each selection period 初始化的 種群 個體數
@@ -129,6 +122,7 @@ config.update({
     "barraNames":barraNames
 })
 
+print("start try out with config {}".format(str(config)))
 # TODO
 # import configparser
 # config = configparser.ConfigParser()
@@ -176,7 +170,7 @@ toolbox.register("mutate", multi_mutate, expr=toolbox.expr_mut, pset=pset)
 # 如果換成一般的 map 或是 multiprocess.map 也可以跑，很慢
 # 可見 single process version
 toolbox.register("map", ray_deap_map, creator_setup=creator_setup,
-                 pset_creator=partial(pset_creator,materialDataNames = materialDataNames))
+                 pset_creator=partial(pset_creator, materialDataNames = materialDataNames))
 
 #%% define stat and logbook
 stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -330,4 +324,4 @@ if __name__ == '__main__':
 
 
 
-# %%
+

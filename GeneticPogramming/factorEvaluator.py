@@ -21,6 +21,17 @@ from GeneticPogramming.utils import rowwise_corrcoef
 
 # evaluate function 评价函数
 def ic_evaluator(factor : GeneralData, shiftedPctChange:GeneralData) -> float:   
+    corr_np = rowwise_corrcoef(np.argsort(factor.generalData, axis = 1), np.argsort(shiftedPctChange.generalData, axis = 1))
+    # print("fail eval {} of {} days".format(corr_np.mask.sum(), shiftedPctChange.generalData.shape[0]))
+    if corr_np.mask.sum() > len(corr_np)/2:
+        print("trouble factor with unevaluate days {} out of {} days".format(corr_np.mask.sum(), len(corr_np)))
+        ic = -1
+    else:
+        ic = np.nanmean(corr_np)
+    return(ic)
+
+# 
+def rankic_evaluator(factor : GeneralData, shiftedPctChange:GeneralData) -> float:   
     corr_np = rowwise_corrcoef(factor, shiftedPctChange)
     # print("fail eval {} of {} days".format(corr_np.mask.sum(), shiftedPctChange.generalData.shape[0]))
     if corr_np.mask.sum() > len(corr_np)/2:
