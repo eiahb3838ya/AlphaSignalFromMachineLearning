@@ -28,8 +28,8 @@ def min_(this: GeneralData, that: GeneralData) -> GeneralData:
     outputToReturn.generalData = np.minimum(this.generalData, that.generalData)
     return outputToReturn
 
-# 𝑚𝑒𝑎𝑛(𝑎, 𝑏) 2 a 和 b 的均值
-def mean_(this: GeneralData, that: GeneralData) -> GeneralData:
+# sum(𝑎, 𝑏) 2 a 和 b 的均值
+def sum_(this: GeneralData, that: GeneralData) -> GeneralData:
     assert this.generalData.shape == that.generalData.shape
     outputToReturn = copy.copy(this)
     outputToReturn.generalData = np.add(this.generalData, that.generalData)

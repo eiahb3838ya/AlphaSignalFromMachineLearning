@@ -93,6 +93,7 @@ def preprocess_eval_single_period(individual,
     # typically ic, icir, factorReturn, Monotonicity(單調性)
     tic = time()
     score = factorEvalFunc(toScoreFactor)
+    print(score)
     toc = time()
     logger.debug('{:6} used {:.5f}s to apply factorEvalFunc to the factor'.format(os.getpid(), toc-tic))
     logger.debug('{:6} used {:.5f}s to evaluate the factor'.format(os.getpid(), toc-tiic))

@@ -79,13 +79,6 @@ def pset_creator(materialDataNames):
     return(pset)
     
     
-    
-    
-    
-    
-    
-    
-    
 if __name__ == '__main__':
     # materialDataNames
     materialDataNames = [

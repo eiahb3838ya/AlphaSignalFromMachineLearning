@@ -163,7 +163,7 @@ def load_data(name, filedir, filetype = 'h5', dataFileDict = None,**kwargs):
         indexFormat =  "%Y-%m-%d"
         if dataFileDict == None:
             print("dataFileDict is needed in csv mode")
-            raise
+            raise Exception
         if "indexFormat" in kwargs:
             indexFormat = kwargs['indexFormat']
         try:
@@ -207,6 +207,11 @@ def align_all_to(dict_, alignTo):
     
 #%% main
 if __name__ == '__main__':
+    PROJECT_ROOT = "c:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\"
+    import os
+    os.chdir(PROJECT_ROOT)
+    from Tool import globalVars
+
     globalVars.initialize()
     # read h5
     # 用例 1 
