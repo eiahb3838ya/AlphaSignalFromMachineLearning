@@ -26,7 +26,7 @@ warnings.filterwarnings("ignore")
 
     # outputToReturn = copy.copy(this)
     # outputToReturn.generalData = np.maximum(this.generalData, that.generalData)
-    return outputToReturn
+    # return outputToReturn
 
 
 #%% simple test

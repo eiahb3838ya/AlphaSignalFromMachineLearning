@@ -50,7 +50,7 @@ ITERTIMES = 30
 POOL_SIZE = 16
 
 # 以及這次使用的適應度，適應度函數在別的地方定義
-EVALUATE_FUNC = ic_evaluator
+EVALUATE_FUNC = rankic_evaluator
 #%% hyperparameters 魔仙超參數
 
 # population count in initialization and each selection period 初始化的 種群 個體數
@@ -221,8 +221,8 @@ def main():
     
     # get the return to compare 
     # 定義用來放進 evaluation function 的 收益率
-    open_ = globalVars.materialData['close']
-    shiftedPctChange_df = open_.to_DataFrame().pct_change().shift(-1) 
+    open_ = globalVars.materialData['open']
+    shiftedPctChange_df = open_.to_DataFrame().pct_change().shift(-2) 
     
     # align data within shiftedPctChange_df data
     # 將所有數據與 收益率數據對齊

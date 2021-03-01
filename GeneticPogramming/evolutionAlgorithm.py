@@ -57,6 +57,7 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
         fitnesses = toolbox.map(evaluate, invalid_ind)    
         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
+            
             # get something useful
             if(fit[0]>0.03):
                 # 找到合格的因子

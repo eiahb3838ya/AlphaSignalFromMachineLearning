@@ -71,9 +71,9 @@ if __name__ == '__main__':
     from Tool import globalVars
     from GetData import load_data, align_all_to
     from Tool import Logger
-    loggerFolder = PROJECT_ROOT+"Tool\\log\\"
-    logger = Logger(loggerFolder, 'log')
-    globalVars.initialize(logger)
+    # loggerFolder = PROJECT_ROOT+"Tool\\log\\"
+    # logger = Logger(loggerFolder, 'log')
+    globalVars.initialize()
 
     # read h5
     # 用例 1 
