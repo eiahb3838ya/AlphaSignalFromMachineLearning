@@ -9,10 +9,18 @@ Created on Fri Dec  4 14:43:53 2020
 import os
 import pandas as pd
 from copy import deepcopy
+try:
+    from Tool import globalVars
+    from Tool import GeneralData
+    from Tool.Factor import Factor
+except :
+    PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+    os.chdir(PROJECT_ROOT)
+    print("change wd to {}".format(PROJECT_ROOT))
+    from Tool import globalVars
+    from Tool import GeneralData
+    from Tool.Factor import Factor
 
-from Tool import globalVars
-from Tool import GeneralData
-from Tool.Factor import Factor
 
 try:
     logger = globalVars.logger
@@ -41,7 +49,25 @@ materialDataFileDict = {
         # 'preclose': 'S_DQ_ADJPRECLOSE.csv',
         'amount': 'S_DQ_AMOUNT.csv',
         'volume': 'S_DQ_VOLUME.csv',
-        'pctChange': 'S_DQ_PCTCHANGE.csv'
+        'pctChange': 'S_DQ_PCTCHANGE.csv',
+
+        'close_moneyflow_pct_value':'CLOSE_MONEYFLOW_PCT_VALUE.csv',
+        'close_moneyflow_pct_volume': 'CLOSE_MONEYFLOW_PCT_VOLUME.csv',
+        'close_net_inflow_rate_value': 'CLOSE_NET_INFLOW_RATE_VALUE.csv',
+        'close_net_inflow_rate_volume': 'CLOSE_NET_INFLOW_RATE_VOLUME.csv',
+        'moneyflow_pct_value': 'MONEYFLOW_PCT_VALUE.csv',
+        'moneyflow_pct_volume':'MONEYFLOW_PCT_VOLUME.csv',
+        'net_inflow_rate_value':'NET_INFLOW_RATE_VALUE.csv',
+        'net_inflow_rate_volume':'NET_INFLOW_RATE_VOLUME.csv',
+        'open_moneyflow_pct_value':'OPEN_MONEYFLOW_PCT_VALUE.csv',
+        'open_moneyflow_pct_volume':'OPEN_MONEYFLOW_PCT_VOLUME.csv',
+        'open_net_inflow_rate_value':'OPEN_NET_INFLOW_RATE_VALUE.csv',
+        'open_net_inflow_rate_volume':'OPEN_NET_INFLOW_RATE_VOLUME.csv',
+        's_mfd_inflow':'S_MFD_INFLOW.csv',
+        's_mfd_inflowvolume':'S_MFD_INFLOWVOLUME.csv',
+        's_mfd_inflow_closevolume':'S_MFD_INFLOW_CLOSEVOLUME.csv',
+        's_mfd_inflow_openvolume':'S_MFD_INFLOW_OPENVOLUME.csv'
+
 
         # 'raw_close': 'S_DQ_ADJCLOSE.csv',
         # 'raw_high': 'S_DQ_ADJHIGH.csv',
@@ -65,6 +91,7 @@ materialDataFileDict = {
         # 'name': ''   # 股票简称
 
     }
+
 
 #####################################
 #barra index format 為 "%Y-%m-%d"
@@ -215,29 +242,40 @@ if __name__ == '__main__':
     globalVars.initialize()
     # read h5
     # 用例 1 
-    load_data("barra",
-        os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5")
-    )
+    # load_data("barra",
+    #     os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5")
+    # )
+
     # 用例 2
     load_data("materialData",
-        os.path.join(os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5"), "materialData.h5")
+        os.path.join(os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5"), "materialData_newData.h5")
     )
 
-    #read csv
-    # 用例 3 
-    load_data("barra",
-        os.path.join(os.path.join(os.path.join(PROJECT_ROOT,"data"), "tables"), "barra"),
-        filetype="csv",dataFileDict=barraFileDict
-    )
+    # #read csv
+    # # 用例 3 
+    # load_data("barra",
+    #     os.path.join(os.path.join(os.path.join(PROJECT_ROOT,"data"), "tables"), "barra"),
+    #     filetype="csv",dataFileDict=barraFileDict
+    # )
 
     # 用例 4
-    load_data("materialData",
-        os.path.join(os.path.join(PROJECT_ROOT,"data"), "tables"),
-        filetype="csv",dataFileDict=materialDataFileDict,indexFormat = "%Y%m%d"
-    )
+    # load_data("materialData",
+    #     os.path.join(os.path.join(PROJECT_ROOT,"data"), "tables"),
+    #     filetype="csv",dataFileDict=materialDataFileDict,indexFormat = "%Y%m%d"
+    # )
 
 
 
 
 
+# %%
+# h5_path = "C:\\Users\\eiahb\\Documents\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\data\\h5"
+# hdf = pd.HDFStore(os.path.join(h5_path, '{}.h5'.format("materialData_newData")))
+# # %%
+# for k, v in globalVars.materialData.items():
+#     print(v)
+#     hdf.put(k, v.to_DataFrame())
+# hdf.close()
+
+# %%
 # %%

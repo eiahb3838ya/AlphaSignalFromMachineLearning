@@ -12,6 +12,7 @@ import ray
 import json
 import numpy as np
 import numpy.random as random
+import pandas as pd
 
 from datetime import datetime
 from deap import base, creator, gp, tools
@@ -181,6 +182,11 @@ mstats.register("std", np.std)
 mstats.register("min", np.min)
 mstats.register("max", np.max)
 
+
+
+#%%
+
+
 #%% define main 
 def main():
     random.seed(318)
@@ -203,6 +209,8 @@ def main():
     os.makedirs(loggerFolder, exist_ok=True)
     logger = Logger(loggerFolder=loggerFolder, exeFileName='log')
     globalVars.initialize(logger)
+
+    date_range_s = pd.date_range(PERIOD_START, PERIOD_END)
     
     # load data to globalVars
     load_data("barra",
@@ -211,6 +219,9 @@ def main():
     load_data("materialData",
         os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5")
     )
+
+    
+
     globalVars.logger.info('load all......done')
     
     # prepare data
@@ -218,6 +229,15 @@ def main():
     materialDataDict = {k:globalVars.materialData[k] for k in materialDataNames} # only take the data specified in materialDataNames
     barraDict = {k:globalVars.barra[k] for k in barraNames} # only take the data specified in barraNames
     toRegFactorDict = {}
+    
+    # industry data
+    h5_path = "C:\\Users\\eiahb\\Documents\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\data\\h5"
+    hdf = pd.HDFStore(os.path.join(h5_path, '{}.h5'.format("industry")))
+    for k in hdf.keys():
+        tmp = pd.concat([hdf.get(k)] * len(date_range_s), axis=1).T
+        tmp.index = date_range_s
+        toRegFactorDict[k] = GeneralData(k,tmp)
+
     
     # get the return to compare 
     # 定義用來放進 evaluation function 的 收益率
@@ -230,6 +250,7 @@ def main():
     periodShiftedPctChange = GeneralData('periodShiftedPctChange_df', periodShiftedPctChange_df)
     periodMaterialDataDict = align_all_to(materialDataDict, periodShiftedPctChange)
     periodBarraDict = align_all_to(barraDict, periodShiftedPctChange)
+    periodToRegFactorDict = align_all_to(toRegFactorDict, periodShiftedPctChange)
     del shiftedPctChange_df, periodShiftedPctChange_df
     
     # stack barra data
@@ -239,8 +260,8 @@ def main():
     if len(barraDict)>0:
         barraStack = np.stack([aB.generalData for aB in periodBarraDict.values()],axis = 2)
     if len(toRegFactorDict)>0:
-        toRegFactorStack = np.stack([aB.generalData for aB in toRegFactorDict.values()],axis = 2)
-        
+        toRegFactorStack = np.stack([aB.generalData for aB in periodToRegFactorDict.values()],axis = 2)
+    
     # put data to ray for latter use
     materialDataDictID = ray.put(periodMaterialDataDict)
     barraStackID = ray.put(barraStack)
