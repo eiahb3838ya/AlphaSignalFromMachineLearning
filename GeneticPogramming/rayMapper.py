@@ -13,7 +13,8 @@ import ray
 from ray.util import ActorPool
 
 
-@ray.remote(num_cpus=1)
+# @ray.remote(num_cpus=1)
+@ray.remote
 class Ray_Deap_Map():
     def __init__(self, creator_setup=None, pset_creator=None):
         # issue 946? Ensure non trivial startup to prevent bad load balance across a cluster
@@ -24,7 +25,6 @@ class Ray_Deap_Map():
         self.creator_setup = creator_setup
         if creator_setup is not None:
             self.creator_setup()
-
         self.pset_creator = pset_creator
         if pset_creator is not None:
             self.pset_creator()
@@ -71,7 +71,7 @@ class Ray_Deap_Map_Manager():
             
             #flatten batches to list of fitnes
             results = [item[0] for sublist in ordered_batch_results for item in sublist]
-            
+            r = [ray.kill(actor_handler) for actor_handler in eval_pool._idle_actors]
         return results
 
 # This is what we register as map in deap toolbox. 

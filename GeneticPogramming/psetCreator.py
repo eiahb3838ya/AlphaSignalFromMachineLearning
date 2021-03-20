@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#%%
 from deap import gp
 import itertools
 import numpy.random as random
@@ -77,13 +78,6 @@ def pset_creator(materialDataNames):
         print(str(gp.EphemeralConstant_flaot)+"is already in gp global, we del it and reAdd anyway")
         print(str(gp.EphemeralConstant_int)+"is already in gp global, we del it and reAdd anyway")
     return(pset)
-    
-    
-    
-    
-    
-    
-    
     
     
 if __name__ == '__main__':

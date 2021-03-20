@@ -125,7 +125,7 @@ def rank(this: GeneralData) -> GeneralData:
 
 def scale(this: GeneralData) -> GeneralData:
     outputToReturn = copy.copy(this)
-    sum_axis1 =  np.nansum(outputToReturn.generalData, axis = 1, keepdims=True)
+    sum_axis1 =  np.nanmean(outputToReturn.generalData, axis = 1, keepdims=True)
     outputToReturn.generalData = np.divide(outputToReturn.generalData, sum_axis1)
     return outputToReturn
 

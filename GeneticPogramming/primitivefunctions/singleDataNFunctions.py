@@ -26,16 +26,14 @@ def delay(this: GeneralData, aNum: int = 1) -> GeneralData:
 # 𝑑𝑒𝑙𝑡𝑎(𝑎, 𝑏) 𝑎 − 𝑑𝑒𝑙𝑎𝑦(𝑎, 𝑏)
 def delta(this: GeneralData, aNum: int = 1) -> GeneralData:
     assert aNum >= 0
-    # print(id(this))
-    # print(id(this.generalData))
+
     outputToReturn = copy.copy(this)
     tmp_copy = outputToReturn.generalData.copy()
     
     tmp_copy[-aNum:, :] = np.nan
 
     outputToReturn.generalData = np.subtract(tmp_copy, np.roll(tmp_copy, aNum, axis = 0))
-    # print(id(outputToReturn))
-    # print(id(outputToReturn.generalData))
+
     return outputToReturn
 
 # 𝑑𝑒𝑙𝑡𝑎(𝑎, 𝑏) 𝑎 − 𝑑𝑒𝑙𝑎𝑦(𝑎, 𝑏)

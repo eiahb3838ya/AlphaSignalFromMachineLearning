@@ -12,37 +12,30 @@ import ray
 import json
 import numpy as np
 import numpy.random as random
+import pandas as pd
 
 from datetime import datetime
 from deap import base, creator, gp, tools
 from functools import partial
-try:
-    from GeneticPogramming.psetCreator import pset_creator
-    from GeneticPogramming.rayMapper import ray_deap_map
-    from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
-    from GeneticPogramming.evolutionAlgorithm import easimple
-    from GeneticPogramming.factorEvaluator import ic_evaluator, icir_evaluator
-    from GeneticPogramming.utils import save_factor, compileFactor
-    from Tool import Logger, GeneralData, Factor
-    from GetData import load_data, align_all_to
-except :
-    # 如果import 失敗的話 可能是因為 working directory 不在最上層
-    PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
-    os.chdir(PROJECT_ROOT)
-    print("change wd to {}".format(PROJECT_ROOT))
-    from GeneticPogramming.psetCreator import pset_creator
-    from GeneticPogramming.rayMapper import ray_deap_map
-    from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
-    from GeneticPogramming.evolutionAlgorithm import easimple
-    from GeneticPogramming.factorEvaluator import ic_evaluator, icir_evaluator
-    from GeneticPogramming.utils import save_factor, compileFactor
-    from Tool import Logger, GeneralData, Factor
-    from GetData import load_data, align_all_to
+
+PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
+os.chdir(PROJECT_ROOT)
+print("change wd to {}".format(PROJECT_ROOT))
+from GeneticPogramming.psetCreator import pset_creator
+from GeneticPogramming.rayMapper import ray_deap_map
+
+from GeneticPogramming.evalAlgorithm import preprocess_eval_single_period
+from GeneticPogramming.evolutionAlgorithm import easimple
+from GeneticPogramming.factorEvaluator import *
+from GeneticPogramming.utils import compileFactor
+
+from Tool import Logger, GeneralData, Factor
+from GetData import load_data, align_all_to
 
 # use up to 16 core as limit
 os.environ['NUMEXPR_MAX_THREADS'] = '16'
+os.environ["PYTHONPATH"] = PROJECT_ROOT + ";" + os.environ.get("PYTHONPATH", "")
 #%% set parameters 挖因子過程參數
-PROJECT_ROOT = 'C:\\Users\\eiahb\\Documents\\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\'
 
 # data path to save factors 用來儲存挖到的因子的路徑
 FACTOR_PATH = os.path.join(PROJECT_ROOT,"data\\factors")
@@ -55,32 +48,32 @@ PERIOD_END = "2019-01-01"
 ITERTIMES = 30
 
 # core count to use in multiprocessing 多進程使用的邏輯數
-POOL_SIZE = 4
+POOL_SIZE = 16
 
 # 以及這次使用的適應度，適應度函數在別的地方定義
-EVALUATE_FUNC = ic_evaluator
+EVALUATE_FUNC = rankic_evaluator
 #%% hyperparameters 魔仙超參數
 
 # population count in initialization and each selection period 初始化的 種群 個體數
-N_POP = 100
+N_POP = 200
 
 # max generation in one iteration 最多繁衍的代數
-N_GEN = 7
+N_GEN = 5
 
 # cross probability 交叉的機率
-CXPB = 0.6
+CXPB = 0.45
 
 # mutation prob 變異的機率
-MUTPB = 0.2
+MUTPB = 0.1
 # the tournsize of tourn selecetion
-TOURNSIZE = 3
+TOURNSIZE = 5
 
 # The parameter *termpb* sets the probability to choose between 
 # a terminal or non-terminal crossover point.
 TERMPB = 0.1
 
 # the height min max of a initial generate 
-initGenHeightMin, initGenHeightMax = 2, 4
+initGenHeightMin, initGenHeightMax = 1, 3
 
 # the height min max of a mutate sub tree
 mutGenHeightMin, mutGenHeightMax = 1, 2
@@ -129,6 +122,7 @@ config.update({
     "barraNames":barraNames
 })
 
+print("start try out with config {}".format(str(config)))
 # TODO
 # import configparser
 # config = configparser.ConfigParser()
@@ -176,7 +170,8 @@ toolbox.register("mutate", multi_mutate, expr=toolbox.expr_mut, pset=pset)
 # 如果換成一般的 map 或是 multiprocess.map 也可以跑，很慢
 # 可見 single process version
 toolbox.register("map", ray_deap_map, creator_setup=creator_setup,
-                 pset_creator=partial(pset_creator,materialDataNames = materialDataNames))
+                 pset_creator=partial(pset_creator, materialDataNames = materialDataNames))
+
 
 #%% define stat and logbook
 stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -187,10 +182,15 @@ mstats.register("std", np.std)
 mstats.register("min", np.min)
 mstats.register("max", np.max)
 
+
+
+#%%
+
+
 #%% define main 
 def main():
     random.seed(318)
-    ray.init(num_cpus=POOL_SIZE, ignore_reinit_error=True)
+    ray.init(num_cpus=POOL_SIZE, ignore_reinit_error=True, log_to_driver=False)
     logbook = tools.Logbook()
     
     # make a new folder 替每次實驗都產生一個文件夾，內含合格的因子，以及最高分的因子(如果 iter 結束都沒找到合格因子)
@@ -209,6 +209,8 @@ def main():
     os.makedirs(loggerFolder, exist_ok=True)
     logger = Logger(loggerFolder=loggerFolder, exeFileName='log')
     globalVars.initialize(logger)
+
+    date_range_s = pd.date_range(PERIOD_START, PERIOD_END)
     
     # load data to globalVars
     load_data("barra",
@@ -217,6 +219,9 @@ def main():
     load_data("materialData",
         os.path.join(os.path.join(PROJECT_ROOT,"data"), "h5")
     )
+
+    
+
     globalVars.logger.info('load all......done')
     
     # prepare data
@@ -225,10 +230,19 @@ def main():
     barraDict = {k:globalVars.barra[k] for k in barraNames} # only take the data specified in barraNames
     toRegFactorDict = {}
     
+    # industry data
+    h5_path = "C:\\Users\\eiahb\\Documents\MyFiles\\WorkThing\\tf\\01task\\GeneticProgrammingProject\\AlphaSignalFromMachineLearning\\data\\h5"
+    hdf = pd.HDFStore(os.path.join(h5_path, '{}.h5'.format("industry")))
+    for k in hdf.keys():
+        tmp = pd.concat([hdf.get(k)] * len(date_range_s), axis=1).T
+        tmp.index = date_range_s
+        toRegFactorDict[k] = GeneralData(k,tmp)
+
+    
     # get the return to compare 
     # 定義用來放進 evaluation function 的 收益率
     open_ = globalVars.materialData['open']
-    shiftedPctChange_df = open_.to_DataFrame().pct_change().shift(-2) #使用後天到明天開盤價的 pctChange 作為 收益率
+    shiftedPctChange_df = open_.to_DataFrame().pct_change().shift(-2) 
     
     # align data within shiftedPctChange_df data
     # 將所有數據與 收益率數據對齊
@@ -236,6 +250,7 @@ def main():
     periodShiftedPctChange = GeneralData('periodShiftedPctChange_df', periodShiftedPctChange_df)
     periodMaterialDataDict = align_all_to(materialDataDict, periodShiftedPctChange)
     periodBarraDict = align_all_to(barraDict, periodShiftedPctChange)
+    periodToRegFactorDict = align_all_to(toRegFactorDict, periodShiftedPctChange)
     del shiftedPctChange_df, periodShiftedPctChange_df
     
     # stack barra data
@@ -245,8 +260,8 @@ def main():
     if len(barraDict)>0:
         barraStack = np.stack([aB.generalData for aB in periodBarraDict.values()],axis = 2)
     if len(toRegFactorDict)>0:
-        toRegFactorStack = np.stack([aB.generalData for aB in toRegFactorDict.values()],axis = 2)
-        
+        toRegFactorStack = np.stack([aB.generalData for aB in periodToRegFactorDict.values()],axis = 2)
+    
     # put data to ray for latter use
     materialDataDictID = ray.put(periodMaterialDataDict)
     barraStackID = ray.put(barraStack)
@@ -326,6 +341,8 @@ if __name__ == '__main__':
     from Tool import globalVars
     main()
     
+
+
 
 
 

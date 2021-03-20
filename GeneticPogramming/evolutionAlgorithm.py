@@ -54,11 +54,12 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
         tic = time()
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
         logger.info('start evaluate for {}th Generation new {} individuals......'.format(gen, len(invalid_ind)))
-        fitnesses = toolbox.map(evaluate, invalid_ind)   
+        fitnesses = toolbox.map(evaluate, invalid_ind)    
         for i, (ind, fit) in enumerate(zip(invalid_ind, fitnesses)):
             ind.fitness.values = fit
-            if(fit[0]>0.01):
-                # get something useful
+            
+            # get something useful
+            if(fit[0]>0.03):
                 # 找到合格的因子
                 logger.info('got a expr useful in gen:{}, end gp algorithm'.format(gen))
                 return(True, ind, logbook)
@@ -71,8 +72,13 @@ def easimple(toolbox, stats, logbook, evaluate, logger,\
         
         # 记录数据
         record = stats.compile(pop)
+
         logger.info("The {} th record:{}".format(gen, str(record)))
         logbook.record(gen=gen, **record)
+        if record['fitness']['max']<0.015:
+            logger.info('max fitness is too low, terminate easimple')
+            ind = tools.selBest(offspring, 1, fit_attr='fitness')[0]
+            return(False, ind, logbook)
     ind = tools.selBest(offspring, 1, fit_attr='fitness')[0]
     logger.info('none expr useful, terminate easimple')
     logger.info('end easimple {:.2f}'.format(tic))
