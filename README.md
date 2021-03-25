@@ -2,23 +2,15 @@
 
 ## 模块设计
 
-从使用者视角来看，本次project主要包含以下模块：
+本次project主要包含以下模块：
 
-- Factor模块：实现从raw data到factor的过程，从而进入Signal模块
 - Signal模块：接收上一模块输入的factor，进行一系列操作后，产生Signal，进入Strategy模块
 - Strategy模块：接收上一模块产生的Signal后，进一步处理，得到股票配置的策略
 
-## Factor模块
-
-这里的重点在于factorManager的设计，他需要包含以下几个功能：
-
-- load_factor：根据使用者的需求从因子库中读取因子
-- update_factor：检查截至最新日期，因子库中的因子数据是否有未更新的，如果有，则计算未更新时间段中的因子值
-- save_factor：将update factor中新计算出的factor进行保存，以便下次使用
-
 ## Signal模块
 
-本模块主要包括两大功能：generateSignals和smoothing，即产生raw signal，signal平滑处理
+本模块主要包括两大功能：generateSignals和smoothing
+即产生 raw signal，signal 平滑处理
 
 ### generateSignals
 
@@ -37,9 +29,6 @@
 
 对于generateSignals产出的raw signals进行平滑处理
 
-### test
-
-利用叶文轩之前写好的内容对于单个signal进行测试，并输出测试报告
 
 ## Strategy模块
 
@@ -49,73 +38,3 @@
 - long only
 - 利用cvxopt进行各种组合优化
 
-# Meeting Log
-
-## 2020-12-02
-
-**讨论**：
-
-整体框架设计，各模块功能
-
-**任务**：
-
-学习类的继承
-
-## 2020-12-09
-
-**讨论**整体框架设计，各模块功能，分配任务，重点在于Signal模块的设计
-
-**任务：**
-
-编写Signal模块中get_signal会用到的方法：
-
-- 线性（叶梦婕）
-- 树状（国欣然）
-- 网络型（薛岚天）
-
-从以上三个方向编写CrossSectionalModels（AlphaSignalFromMachineLearning\BackTesting\Signal\CrossSectionalModels）以及FeatureSelectors（AlphaSignalFromMachineLearning\BackTesting\Signal\FeatureSelectors）
-
-## 2020-12-16
-
-**讨论**:
-
-- 上周任务完成情况
-  - 已编写线性（OLS、Ridge、Lasso），树状，KNN的CrossSectionalModel
-  - 线性模型已测试完成
-  - parameter的获取方式：jsonPath，paraDict，CrossValidation
-
-- SignalBase的方法设计
-
-**任务**：
-
-- **code review**
-- 编写CrossSectionalModelSklearn与ModelTest两个类，使得构造CrossSectionalModel时直接继承这两个
-  - CrossSectionalModelSklearn：实现共同init的方式，fit的方式（CV或者直接fit）
-  - ModelTest：对模型进行测试的工具包，例如：计算score，画图等等
-- 整理文件夹，每个目录都设置README
-- SignalBase的方法编写
-  - generate_signals（国欣然）
-  - train_test_slice（叶梦婕）
-  - preprocessing（叶文轩）
-  - get_signal（国欣然）
-  - smoothing, logger（薛岚天）
-
-## 2020-12-23
-
-**讨论**:
-
-- 上周任务完成情况
-  - train_test_slice的具体参数设置，底层切片方法的需求
-  - preprocessing的具体处理，mask的实现与相应类MA设计，preprocessing所涉方法维度选择
-  - generate_signals基本框架思路
-  - smoothing方法的generalize,logger类的使用
- 
- **任务**：
- 
- - 各自完善代码
- - 底层切片方法的完善，策略基础类的架构（胡逸凡）
- - 寻找表现较好的因子，具体说明为什么能有较好表现及后续数据的可得
-    - 技术指标：动量及反转相关（国欣然）
-    - 基本面指标：财务数据相关（叶文轩）
-    - 投资者行为相关（叶梦婕）
-    - 高频因子低频化（薛岚天）
